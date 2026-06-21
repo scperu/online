@@ -1,0 +1,44 @@
+{
+  "articulos": [
+    {
+      "id": "1",
+      "titulo": "El Futuro de la Inteligencia Artificial",
+      "resumen": "Exploramos cómo la IA está transformando industrias y redefiniendo el futuro del trabajo y la creatividad.",
+      "categoria": "Tecnología",
+      "autor": "Dra. Ana Martínez",
+      "fecha": "2024-01-15",
+      "tiempo_lectura": "8 min",
+      "color": "linear-gradient(135deg, #6366f1, #8b5cf6)"
+    },
+    {
+      "id": "2",
+      "titulo": "Civilizaciones Perdidas: El Misterio de Atlantis",
+      "resumen": "Un viaje a través de los mitos y evidencias que rodean a la legendaria ciudad perdida de Atlantis.",
+      "categoria": "Historia",
+      "autor": "Prof. Carlos Ruiz",
+      "fecha": "2024-01-12",
+      "tiempo_lectura": "12 min",
+      "color": "linear-gradient(135deg, #f59e0b, #f97316)"
+    },
+    {
+      "id": "3",
+      "titulo": "Descubrimientos Científicos que Cambiaron el Mundo",
+      "resumen": "Un recorrido por los descubrimientos científicos más impactantes de la historia y su legado.",
+      "categoria": "Ciencia",
+      "autor": "Dra. Laura Gómez",
+      "fecha": "2024-01-10",
+      "tiempo_lectura": "10 min",
+      "color": "linear-gradient(135deg, #10b981, #34d399)"
+    },
+    {
+      "id": "4",
+      "titulo": "Blockchain y su impacto en la sociedad",
+      "resumen": "Cómo la tecnología blockchain está revolucionando las finanzas, la identidad y la transparencia.",
+      "categoria": "Tecnología",
+      "autor": "Ing. Miguel Torres",
+      "fecha": "2024-01-08",
+      "tiempo_lectura": "7 min",
+      "color": "linear-gradient(135deg, #8b5cf6, #d946ef)"
+    }
+  ]
+}

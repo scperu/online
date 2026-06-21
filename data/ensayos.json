@@ -1,0 +1,11 @@
+{
+  "ensayos": [
+    {
+      "id": "1",
+      "titulo": "El arte de la programación",
+      "autor": "Donald Knuth",
+      "resumen": "Reflexiones sobre la belleza y la complejidad de escribir código.",
+      "categoria": "Tecnología"
+    }
+  ]
+}
