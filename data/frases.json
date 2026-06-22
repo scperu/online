@@ -1,12 +1,6 @@
 {
   "frases": [
     {
-      "id": "2",
-      "texto": "La tecnología es solo una herramienta. En términos de motivación e interacción humana, no hay mejor herramienta que el contacto humano.",
-      "autor": "Bill Gates",
-      "categoria": "Tecnología"
-    },
-    {
       "id": "4",
       "texto": "La curiosidad es el motor del progreso. Sin ella, el conocimiento se estanca.",
       "autor": "Marie Curie",
