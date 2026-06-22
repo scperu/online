@@ -1,12 +1,6 @@
 {
   "frases": [
     {
-      "id": "1",
-      "texto": "El conocimiento es poder, pero el conocimiento compartido es transformación.",
-      "autor": "Anónimo",
-      "categoria": "Conocimiento"
-    },
-    {
       "id": "2",
       "texto": "La tecnología es solo una herramienta. En términos de motivación e interacción humana, no hay mejor herramienta que el contacto humano.",
       "autor": "Bill Gates",
