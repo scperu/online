@@ -1,1402 +1,889 @@
 <!DOCTYPE html>
-<html lang="es" data-theme="light">
+<html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Atlas del Saber – Panel de Gestión</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-  <style>
-    /* ===== ESTILOS COMPLETOS (igual que antes, sin cambios) ===== */
-    :root {
-      --primary: #6366f1;
-      --primary-light: #818cf8;
-      --primary-dark: #4f46e5;
-      --secondary: #14b8a6;
-      --accent: #f59e0b;
-      --gradient-start: #6366f1;
-      --gradient-end: #8b5cf6;
-      --font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      --radius-sm: 0.5rem;
-      --radius-md: 0.75rem;
-      --radius-lg: 1rem;
-      --radius-xl: 1.5rem;
-      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    [data-theme="light"] {
-      --bg-primary: #ffffff;
-      --bg-secondary: #f8fafc;
-      --bg-tertiary: #f1f5f9;
-      --text-primary: #0f172a;
-      --text-secondary: #475569;
-      --text-muted: #94a3b8;
-      --border-color: #e2e8f0;
-      --card-bg: #ffffff;
-      --shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
-      --shadow-hover: 0 20px 60px rgba(0, 0, 0, 0.12);
-      --editor-bg: #f8fafc;
-    }
-    [data-theme="dark"] {
-      --bg-primary: #0f172a;
-      --bg-secondary: #1e293b;
-      --bg-tertiary: #2d3748;
-      --text-primary: #f1f5f9;
-      --text-secondary: #cbd5e1;
-      --text-muted: #64748b;
-      --border-color: #334155;
-      --card-bg: #1e293b;
-      --shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
-      --shadow-hover: 0 20px 60px rgba(0, 0, 0, 0.6);
-      --editor-bg: #1e293b;
-    }
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
-    body {
-      font-family: var(--font-family);
-      background-color: var(--bg-primary);
-      color: var(--text-primary);
-      line-height: 1.6;
-      transition: background-color 0.3s, color 0.3s;
-    }
-    a { text-decoration: none; color: inherit; }
-    button { cursor: pointer; border: none; outline: none; background: none; font-family: inherit; }
-    .container { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; }
-    .gradient-text {
-      background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-    .section-header { text-align: center; margin-bottom: 2.5rem; }
-    .section-header h2 { font-size: 2.5rem; font-weight: 800; margin-bottom: 0.5rem; }
-    .section-header p { color: var(--text-secondary); font-size: 1.125rem; }
-    .text-center { text-align: center; }
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>📚 Admin · Biblioteca Digital Premium</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet" />
+    <style>
+        /* ── RESET Y BASE ─────────────────────────────────────────────── */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', -apple-system, system-ui, sans-serif;
+            background: #f1f5f9;
+            color: #0f172a;
+            min-height: 100vh;
+            padding: 24px;
+        }
+        .admin-wrapper { max-width: 1440px; margin: 0 auto; }
 
-    .btn-primary, .btn-secondary, .btn-success, .btn-danger, .btn-warning {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.75rem 1.5rem;
-      border-radius: var(--radius-lg);
-      font-weight: 600;
-      transition: var(--transition);
-    }
-    .btn-primary {
-      background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
-      color: #fff;
-      box-shadow: 0 4px 20px rgba(99, 102, 241, 0.3);
-    }
-    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(99,102,241,0.4); }
-    .btn-secondary {
-      background: var(--bg-tertiary);
-      color: var(--text-primary);
-      border: 2px solid var(--border-color);
-    }
-    .btn-secondary:hover { background: var(--border-color); transform: translateY(-2px); }
-    .btn-success { background: #10b981; color: #fff; }
-    .btn-success:hover { background: #059669; transform: translateY(-2px); }
-    .btn-danger { background: #ef4444; color: #fff; }
-    .btn-danger:hover { background: #dc2626; transform: translateY(-2px); }
-    .btn-warning { background: #f59e0b; color: #fff; }
-    .btn-warning:hover { background: #d97706; transform: translateY(-2px); }
+        /* ── HEADER ────────────────────────────────────────────────────── */
+        .admin-header {
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 24px 32px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.03);
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 28px;
+            border: 1px solid #e9edf2;
+        }
+        .admin-header .brand {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+        .admin-header .brand h1 {
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+            background: linear-gradient(135deg, #0f2b4b, #1a4b7a);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .admin-header .brand i { font-size: 28px; color: #1a4b7a; }
+        .admin-header .badge-version {
+            background: #e9edf2;
+            padding: 6px 14px;
+            border-radius: 40px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #475569;
+        }
+        .header-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .header-actions .btn {
+            border: none;
+            padding: 10px 20px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+            background: #f1f5f9;
+            color: #0f172a;
+        }
+        .header-actions .btn-primary {
+            background: #1a4b7a;
+            color: #fff;
+        }
+        .header-actions .btn-primary:hover {
+            background: #0f3b5f;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(26,75,122,0.25);
+        }
+        .header-actions .btn-outline {
+            background: transparent;
+            border: 2px solid #dce2eb;
+        }
+        .header-actions .btn-outline:hover {
+            border-color: #1a4b7a;
+            background: #f0f5ff;
+        }
+        .header-actions .btn-success {
+            background: #059669;
+            color: #fff;
+        }
+        .header-actions .btn-success:hover {
+            background: #047857;
+            transform: translateY(-2px);
+        }
 
-    /* ===== NAVBAR ===== */
-    .navbar {
-      position: sticky;
-      top: 0;
-      background: rgba(var(--bg-primary), 0.8);
-      backdrop-filter: blur(20px);
-      border-bottom: 1px solid var(--border-color);
-      padding: 0.75rem 0;
-      z-index: 1000;
-      transition: var(--transition);
-    }
-    .nav-container {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1.5rem;
-      flex-wrap: wrap;
-    }
-    .nav-brand .logo {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-size: 1.25rem;
-      font-weight: 800;
-    }
-    .nav-brand .logo i { color: var(--primary); font-size: 1.5rem; }
-    .nav-search { flex: 1; max-width: 500px; min-width: 200px; }
-    .search-container { position: relative; }
-    .search-input {
-      width: 100%;
-      padding: 0.65rem 1rem 0.65rem 2.75rem;
-      border: 2px solid var(--border-color);
-      border-radius: var(--radius-lg);
-      background: var(--bg-secondary);
-      color: var(--text-primary);
-      font-size: 0.95rem;
-      transition: var(--transition);
-    }
-    .search-input:focus {
-      border-color: var(--primary);
-      box-shadow: 0 0 0 4px rgba(99,102,241,0.1);
-      outline: none;
-    }
-    .search-icon {
-      position: absolute;
-      left: 1rem;
-      top: 50%;
-      transform: translateY(-50%);
-      color: var(--text-muted);
-    }
-    .search-results {
-      position: absolute;
-      top: calc(100% + 0.5rem);
-      left: 0;
-      right: 0;
-      background: var(--bg-primary);
-      border-radius: var(--radius-lg);
-      box-shadow: var(--shadow-hover);
-      max-height: 400px;
-      overflow-y: auto;
-      display: none;
-      border: 1px solid var(--border-color);
-      z-index: 999;
-    }
-    .search-results.active { display: block; }
-    .search-result-item {
-      padding: 0.75rem 1rem;
-      border-bottom: 1px solid var(--border-color);
-      transition: var(--transition);
-    }
-    .search-result-item:last-child { border-bottom: none; }
-    .search-result-item:hover { background: var(--bg-secondary); }
-    .result-type {
-      display: inline-block;
-      font-size: 0.7rem;
-      padding: 0.1rem 0.5rem;
-      border-radius: 50px;
-      background: var(--bg-tertiary);
-      color: var(--text-muted);
-      text-transform: uppercase;
-      font-weight: 600;
-      margin-right: 0.5rem;
-    }
-    .result-title { display: block; font-weight: 500; margin: 0.25rem 0; }
-    .result-author { font-size: 0.875rem; color: var(--text-muted); }
-    .search-no-results { padding: 2rem; text-align: center; color: var(--text-muted); }
-    .search-no-results i { font-size: 2rem; display: block; margin-bottom: 0.5rem; }
-    .nav-actions { display: flex; align-items: center; gap: 1rem; }
-    .theme-toggle {
-      font-size: 1.25rem;
-      color: var(--text-primary);
-      padding: 0.5rem;
-      border-radius: var(--radius-sm);
-      transition: var(--transition);
-    }
-    .theme-toggle:hover { background: var(--bg-secondary); }
-    .nav-toggle { display: none; font-size: 1.5rem; color: var(--text-primary); }
+        /* ── ESTADÍSTICAS ────────────────────────────────────────────── */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+        .stat-card {
+            background: #fff;
+            border-radius: 16px;
+            padding: 18px 22px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+            border: 1px solid #e9edf2;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+        .stat-card .stat-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: #fff;
+        }
+        .stat-card .stat-icon.blue { background: #1a4b7a; }
+        .stat-card .stat-icon.green { background: #059669; }
+        .stat-card .stat-icon.purple { background: #7c3aed; }
+        .stat-card .stat-icon.amber { background: #d97706; }
+        .stat-card .stat-info { flex: 1; }
+        .stat-card .stat-info .number {
+            font-size: 26px;
+            font-weight: 700;
+            line-height: 1.2;
+            color: #0f172a;
+        }
+        .stat-card .stat-info .label {
+            font-size: 14px;
+            color: #64748b;
+            font-weight: 500;
+        }
 
-    /* ===== HERO ===== */
-    .hero { padding: 4rem 0 3rem; background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%); position: relative; overflow: hidden; }
-    .hero::before { content: ''; position: absolute; top: -50%; right: -20%; width: 600px; height: 600px; background: radial-gradient(circle, rgba(99, 102, 241, 0.1) 0%, transparent 70%); border-radius: 50%; pointer-events: none; }
-    .hero-container { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: center; }
-    .hero-content { position: relative; z-index: 1; }
-    .hero-badge { display: inline-flex; align-items: center; gap: 0.5rem; background: var(--bg-tertiary); padding: 0.4rem 1rem; border-radius: 50px; font-size: 0.875rem; font-weight: 500; color: var(--primary); margin-bottom: 1rem; }
-    .hero-title { font-size: 3.2rem; font-weight: 900; line-height: 1.1; margin-bottom: 1rem; }
-    .hero-subtitle { font-size: 1.2rem; color: var(--text-secondary); margin-bottom: 1.5rem; max-width: 500px; }
-    .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
-    .hero-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
-    .stat-item { text-align: center; background: var(--card-bg); padding: 1.5rem 1rem; border-radius: var(--radius-lg); box-shadow: var(--shadow); }
-    .stat-number { display: block; font-size: 2.5rem; font-weight: 800; background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-    .stat-label { display: block; color: var(--text-secondary); font-size: 0.875rem; margin-top: 0.25rem; }
+        /* ── TOOLBAR ──────────────────────────────────────────────────── */
+        .toolbar {
+            background: #fff;
+            border-radius: 20px;
+            padding: 16px 24px;
+            margin-bottom: 24px;
+            border: 1px solid #e9edf2;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+        }
+        .toolbar .search-box {
+            display: flex;
+            align-items: center;
+            background: #f1f5f9;
+            border-radius: 40px;
+            padding: 0 18px;
+            flex: 1 1 280px;
+            max-width: 420px;
+            border: 2px solid transparent;
+            transition: 0.2s;
+        }
+        .toolbar .search-box:focus-within {
+            border-color: #1a4b7a;
+            background: #fff;
+        }
+        .toolbar .search-box i { color: #94a3b8; }
+        .toolbar .search-box input {
+            border: none;
+            background: transparent;
+            padding: 12px 14px;
+            font-size: 15px;
+            width: 100%;
+            outline: none;
+            color: #0f172a;
+            font-family: inherit;
+        }
+        .toolbar .search-box input::placeholder { color: #94a3b8; }
+        .toolbar-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .toolbar-actions .btn-add {
+            background: #1a4b7a;
+            color: #fff;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .toolbar-actions .btn-add:hover {
+            background: #0f3b5f;
+            transform: scale(1.02);
+        }
+        .toolbar-actions .filter-select {
+            padding: 10px 18px;
+            border-radius: 40px;
+            border: 2px solid #dce2eb;
+            background: #fff;
+            font-weight: 500;
+            font-size: 14px;
+            color: #0f172a;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+        }
+        .toolbar-actions .filter-select:focus {
+            border-color: #1a4b7a;
+            outline: none;
+        }
 
-    /* ===== CATEGORÍAS ===== */
-    .featured-categories { padding: 4rem 0; }
-    .categories-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; }
-    .category-card { background: var(--card-bg); padding: 1.5rem; border-radius: var(--radius-lg); box-shadow: var(--shadow); transition: var(--transition); position: relative; overflow: hidden; cursor: pointer; }
-    .category-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end)); transform: scaleX(0); transition: var(--transition); }
-    .category-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-hover); }
-    .category-card:hover::before { transform: scaleX(1); }
-    .category-icon { width: 56px; height: 56px; display: flex; align-items: center; justify-content: center; border-radius: var(--radius-md); background: var(--bg-tertiary); font-size: 1.5rem; color: var(--primary); margin-bottom: 1rem; }
-    .category-card h3 { font-size: 1.2rem; font-weight: 700; margin-bottom: 0.25rem; }
-    .category-card p { color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1rem; }
-    .category-arrow { display: inline-block; font-size: 1.2rem; color: var(--primary); transition: var(--transition); }
-    .category-card:hover .category-arrow { transform: translateX(4px); }
-    .cat-tech .category-icon { background: rgba(99,102,241,0.1); color: #6366f1; }
-    .cat-history .category-icon { background: rgba(245,158,11,0.1); color: #f59e0b; }
-    .cat-curiosities .category-icon { background: rgba(16,185,129,0.1); color: #10b981; }
-    .cat-news .category-icon { background: rgba(239,68,68,0.1); color: #ef4444; }
-    .cat-library .category-icon { background: rgba(139,92,246,0.1); color: #8b5cf6; }
-    .cat-essays .category-icon { background: rgba(236,72,153,0.1); color: #ec4899; }
+        /* ── TABLA ───────────────────────────────────────────────────── */
+        .table-container {
+            background: #fff;
+            border-radius: 20px;
+            border: 1px solid #e9edf2;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+        }
+        .table-container table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+        .table-container th {
+            text-align: left;
+            padding: 16px 20px;
+            background: #f8fafc;
+            font-weight: 600;
+            color: #475569;
+            border-bottom: 2px solid #e9edf2;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        .table-container td {
+            padding: 14px 20px;
+            border-bottom: 1px solid #f1f5f9;
+            vertical-align: middle;
+            color: #0f172a;
+        }
+        .table-container tr:hover td { background: #fafcff; }
+        .table-container .badge-tipo {
+            display: inline-block;
+            padding: 4px 14px;
+            border-radius: 40px;
+            font-size: 12px;
+            font-weight: 600;
+            background: #eef2f6;
+            color: #475569;
+        }
+        .badge-tipo.ensayo { background: #dbeafe; color: #1a4b7a; }
+        .badge-tipo.tecnologia { background: #e0f2fe; color: #0369a1; }
+        .badge-tipo.frase { background: #fae8ff; color: #7c3aed; }
+        .badge-tipo.libro { background: #fef3c7; color: #b45309; }
 
-    /* ===== FRASE DEL DÍA ===== */
-    .quote-of-day { padding: 4rem 0; background: var(--bg-secondary); }
-    .quote-card { background: var(--card-bg); padding: 2.5rem; border-radius: var(--radius-xl); box-shadow: var(--shadow); text-align: center; }
-    .quote-content { max-width: 700px; margin: 0 auto; }
-    .quote-icon { font-size: 2.5rem; color: var(--primary); opacity: 0.3; margin-bottom: 1rem; }
-    .quote-content blockquote { font-size: 1.5rem; font-weight: 500; font-style: italic; line-height: 1.6; margin-bottom: 1rem; }
-    .quote-content cite { display: block; color: var(--text-secondary); font-style: normal; font-weight: 500; }
-    .quote-link { display: inline-flex; align-items: center; gap: 0.5rem; margin-top: 1.5rem; color: var(--primary); font-weight: 600; transition: var(--transition); }
-    .quote-link:hover { gap: 0.75rem; }
+        .acciones-cell {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        .acciones-cell .btn-icon {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            padding: 6px 10px;
+            border-radius: 8px;
+            transition: 0.2s;
+            color: #64748b;
+        }
+        .acciones-cell .btn-icon:hover {
+            background: #f1f5f9;
+            color: #0f172a;
+        }
+        .acciones-cell .btn-icon.edit:hover { background: #dbeafe; color: #1a4b7a; }
+        .acciones-cell .btn-icon.delete:hover { background: #fee2e2; color: #b91c1c; }
 
-    /* ===== ARTÍCULOS ===== */
-    .latest-articles { padding: 4rem 0; }
-    .articles-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; margin-bottom: 2.5rem; }
-    .article-card { background: var(--card-bg); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow); transition: var(--transition); }
-    .article-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-hover); }
-    .article-image { width: 100%; height: 180px; background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end)); position: relative; }
-    .article-badge { position: absolute; top: 1rem; right: 1rem; background: rgba(0,0,0,0.7); backdrop-filter: blur(10px); color: #fff; padding: 0.2rem 0.75rem; border-radius: 50px; font-size: 0.75rem; font-weight: 500; }
-    .article-content { padding: 1.5rem; }
-    .article-content h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem; }
-    .article-content p { color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 1rem; }
-    .article-meta { display: flex; align-items: center; gap: 1rem; font-size: 0.875rem; color: var(--text-muted); }
-    .article-meta i { margin-right: 0.25rem; }
-    .article-actions { display: flex; align-items: center; gap: 0.5rem; margin-top: 1rem; }
-    .article-actions button { padding: 0.25rem 0.75rem; border-radius: var(--radius-sm); font-size: 0.875rem; color: var(--text-secondary); transition: var(--transition); }
-    .article-actions button:hover { background: var(--bg-tertiary); color: var(--text-primary); }
-    .article-actions .favorite-btn.active { color: #ef4444; }
-    .read-more { font-weight: 600; color: var(--primary); margin-left: auto; }
-    .read-more:hover { text-decoration: underline; }
+        .empty-row td {
+            text-align: center;
+            padding: 60px 20px;
+            color: #94a3b8;
+        }
+        .empty-row i {
+            font-size: 40px;
+            margin-bottom: 12px;
+            opacity: 0.4;
+            display: block;
+        }
 
-    /* ===== PÁGINAS SPA ===== */
-    .page-section { display: none; padding: 3rem 0; animation: fadeInUp 0.5s ease; }
-    .page-section.active { display: block; }
+        /* ── MODAL ────────────────────────────────────────────────────── */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15,23,42,0.55);
+            backdrop-filter: blur(6px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+        .modal-overlay.open { display: flex; }
+        .modal-box {
+            background: #fff;
+            border-radius: 28px;
+            max-width: 600px;
+            width: 100%;
+            padding: 32px 36px;
+            box-shadow: 0 40px 80px rgba(0,0,0,0.30);
+            animation: modalIn 0.25s ease;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        @keyframes modalIn {
+            0% { opacity: 0; transform: scale(0.96) translateY(20px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+        .modal-header h2 { font-size: 22px; font-weight: 700; color: #0f172a; }
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 28px;
+            color: #94a3b8;
+            cursor: pointer;
+            transition: 0.2s;
+            padding: 0 4px;
+        }
+        .modal-close:hover { color: #0f172a; transform: rotate(90deg); }
+        .form-group {
+            margin-bottom: 18px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            font-size: 14px;
+            color: #334155;
+            margin-bottom: 5px;
+        }
+        .form-group label .required { color: #b91c1c; }
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e9edf2;
+            border-radius: 14px;
+            font-size: 15px;
+            font-family: inherit;
+            transition: 0.2s;
+            background: #fafcff;
+            color: #0f172a;
+        }
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: #1a4b7a;
+            outline: none;
+            background: #fff;
+            box-shadow: 0 0 0 4px rgba(26,75,122,0.08);
+        }
+        .form-group textarea { resize: vertical; min-height: 70px; }
+        .form-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+            justify-content: flex-end;
+        }
+        .form-actions .btn {
+            padding: 12px 32px;
+            border-radius: 40px;
+            border: none;
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .form-actions .btn-submit {
+            background: #1a4b7a;
+            color: #fff;
+        }
+        .form-actions .btn-submit:hover {
+            background: #0f3b5f;
+        }
+        .form-actions .btn-cancel {
+            background: #eef2f6;
+            color: #475569;
+        }
+        .form-actions .btn-cancel:hover {
+            background: #e2e8f0;
+        }
 
-    /* ===== FOOTER ===== */
-    .footer { background: var(--bg-secondary); border-top: 1px solid var(--border-color); padding: 3rem 0 1.5rem; margin-top: 2rem; }
-    .footer-content { display: grid; grid-template-columns: 2fr 3fr; gap: 2rem; margin-bottom: 1.5rem; }
-    .footer-brand h3 { font-size: 1.5rem; font-weight: 800; }
-    .footer-brand h3 i { color: var(--primary); }
-    .footer-brand p { color: var(--text-secondary); }
-    .footer-links { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
-    .footer-column h4 { font-weight: 600; margin-bottom: 0.75rem; }
-    .footer-column a { display: block; color: var(--text-secondary); padding: 0.25rem 0; transition: var(--transition); }
-    .footer-column a:hover { color: var(--text-primary); }
-    .footer-column a i { margin-right: 0.5rem; }
-    .footer-bottom { border-top: 1px solid var(--border-color); padding-top: 1.5rem; text-align: center; color: var(--text-muted); font-size: 0.875rem; }
-    #toggleEditor { color: var(--primary); font-weight: 600; transition: var(--transition); }
-    #toggleEditor:hover { text-decoration: underline; }
+        /* ── TOAST ────────────────────────────────────────────────────── */
+        .toast-container {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 2000;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-width: 380px;
+        }
+        .toast {
+            background: #0f172a;
+            color: #fff;
+            padding: 16px 24px;
+            border-radius: 16px;
+            font-weight: 500;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.20);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            animation: slideIn 0.3s ease;
+            font-size: 15px;
+        }
+        .toast.success { background: #065f46; }
+        .toast.error { background: #991b1b; }
+        .toast i { font-size: 20px; }
+        @keyframes slideIn {
+            0% { opacity: 0; transform: translateX(40px); }
+            100% { opacity: 1; transform: translateX(0); }
+        }
 
-    /* ===== EDITOR ===== */
-    .github-editor { display: none; padding: 3rem 0; background: var(--bg-secondary); border-top: 2px solid var(--border-color); }
-    .github-editor.active { display: block; }
-    .editor-status { padding: 1rem; border-radius: var(--radius-lg); margin-bottom: 1.5rem; display: none; }
-    .editor-status.success { display: block; background: rgba(16,185,129,0.15); color: #10b981; border: 1px solid #10b981; }
-    .editor-status.error { display: block; background: rgba(239,68,68,0.15); color: #ef4444; border: 1px solid #ef4444; }
-    .editor-status.loading { display: block; background: rgba(99,102,241,0.15); color: var(--primary); border: 1px solid var(--primary); }
-    .editor-tabs { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 2rem; border-bottom: 2px solid var(--border-color); padding-bottom: 0.5rem; }
-    .editor-tab { padding: 0.5rem 1.5rem; border-radius: var(--radius-lg) var(--radius-lg) 0 0; font-weight: 600; color: var(--text-secondary); transition: var(--transition); background: transparent; }
-    .editor-tab:hover { background: var(--bg-tertiary); }
-    .editor-tab.active { background: var(--primary); color: #fff; box-shadow: 0 4px 12px rgba(99,102,241,0.3); }
-    .editor-panel { display: none; background: var(--card-bg); padding: 2rem; border-radius: var(--radius-lg); box-shadow: var(--shadow); }
-    .editor-panel.active { display: block; }
-    .editor-panel h3 { font-size: 1.3rem; font-weight: 700; margin-bottom: 0.5rem; }
-    .editor-panel p { color: var(--text-secondary); margin-bottom: 1.5rem; }
-    .form-group { margin-bottom: 1.25rem; }
-    .form-group label { display: block; font-weight: 600; margin-bottom: 0.25rem; }
-    .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 0.65rem 1rem; border: 2px solid var(--border-color); border-radius: var(--radius-md); background: var(--bg-secondary); color: var(--text-primary); font-size: 1rem; transition: var(--transition); }
-    .form-group input:focus, .form-group textarea:focus, .form-group select:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(99,102,241,0.1); outline: none; }
-    .form-group textarea { resize: vertical; min-height: 80px; }
-    .form-actions { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 1rem; }
-    .items-list { margin-top: 2rem; border-top: 2px solid var(--border-color); padding-top: 1.5rem; }
-    .items-list h4 { font-weight: 600; margin-bottom: 1rem; }
-    .items-list .item-row { display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1rem; background: var(--bg-secondary); border-radius: var(--radius-md); margin-bottom: 0.5rem; border: 1px solid var(--border-color); }
-    .items-list .item-row .item-info { flex: 1; }
-    .items-list .item-row .item-info strong { display: block; }
-    .items-list .item-row .item-info small { color: var(--text-muted); }
-    .items-list .item-row .item-actions { display: flex; gap: 0.5rem; }
-    .items-list .item-row .item-actions button { padding: 0.25rem 0.75rem; border-radius: var(--radius-sm); font-size: 0.75rem; font-weight: 600; transition: var(--transition); }
-    .items-list .item-row .item-actions .btn-edit { background: var(--bg-tertiary); color: var(--text-secondary); }
-    .items-list .item-row .item-actions .btn-edit:hover { background: var(--border-color); }
-    .items-list .item-row .item-actions .btn-delete { background: rgba(239,68,68,0.1); color: #ef4444; }
-    .items-list .item-row .item-actions .btn-delete:hover { background: #ef4444; color: #fff; }
+        /* ── RESPONSIVE ──────────────────────────────────────────────── */
+        @media (max-width: 768px) {
+            body { padding: 16px; }
+            .admin-header { padding: 18px 20px; flex-direction: column; gap: 16px; align-items: stretch; }
+            .header-actions { justify-content: stretch; }
+            .header-actions .btn { flex: 1; justify-content: center; }
+            .stats-grid { grid-template-columns: 1fr 1fr; }
+            .toolbar { flex-direction: column; align-items: stretch; }
+            .toolbar .search-box { max-width: 100%; }
+            .toolbar-actions { flex-wrap: wrap; justify-content: stretch; }
+            .toolbar-actions .btn-add { flex: 1; justify-content: center; }
+            .table-container { overflow-x: auto; }
+            .table-container table { font-size: 13px; }
+            .table-container th, .table-container td { padding: 10px 14px; }
+            .modal-box { padding: 24px 18px; }
+        }
+        @media (max-width: 480px) {
+            .stats-grid { grid-template-columns: 1fr; }
+            .admin-header .brand h1 { font-size: 20px; }
+        }
 
-    /* ===== TOAST ===== */
-    .toast-notification { position: fixed; bottom: 2rem; right: 2rem; background: var(--bg-primary); color: var(--text-primary); padding: 1rem 1.5rem; border-radius: var(--radius-lg); box-shadow: var(--shadow-hover); border: 1px solid var(--border-color); z-index: 9999; animation: fadeInUp 0.5s ease; font-weight: 500; max-width: 300px; }
-
-    @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-    @keyframes fadeOutDown { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(20px); } }
-    .fade-in-up { animation: fadeInUp 0.6s ease forwards; }
-
-    @media (max-width: 1024px) {
-      .hero-container { grid-template-columns: 1fr; text-align: center; }
-      .hero-subtitle { margin: 0 auto 1.5rem; }
-      .hero-actions { justify-content: center; }
-      .hero-stats { max-width: 500px; margin: 0 auto; }
-    }
-    @media (max-width: 768px) {
-      .nav-search { display: none; }
-      .nav-toggle { display: block; }
-      .hero-title { font-size: 2.5rem; }
-      .hero-stats { grid-template-columns: 1fr 1fr; }
-      .categories-grid { grid-template-columns: 1fr; }
-      .articles-grid { grid-template-columns: 1fr; }
-      .footer-content { grid-template-columns: 1fr; }
-      .footer-links { grid-template-columns: 1fr; }
-      .section-header h2 { font-size: 2rem; }
-      .page-section { padding: 2rem 0; }
-      .editor-panel { padding: 1.5rem; }
-      .items-list .item-row { flex-direction: column; align-items: stretch; gap: 0.5rem; }
-    }
-    @media (max-width: 480px) {
-      .hero-title { font-size: 2rem; }
-      .hero-actions { flex-direction: column; width: 100%; }
-      .hero-actions a { width: 100%; justify-content: center; }
-      .hero-stats { grid-template-columns: 1fr; }
-    }
-  </style>
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #eef2f6; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
 </head>
 <body>
 
-  <!-- ===== NAVBAR ===== -->
-  <nav class="navbar">
-    <div class="container nav-container">
-      <div class="nav-brand">
-        <a href="#" class="logo" data-page="inicio">
-          <i class="fas fa-atlas"></i>
-          <span>Atlas del Saber</span>
-        </a>
-      </div>
-      <div class="nav-search">
-        <div class="search-container">
-          <i class="fas fa-search search-icon"></i>
-          <input type="text" id="globalSearch" placeholder="Buscar conocimiento..." class="search-input" />
-          <div id="searchResults" class="search-results"></div>
+<div class="admin-wrapper">
+
+    <!-- HEADER -->
+    <header class="admin-header">
+        <div class="brand">
+            <i class="fas fa-crown"></i>
+            <h1>Administración · Biblioteca Digital</h1>
+            <span class="badge-version">v2.0 · Premium</span>
         </div>
-      </div>
-      <div class="nav-actions">
-        <button class="theme-toggle" id="themeToggle"><i class="fas fa-moon"></i></button>
-        <button class="nav-toggle" id="navToggle"><i class="fas fa-bars"></i></button>
-      </div>
+        <div class="header-actions">
+            <button class="btn btn-outline" onclick="exportarCSV()">
+                <i class="fas fa-file-export"></i> Exportar CSV
+            </button>
+            <button class="btn btn-success" onclick="recargarDatos()">
+                <i class="fas fa-sync-alt"></i> Sincronizar
+            </button>
+            <!-- Opcional: botón al visor público (solo para el admin) -->
+            <button class="btn btn-primary" onclick="window.open('visor.html', '_blank')">
+                <i class="fas fa-eye"></i> Ver Visor Público
+            </button>
+        </div>
+    </header>
+
+    <!-- ESTADÍSTICAS -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon blue"><i class="fas fa-book"></i></div>
+            <div class="stat-info"><div class="number" id="totalItems">0</div><div class="label">Total registros</div></div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon green"><i class="fas fa-pen-fancy"></i></div>
+            <div class="stat-info"><div class="number" id="ensayoCount">0</div><div class="label">Ensayos</div></div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon purple"><i class="fas fa-microchip"></i></div>
+            <div class="stat-info"><div class="number" id="tecnologiaCount">0</div><div class="label">Tecnología</div></div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon amber"><i class="fas fa-quote-right"></i></div>
+            <div class="stat-info"><div class="number" id="fraseCount">0</div><div class="label">Frases célebres</div></div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon" style="background:#b45309;"><i class="fas fa-book-open"></i></div>
+            <div class="stat-info"><div class="number" id="libroCount">0</div><div class="label">Libros</div></div>
+        </div>
     </div>
-  </nav>
 
-  <!-- ===== CONTENIDO PRINCIPAL (SPA) ===== -->
-  <main>
-    <!-- Inicio -->
-    <section id="page-inicio" class="page-section active">
-      <div class="hero">
-        <div class="container hero-container">
-          <div class="hero-content">
-            <div class="hero-badge"><i class="fas fa-sparkles"></i> Biblioteca Digital Moderna</div>
-            <h1 class="hero-title">Descubre el <span class="gradient-text">Conocimiento</span> que Transforma</h1>
-            <p class="hero-subtitle">Explora miles de artículos, ensayos y curiosidades en una plataforma diseñada para mentes curiosas.</p>
-            <div class="hero-actions">
-              <a href="#categorias" class="btn-primary"><i class="fas fa-compass"></i> Explorar</a>
-              <a href="#articulos" class="btn-secondary">Ver Artículos</a>
-            </div>
-          </div>
-          <div class="hero-stats">
-            <div class="stat-item"><span class="stat-number" data-count="15000">0</span><span class="stat-label">Artículos</span></div>
-            <div class="stat-item"><span class="stat-number" data-count="500">0</span><span class="stat-label">Autores</span></div>
-            <div class="stat-item"><span class="stat-number" data-count="100">0</span><span class="stat-label">Categorías</span></div>
-          </div>
+    <!-- TOOLBAR -->
+    <div class="toolbar">
+        <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" id="searchInput" placeholder="Buscar por título, autor, frase…" />
         </div>
-      </div>
-
-      <section class="featured-categories" id="categorias">
-        <div class="container">
-          <div class="section-header"><h2>Explora por Categorías</h2><p>Sumérgete en áreas del conocimiento cuidadosamente seleccionadas</p></div>
-          <div class="categories-grid">
-            <div class="category-card cat-tech" data-page="tecnologia"><div class="category-icon"><i class="fas fa-microchip"></i></div><h3>Tecnología</h3><p>IA, Programación, Innovación</p><span class="category-arrow">→</span></div>
-            <div class="category-card cat-history" data-page="historia"><div class="category-icon"><i class="fas fa-landmark"></i></div><h3>Historia</h3><p>Civilizaciones, Personajes, Guerras</p><span class="category-arrow">→</span></div>
-            <div class="category-card cat-curiosities" data-page="curiosidades"><div class="category-icon"><i class="fas fa-lightbulb"></i></div><h3>Curiosidades</h3><p>Ciencia, Espacio, Naturaleza</p><span class="category-arrow">→</span></div>
-            <div class="category-card cat-news" data-page="actualidad"><div class="category-icon"><i class="fas fa-newspaper"></i></div><h3>Actualidad</h3><p>Noticias, Tendencias, Innovación</p><span class="category-arrow">→</span></div>
-            <div class="category-card cat-library" data-page="biblioteca"><div class="category-icon"><i class="fas fa-book"></i></div><h3>Biblioteca</h3><p>Libros, Resúmenes, Lectura</p><span class="category-arrow">→</span></div>
-            <div class="category-card cat-essays" data-page="ensayos"><div class="category-icon"><i class="fas fa-pen-fancy"></i></div><h3>Ensayos</h3><p>Artículos extensos, Reflexión</p><span class="category-arrow">→</span></div>
-          </div>
-        </div>
-      </section>
-
-      <section class="quote-of-day">
-        <div class="container">
-          <div class="quote-card">
-            <div class="quote-content">
-              <i class="fas fa-quote-left quote-icon"></i>
-              <blockquote id="dailyQuote">"El conocimiento es poder, pero el conocimiento compartido es transformación."</blockquote>
-              <cite id="quoteAuthor">- Anónimo</cite>
-            </div>
-            <a href="#" class="quote-link" data-page="frases">Ver más frases <i class="fas fa-arrow-right"></i></a>
-          </div>
-        </div>
-      </section>
-
-      <section class="latest-articles" id="articulos">
-        <div class="container">
-          <div class="section-header"><h2>Últimos Contenidos</h2><p>Descubre lo más reciente en nuestra biblioteca de conocimiento</p></div>
-          <div class="articles-grid" id="articlesContainer"></div>
-          <div class="text-center"><a href="#" class="btn-primary" data-page="tecnologia">Ver todos los artículos</a></div>
-        </div>
-      </section>
-    </section>
-
-    <!-- Páginas de categorías (simplificadas) -->
-    <section id="page-tecnologia" class="page-section"><div class="container"><div class="section-header"><h2>Tecnología</h2><p>IA, Programación...</p></div><div class="articles-grid" id="tecnologiaContainer"></div></div></section>
-    <section id="page-historia" class="page-section"><div class="container"><div class="section-header"><h2>Historia</h2><p>Civilizaciones...</p></div><div class="articles-grid" id="historiaContainer"></div></div></section>
-    <section id="page-curiosidades" class="page-section"><div class="container"><div class="section-header"><h2>Curiosidades</h2><p>Ciencia...</p></div><div class="articles-grid" id="curiosidadesContainer"></div></div></section>
-    <section id="page-actualidad" class="page-section"><div class="container"><div class="section-header"><h2>Actualidad</h2><p>Noticias...</p></div><div class="articles-grid" id="actualidadContainer"></div></div></section>
-    <section id="page-biblioteca" class="page-section"><div class="container"><div class="section-header"><h2>Biblioteca</h2><p>Libros...</p></div><div class="articles-grid" id="bibliotecaContainer"></div></div></section>
-    <section id="page-ensayos" class="page-section"><div class="container"><div class="section-header"><h2>Ensayos</h2><p>Artículos extensos...</p></div><div class="articles-grid" id="ensayosContainer"></div></div></section>
-    <section id="page-frases" class="page-section"><div class="container"><div class="section-header"><h2>Frases Célebres</h2><p>Inspírate...</p></div><div id="frasesContainer" style="display: grid; gap: 1.5rem; grid-template-columns: repeat(auto-fill, minmax(280px,1fr));"></div></div></section>
-  </main>
-
-  <!-- ===== EDITOR ===== -->
-  <section id="githubEditor" class="github-editor">
-    <div class="container">
-      <div class="section-header">
-        <h2>Panel de Gestión</h2>
-        <p>Agrega, edita o elimina contenido. Los cambios se guardan en GitHub.</p>
-        <button id="testConnectionBtn" class="btn-secondary" style="margin-top:1rem;"><i class="fas fa-plug"></i> Probar conexión</button>
-      </div>
-
-      <div id="editorStatus" class="editor-status"></div>
-
-      <div class="editor-tabs">
-        <button class="editor-tab active" data-type="articulos">Artículos</button>
-        <button class="editor-tab" data-type="frases">Frases</button>
-        <button class="editor-tab" data-type="libros">Libros</button>
-        <button class="editor-tab" data-type="ensayos">Ensayos</button>
-      </div>
-
-      <!-- Panel Artículos (ID corregido: formArticulos) -->
-      <div id="panel-articulos" class="editor-panel active">
-        <h3><i class="fas fa-file-alt"></i> Gestionar Artículos</h3>
-        <form id="formArticulos">
-          <div class="form-group"><label>Título *</label><input type="text" id="artTitulo" placeholder="Título" required /></div>
-          <div class="form-group"><label>Resumen</label><textarea id="artResumen" placeholder="Breve descripción"></textarea></div>
-          <div class="form-group"><label>Categoría *</label>
-            <select id="artCategoria">
-              <option value="Tecnología">Tecnología</option><option value="Historia">Historia</option>
-              <option value="Ciencia">Ciencia</option><option value="Actualidad">Actualidad</option>
-              <option value="Biblioteca">Biblioteca</option><option value="Ensayo">Ensayo</option>
-              <option value="Curiosidades">Curiosidades</option>
+        <div class="toolbar-actions">
+            <select class="filter-select" id="filterSelect">
+                <option value="all">Todos los tipos</option>
+                <option value="ensayo">Ensayos</option>
+                <option value="tecnologia">Tecnología</option>
+                <option value="frase">Frases célebres</option>
+                <option value="libro">Libros</option>
             </select>
-          </div>
-          <div class="form-group"><label>Autor</label><input type="text" id="artAutor" placeholder="Autor" /></div>
-          <div class="form-group"><label>Tiempo de lectura</label><input type="text" id="artTiempo" placeholder="5 min" /></div>
-          <div class="form-group"><label>Color (opcional)</label><input type="text" id="artColor" placeholder="linear-gradient(...)" /></div>
-          <div class="form-actions">
-            <button type="submit" class="btn-success"><i class="fas fa-plus"></i> Agregar Artículo</button>
-            <button type="reset" class="btn-secondary">Limpiar</button>
-          </div>
-        </form>
-        <div class="items-list"><h4>Artículos existentes</h4><div id="articulosList"></div></div>
-      </div>
-
-      <!-- Panel Frases (ID corregido: formFrases) -->
-      <div id="panel-frases" class="editor-panel">
-        <h3><i class="fas fa-quote-right"></i> Gestionar Frases</h3>
-        <form id="formFrases">
-          <div class="form-group"><label>Texto *</label><textarea id="fraseTexto" placeholder="Frase célebre" required></textarea></div>
-          <div class="form-group"><label>Autor *</label><input type="text" id="fraseAutor" placeholder="Autor" required /></div>
-          <div class="form-group"><label>Categoría</label><input type="text" id="fraseCategoria" placeholder="Ej: Motivación" /></div>
-          <div class="form-group"><label>Libro</label><input type="text" id="fraseLibro" placeholder="Ej: El Principito" /></div>
-          <div class="form-actions">
-            <button type="submit" class="btn-success"><i class="fas fa-plus"></i> Agregar Frase</button>
-            <button type="reset" class="btn-secondary">Limpiar</button>
-          </div>
-        </form>
-        <div class="items-list"><h4>Frases existentes</h4><div id="frasesList"></div></div>
-      </div>
-
-      <!-- Panel Libros (ID corregido: formLibros) -->
-      <div id="panel-libros" class="editor-panel">
-        <h3><i class="fas fa-book"></i> Gestionar Libros</h3>
-        <form id="formLibros">
-          <div class="form-group"><label>Título *</label><input type="text" id="libroTitulo" placeholder="Título" required /></div>
-          <div class="form-group"><label>Autor *</label><input type="text" id="libroAutor" placeholder="Autor" required /></div>
-          <div class="form-group"><label>Resumen</label><textarea id="libroResumen" placeholder="Sinopsis"></textarea></div>
-          <div class="form-group"><label>Categoría</label><input type="text" id="libroCategoria" placeholder="Género" /></div>
-          <div class="form-actions">
-            <button type="submit" class="btn-success"><i class="fas fa-plus"></i> Agregar Libro</button>
-            <button type="reset" class="btn-secondary">Limpiar</button>
-          </div>
-        </form>
-        <div class="items-list"><h4>Libros existentes</h4><div id="librosList"></div></div>
-      </div>
-
-      <!-- Panel Ensayos (ID corregido: formEnsayos) -->
-      <div id="panel-ensayos" class="editor-panel">
-        <h3><i class="fas fa-pen-fancy"></i> Gestionar Ensayos</h3>
-        <form id="formEnsayos">
-          <div class="form-group"><label>Título *</label><input type="text" id="ensayoTitulo" placeholder="Título" required /></div>
-          <div class="form-group"><label>Autor *</label><input type="text" id="ensayoAutor" placeholder="Autor" required /></div>
-          <div class="form-group"><label>Resumen</label><textarea id="ensayoResumen" placeholder="Descripción breve"></textarea></div>
-          <div class="form-group"><label>Categoría</label><input type="text" id="ensayoCategoria" placeholder="Temática" /></div>
-          <div class="form-actions">
-            <button type="submit" class="btn-success"><i class="fas fa-plus"></i> Agregar Ensayo</button>
-            <button type="reset" class="btn-secondary">Limpiar</button>
-          </div>
-        </form>
-        <div class="items-list"><h4>Ensayos existentes</h4><div id="ensayosList"></div></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===== FOOTER ===== -->
-  <footer class="footer">
-    <div class="container">
-      <div class="footer-content">
-        <div class="footer-brand"><h3><i class="fas fa-atlas"></i> Atlas del Saber</h3><p>Descubre el conocimiento que transforma</p></div>
-        <div class="footer-links">
-          <div class="footer-column"><h4>Explorar</h4><a href="#" data-page="tecnologia">Tecnología</a><a href="#" data-page="historia">Historia</a><a href="#" data-page="curiosidades">Curiosidades</a></div>
-          <div class="footer-column"><h4>Recursos</h4><a href="#" data-page="biblioteca">Biblioteca</a><a href="#" data-page="ensayos">Ensayos</a><a href="#" data-page="frases">Frases</a></div>
-          <div class="footer-column"><h4>Conectar</h4><a href="#"><i class="fab fa-twitter"></i> Twitter</a><a href="#"><i class="fab fa-linkedin"></i> LinkedIn</a><a href="#"><i class="fab fa-github"></i> GitHub</a></div>
+            <button class="btn-add" onclick="abrirModalAgregar()">
+                <i class="fas fa-plus-circle"></i> Nuevo registro
+            </button>
         </div>
-      </div>
-      <div class="footer-bottom">
-        <p>&copy; 2024 Atlas del Saber. Todos los derechos reservados.</p>
-        <p style="margin-top: 0.5rem;"><a href="#" id="toggleEditor"><i class="fas fa-edit"></i> Panel de Gestión</a></p>
-      </div>
     </div>
-  </footer>
 
-  <!-- ============================================================
-       SCRIPTS (VERSIÓN CORREGIDA - NOMBRES DE FORMULARIOS EN PLURAL)
-       ============================================================ -->
-  <script>
-    (function() {
-      'use strict';
+    <!-- TABLA -->
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Tipo</th>
+                    <th>Título</th>
+                    <th>Autor</th>
+                    <th>Frase / Resumen</th>
+                    <th style="text-align:center;">Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+                <!-- renderizado dinámico -->
+            </tbody>
+        </table>
+    </div>
+</div>
 
-      // ============================================================
-      // CONFIGURACIÓN - ¡REEMPLAZA TU TOKEN AQUÍ!
-      // ============================================================
-      const GITHUB = {
-        owner: 'scperu',
-        repo: 'online',
-        branch: 'main',
-        token: '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'   // ← Pega aquí tu token personal (con permisos repo)
-      };
-
-      // ============================================================
-      // FUNCIONES DE GITHUB
-      // ============================================================
-      async function readFileFromGitHub(path) {
-        const url = `https://api.github.com/repos/${GITHUB.owner}/${GITHUB.repo}/contents/${path}`;
-        console.log(`📡 Leyendo ${path}...`);
-        try {
-          const response = await fetch(url, {
-            headers: {
-              'Authorization': `token ${GITHUB.token}`,
-              'Accept': 'application/vnd.github.v3+json'
-            }
-          });
-          if (response.status === 404) {
-            console.warn(`⚠️ El archivo ${path} no existe.`);
-            return { content: null, sha: null };
-          }
-          if (!response.ok) {
-            const errorText = await response.text();
-            throw new Error(`HTTP ${response.status}: ${errorText}`);
-          }
-          const data = await response.json();
-          const content = JSON.parse(atob(data.content));
-          console.log(`✅ ${path} leído correctamente.`);
-          return { content, sha: data.sha };
-        } catch (error) {
-          console.error(`❌ Error en readFileFromGitHub: ${error.message}`);
-          throw error;
-        }
-      }
-
-      async function saveFileToGitHub(path, content, sha) {
-        const url = `https://api.github.com/repos/${GITHUB.owner}/${GITHUB.repo}/contents/${path}`;
-        const encoded = btoa(JSON.stringify(content, null, 2));
-        const body = {
-          message: `Actualizado ${path} desde el panel de gestión`,
-          content: encoded,
-          branch: GITHUB.branch
-        };
-        if (sha) body.sha = sha;
-
-        console.log(`📤 Guardando ${path}...`);
-        try {
-          const response = await fetch(url, {
-            method: 'PUT',
-            headers: {
-              'Authorization': `token ${GITHUB.token}`,
-              'Accept': 'application/vnd.github.v3+json',
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(body)
-          });
-          if (!response.ok) {
-            const errorText = await response.text();
-            throw new Error(`HTTP ${response.status}: ${errorText}`);
-          }
-          const result = await response.json();
-          console.log(`✅ ${path} guardado correctamente.`);
-          return result;
-        } catch (error) {
-          console.error(`❌ Error en saveFileToGitHub: ${error.message}`);
-          throw error;
-        }
-      }
-
-      // ============================================================
-      // VARIABLES GLOBALES
-      // ============================================================
-      const fileMap = {
-        articulos: 'data/articulos.json',
-        frases: 'data/frases.json',
-        libros: 'data/libros.json',
-        ensayos: 'data/ensayos.json'
-      };
-
-      let currentType = 'articulos';
-      let currentData = {};
-      let currentSha = {};
-
-      // ============================================================
-      // FUNCIONES DEL EDITOR
-      // ============================================================
-
-      function setEditorStatus(message, type) {
-        const el = document.getElementById('editorStatus');
-        el.textContent = message;
-        el.className = 'editor-status ' + type;
-        el.style.display = 'block';
-        if (type !== 'loading') {
-          setTimeout(() => { el.style.display = 'none'; }, 8000);
-        }
-      }
-
-      async function loadData(type) {
-        const path = fileMap[type];
-        if (!path) return;
-        try {
-          setEditorStatus(`Cargando ${type}...`, 'loading');
-          const result = await readFileFromGitHub(path);
-          if (result.content === null) {
-            currentData[type] = [];
-            currentSha[type] = null;
-            setEditorStatus(`⚠️ ${type} no existe aún. Se creará al guardar.`, 'success');
-          } else {
-            if (result.content[type] && Array.isArray(result.content[type])) {
-              currentData[type] = result.content[type];
-            } else {
-              currentData[type] = [];
-              currentSha[type] = result.sha;
-              setEditorStatus(`⚠️ El archivo ${type}.json no tiene la propiedad "${type}". Se corregirá al guardar.`, 'error');
-            }
-            currentSha[type] = result.sha;
-            setEditorStatus(`✅ ${type} cargados (${currentData[type].length} elementos)`, 'success');
-          }
-          renderList(type);
-        } catch (error) {
-          setEditorStatus(`❌ Error al cargar ${type}: ${error.message}`, 'error');
-          console.error(error);
-        }
-      }
-
-      async function saveData(type) {
-        const path = fileMap[type];
-        if (!path) return;
-        try {
-          setEditorStatus(`Guardando ${type}...`, 'loading');
-          const content = {};
-          content[type] = currentData[type] || [];
-          const result = await saveFileToGitHub(path, content, currentSha[type]);
-          currentSha[type] = result.content.sha;
-          setEditorStatus(`✅ ${type} guardados (${currentData[type].length} elementos)`, 'success');
-          refreshPageContent();
-        } catch (error) {
-          setEditorStatus(`❌ Error al guardar: ${error.message}`, 'error');
-          console.error(error);
-        }
-      }
-
-      // ============================================================
-      // RENDERIZADO DE LA LISTA (CON DELEGACIÓN DE EVENTOS)
-      // ============================================================
-
-      function renderList(type) {
-        const container = document.getElementById(type + 'List');
-        if (!container) return;
-        const items = currentData[type] || [];
-        if (items.length === 0) {
-          container.innerHTML = '<p style="color: var(--text-muted);">No hay elementos aún. Agrega el primero.</p>';
-          return;
-        }
-        container.innerHTML = items.map((item, index) => {
-          const title = item.titulo || item.texto || 'Sin título';
-          const author = item.autor ? 'por ' + item.autor : '';
-          const extra = item.categoria ? ' · ' + item.categoria : '';
-          return `
-            <div class="item-row" data-type="${type}" data-index="${index}">
-              <div class="item-info">
-                <strong>${title}</strong>
-                <small>${author}${extra}</small>
-              </div>
-              <div class="item-actions">
-                <button class="btn-edit" data-type="${type}" data-index="${index}"><i class="fas fa-edit"></i></button>
-                <button class="btn-delete" data-type="${type}" data-index="${index}"><i class="fas fa-trash"></i></button>
-              </div>
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay">
+    <div class="modal-box">
+        <div class="modal-header">
+            <h2 id="modalTitle">Agregar nuevo registro</h2>
+            <button class="modal-close" onclick="cerrarModal()">&times;</button>
+        </div>
+        <form id="modalForm" onsubmit="guardarItem(event)">
+            <input type="hidden" id="editId" value="" />
+            <div class="form-group">
+                <label for="formTipo">Tipo <span class="required">*</span></label>
+                <select id="formTipo" required>
+                    <option value="">Seleccionar…</option>
+                    <option value="ensayo">Ensayos</option>
+                    <option value="tecnologia">Tecnología</option>
+                    <option value="frase">Frases célebres</option>
+                    <option value="libro">Libros</option>
+                </select>
             </div>
-          `;
-        }).join('');
+            <div class="form-group">
+                <label for="formTitulo">Título <span class="required">*</span></label>
+                <input type="text" id="formTitulo" placeholder="Título del contenido" required />
+            </div>
+            <div class="form-group">
+                <label for="formAutor">Autor / Fuente</label>
+                <input type="text" id="formAutor" placeholder="Nombre del autor o fuente" />
+            </div>
+            <div class="form-group">
+                <label for="formFrase">Frase célebre</label>
+                <textarea id="formFrase" placeholder="Cita textual (si aplica)"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="formBook">Libro / Publicación</label>
+                <input type="text" id="formBook" placeholder="Título del libro o medio" />
+            </div>
+            <div class="form-group">
+                <label for="formResumen">Resumen / Descripción</label>
+                <textarea id="formResumen" placeholder="Descripción breve del contenido" rows="3"></textarea>
+            </div>
+            <div class="form-actions">
+                <button type="button" class="btn btn-cancel" onclick="cerrarModal()">Cancelar</button>
+                <button type="submit" class="btn btn-submit" id="modalSubmitBtn">
+                    <i class="fas fa-save"></i> Guardar
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
 
-        // Eliminar event listeners antiguos y añadir el nuevo (delegación)
-        container.removeEventListener('click', handleListClick);
-        container.addEventListener('click', handleListClick);
-      }
+<!-- TOAST -->
+<div class="toast-container" id="toastContainer"></div>
 
-      // Manejador de eventos para la lista (delegación)
-      function handleListClick(e) {
-        const target = e.target.closest('button');
-        if (!target) return;
-        const type = target.dataset.type;
-        const index = target.dataset.index;
-        if (!type || index === undefined) return;
+<script>
+    // ─── CONFIGURACIÓN ──────────────────────────────────────────────────
+    const CONFIG = {
+        SHEET_ID: "13IhR7B5CduVHQEBryDy8Bdlq2BR6ZXHB20VTw3vkYvk",
+        SHEET_NAME: "Biblioteca",
+        API_URL: "https://script.google.com/macros/s/AKfycbzb0nt0YT-SE3_Jz29cwptDoVuOglHR0CRwx_ygD5nom3hM3jSG1FQiDXHv01TQHZzj2A/exec"
+    };
 
-        if (target.classList.contains('btn-edit')) {
-          console.log(`✏️ Editar ${type} índice ${index}`);
-          editItem(type, parseInt(index));
-        } else if (target.classList.contains('btn-delete')) {
-          console.log(`🗑️ Eliminar ${type} índice ${index}`);
-          deleteItem(type, parseInt(index));
+    let items = [];
+    let filter = 'all';
+    let searchTerm = '';
+
+    // ─── DOM REFS ──────────────────────────────────────────────────────
+    const $ = (s) => document.querySelector(s);
+    const tableBody = $('#tableBody');
+    const searchInput = $('#searchInput');
+    const filterSelect = $('#filterSelect');
+    const modalOverlay = $('#modalOverlay');
+    const modalForm = $('#modalForm');
+    const modalTitle = $('#modalTitle');
+    const editId = $('#editId');
+    const formTipo = $('#formTipo');
+    const formTitulo = $('#formTitulo');
+    const formAutor = $('#formAutor');
+    const formFrase = $('#formFrase');
+    const formBook = $('#formBook');
+    const formResumen = $('#formResumen');
+    const modalSubmitBtn = $('#modalSubmitBtn');
+    const toastContainer = $('#toastContainer');
+    const totalItems = $('#totalItems');
+    const ensayoCount = $('#ensayoCount');
+    const tecnologiaCount = $('#tecnologiaCount');
+    const fraseCount = $('#fraseCount');
+    const libroCount = $('#libroCount');
+
+    // ─── CARGAR DATOS DESDE OpenSheet ──────────────────────────────────
+    async function cargarDatos() {
+        try {
+            mostrarToast('Cargando datos…', 'info');
+            const url = `https://opensheet.elk.sh/${CONFIG.SHEET_ID}/${CONFIG.SHEET_NAME}`;
+            const resp = await fetch(url);
+            if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+            const data = await resp.json();
+            items = data.map((row, idx) => ({
+                id: row.id || String(idx + 1),
+                tipo: row.tipo || '',
+                titulo: row.titulo || '',
+                autor: row.autor || '',
+                frase: row.frase || '',
+                book: row.book || '',
+                resumen: row.resumen || ''
+            }));
+            renderizarTabla();
+            actualizarEstadisticas();
+            mostrarToast(`✅ ${items.length} registros cargados`, 'success');
+        } catch (err) {
+            console.error(err);
+            mostrarToast('Error: ' + err.message, 'error');
+            items = [];
+            renderizarTabla();
+            actualizarEstadisticas();
         }
-      }
+    }
 
-      // ============================================================
-      // FUNCIÓN DE EDICIÓN (mejorada con logs y nombres en plural)
-      // ============================================================
-
-      function editItem(type, index) {
-        console.log(`🔍 editItem llamado con type=${type}, index=${index}`);
-        const items = currentData[type] || [];
-        if (index < 0 || index >= items.length) {
-          console.error(`❌ Índice ${index} fuera de rango. Longitud: ${items.length}`);
-          setEditorStatus(`❌ Elemento no encontrado (índice ${index})`, 'error');
-          return;
-        }
-        const item = items[index];
-        if (!item) {
-          console.error(`❌ Elemento en índice ${index} es null/undefined`);
-          setEditorStatus(`❌ Elemento no encontrado`, 'error');
-          return;
-        }
-
-        // Construir el ID del formulario en plural: formArticulos, formFrases, formLibros, formEnsayos
-        const formId = 'form' + type.charAt(0).toUpperCase() + type.slice(1);
-        const form = document.getElementById(formId);
-        if (!form) {
-          console.error(`❌ Formulario ${formId} no encontrado`);
-          setEditorStatus(`❌ Formulario ${formId} no encontrado`, 'error');
-          return;
-        }
-
-        const fieldMap = {
-          articulos: { titulo: 'artTitulo', resumen: 'artResumen', categoria: 'artCategoria', autor: 'artAutor', tiempo_lectura: 'artTiempo', color: 'artColor' },
-          frases: { texto: 'fraseTexto', autor: 'fraseAutor', categoria: 'fraseCategoria' },
-          libros: { titulo: 'libroTitulo', autor: 'libroAutor', resumen: 'libroResumen', categoria: 'libroCategoria' },
-          ensayos: { titulo: 'ensayoTitulo', autor: 'ensayoAutor', resumen: 'ensayoResumen', categoria: 'ensayoCategoria' }
-        };
-
-        const map = fieldMap[type];
-        if (!map) {
-          console.error(`❌ No hay mapeo de campos para ${type}`);
-          return;
-        }
-
-        // Rellenar el formulario con los datos del elemento
-        Object.keys(map).forEach(key => {
-          const el = document.getElementById(map[key]);
-          if (el) {
-            el.value = item[key] || '';
-          }
-        });
-
-        // Guardar el índice en el dataset del formulario
-        form.dataset.editIndex = index;
-        form.dataset.editType = type;
-
-        // Cambiar el texto de los botones
-        const submitBtn = form.querySelector('button[type="submit"]');
-        if (submitBtn) submitBtn.innerHTML = '<i class="fas fa-save"></i> Actualizar';
-        const resetBtn = form.querySelector('button[type="reset"]');
-        if (resetBtn) resetBtn.innerHTML = 'Cancelar';
-
-        setEditorStatus(`✏️ Editando elemento ${index+1} de ${type}`, 'success');
-        // Desplazarse suavemente al formulario
-        form.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }
-
-      // ============================================================
-      // FUNCIÓN DE ELIMINACIÓN
-      // ============================================================
-
-      async function deleteItem(type, index) {
-        console.log(`🗑️ deleteItem llamado con type=${type}, index=${index}`);
-        if (!confirm(`¿Eliminar el elemento ${index+1} de ${type}?`)) return;
-        const items = currentData[type] || [];
-        if (index < 0 || index >= items.length) {
-          console.error(`❌ Índice ${index} fuera de rango`);
-          setEditorStatus(`❌ No se puede eliminar: índice inválido`, 'error');
-          return;
-        }
-        items.splice(index, 1);
-        currentData[type] = items;
-        await saveData(type);
-        renderList(type);
-        setEditorStatus('🗑️ Elemento eliminado', 'success');
-        console.log(`✅ Elemento ${index} eliminado de ${type}`);
-      }
-
-      // Exponer funciones globalmente (por si se necesitan)
-      window.editItem = editItem;
-      window.deleteItem = deleteItem;
-
-      // ============================================================
-      // FORMULARIOS (con manejo de edición)
-      // ============================================================
-
-      function setupForm(type) {
-        const formId = 'form' + type.charAt(0).toUpperCase() + type.slice(1);
-        const form = document.getElementById(formId);
-        if (!form) {
-          console.warn(`⚠️ Formulario ${formId} no encontrado`);
-          return;
+    // ─── RENDERIZAR TABLA ──────────────────────────────────────────────
+    function renderizarTabla() {
+        let filtrados = [...items];
+        if (filter !== 'all') filtrados = filtrados.filter(i => i.tipo === filter);
+        if (searchTerm.trim()) {
+            const term = searchTerm.trim().toLowerCase();
+            filtrados = filtrados.filter(i =>
+                (i.titulo || '').toLowerCase().includes(term) ||
+                (i.autor || '').toLowerCase().includes(term) ||
+                (i.frase || '').toLowerCase().includes(term) ||
+                (i.resumen || '').toLowerCase().includes(term) ||
+                (i.book || '').toLowerCase().includes(term)
+            );
         }
 
-        form.addEventListener('submit', async function(e) {
-          e.preventDefault();
-          console.log(`📝 Enviando formulario ${type}`);
-
-          const items = currentData[type] || [];
-
-          const fieldMap = {
-            articulos: { titulo: 'artTitulo', resumen: 'artResumen', categoria: 'artCategoria', autor: 'artAutor', tiempo_lectura: 'artTiempo', color: 'artColor' },
-            frases: { texto: 'fraseTexto', autor: 'fraseAutor', categoria: 'fraseCategoria' },
-            libros: { titulo: 'libroTitulo', autor: 'libroAutor', resumen: 'libroResumen', categoria: 'libroCategoria' },
-            ensayos: { titulo: 'ensayoTitulo', autor: 'ensayoAutor', resumen: 'ensayoResumen', categoria: 'ensayoCategoria' }
-          };
-
-          const item = {};
-          const map = fieldMap[type];
-          let hasError = false;
-
-          Object.keys(map).forEach(key => {
-            const el = document.getElementById(map[key]);
-            if (el) {
-              const value = el.value.trim();
-              if ((key === 'titulo' || key === 'texto' || key === 'autor') && !value) {
-                hasError = true;
-                el.style.borderColor = '#ef4444';
-              } else {
-                el.style.borderColor = '';
-              }
-              item[key] = value || '';
-            }
-          });
-
-          if (hasError) {
-            setEditorStatus('❌ Los campos obligatorios (*) no pueden estar vacíos', 'error');
+        if (filtrados.length === 0) {
+            tableBody.innerHTML = `<tr class="empty-row"><td colspan="6"><i class="fas fa-inbox"></i>No hay registros que coincidan con los filtros</td></tr>`;
             return;
-          }
-
-          // Generar ID único si es nuevo
-          if (!item.id) {
-            item.id = Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
-          }
-
-          const editIndex = this.dataset.editIndex;
-          if (editIndex !== undefined && editIndex !== '') {
-            const idx = parseInt(editIndex);
-            if (idx >= 0 && idx < items.length) {
-              items[idx] = item;
-              delete this.dataset.editIndex;
-              this.querySelector('button[type="submit"]').innerHTML = '<i class="fas fa-plus"></i> Agregar';
-              this.querySelector('button[type="reset"]').innerHTML = 'Limpiar';
-              setEditorStatus('✅ Elemento actualizado', 'success');
-              console.log(`✅ Elemento ${idx} actualizado`);
-            } else {
-              setEditorStatus(`❌ Índice ${idx} inválido`, 'error');
-              return;
-            }
-          } else {
-            items.push(item);
-            setEditorStatus('✅ Nuevo elemento agregado', 'success');
-            console.log(`➕ Nuevo elemento agregado: ${item.titulo || item.texto}`);
-          }
-
-          currentData[type] = items;
-          await saveData(type);
-          renderList(type);
-          this.reset();
-        });
-
-        form.addEventListener('reset', function() {
-          delete this.dataset.editIndex;
-          this.querySelector('button[type="submit"]').innerHTML = '<i class="fas fa-plus"></i> Agregar';
-          this.querySelector('button[type="reset"]').innerHTML = 'Limpiar';
-          this.querySelectorAll('input, textarea').forEach(el => el.style.borderColor = '');
-          console.log('🔄 Formulario reseteado');
-        });
-      }
-
-      // ============================================================
-      // PRUEBA DE CONEXIÓN
-      // ============================================================
-
-      async function testConnection() {
-        const statusEl = document.getElementById('editorStatus');
-        statusEl.style.display = 'block';
-        statusEl.className = 'editor-status loading';
-        statusEl.textContent = '🔌 Probando conexión con GitHub...';
-
-        try {
-          const url = `https://api.github.com/repos/${GITHUB.owner}/${GITHUB.repo}`;
-          const response = await fetch(url, {
-            headers: {
-              'Authorization': `token ${GITHUB.token}`,
-              'Accept': 'application/vnd.github.v3+json'
-            }
-          });
-          if (!response.ok) {
-            const err = await response.json();
-            throw new Error(`HTTP ${response.status}: ${err.message || response.statusText}`);
-          }
-          const repo = await response.json();
-          statusEl.className = 'editor-status success';
-          statusEl.textContent = `✅ Conexión exitosa. Repositorio: ${repo.full_name} (${repo.private ? 'privado' : 'público'})`;
-          console.log('✅ Prueba de conexión OK:', repo);
-        } catch (error) {
-          statusEl.className = 'editor-status error';
-          statusEl.textContent = `❌ Error de conexión: ${error.message}`;
-          console.error('❌ Prueba de conexión fallida:', error);
         }
-      }
 
-      // ============================================================
-      // FUNCIONES DE REFRESCO Y CARGA DE CONTENIDO
-      // ============================================================
+        tableBody.innerHTML = filtrados.map(item => `
+            <tr>
+                <td><span style="font-weight:600;color:#1a4b7a;">#${escapeHtml(item.id)}</span></td>
+                <td><span class="badge-tipo ${item.tipo}">${traducirTipo(item.tipo)}</span></td>
+                <td><strong>${escapeHtml(item.titulo || 'Sin título')}</strong></td>
+                <td>${escapeHtml(item.autor) || '-'}</td>
+                <td>${item.frase ? `<span style="font-style:italic;color:#475569;">“${escapeHtml(item.frase.substring(0, 60))}${item.frase.length > 60 ? '…' : ''}”</span>` : 
+                    item.resumen ? escapeHtml(item.resumen.substring(0, 60)) + (item.resumen.length > 60 ? '…' : '') : '-'}</td>
+                <td style="text-align:center;">
+                    <div class="acciones-cell" style="justify-content:center;">
+                        <button class="btn-icon edit" onclick="editarItem('${item.id}')" title="Editar"><i class="fas fa-edit"></i></button>
+                        <button class="btn-icon delete" onclick="eliminarItem('${item.id}')" title="Eliminar"><i class="fas fa-trash-alt"></i></button>
+                    </div>
+                </td>
+            </tr>
+        `).join('');
+    }
 
-      function refreshPageContent() {
-        loadArticles();
-        loadCategoryArticles();
-        loadFrases();
-        initDailyQuote();
-        showToast('🔄 Contenido actualizado');
-      }
+    // ─── ESTADÍSTICAS ──────────────────────────────────────────────────
+    function actualizarEstadisticas() {
+        const total = items.length;
+        const ensayos = items.filter(i => i.tipo === 'ensayo').length;
+        const tec = items.filter(i => i.tipo === 'tecnologia').length;
+        const frases = items.filter(i => i.tipo === 'frase').length;
+        const libros = items.filter(i => i.tipo === 'libro').length;
+        totalItems.textContent = total;
+        ensayoCount.textContent = ensayos;
+        tecnologiaCount.textContent = tec;
+        fraseCount.textContent = frases;
+        libroCount.textContent = libros;
+    }
 
-      // ===== Carga de artículos, frases y demás (las mismas que tenías) =====
-      async function loadArticles() {
-        try {
-          const data = await readFileFromGitHub('data/articulos.json');
-          const articles = data.content ? data.content.articulos || [] : [];
-          const container = document.getElementById('articlesContainer');
-          if (!container) return;
-          const recent = articles.slice(0, 3);
-          container.innerHTML = recent.map(art => createArticleCard(art)).join('');
-          initFavorites();
-        } catch (error) {
-          console.error('Error cargando artículos:', error);
+    function traducirTipo(tipo) {
+        const mapa = { 'ensayo': 'Ensayos', 'tecnologia': 'Tecnología', 'frase': 'Frases célebres', 'libro': 'Libros' };
+        return mapa[tipo] || tipo || 'Sin tipo';
+    }
+
+    // ─── GUARDAR (NO-CORS) ────────────────────────────────────────────
+    async function guardarItem(e) {
+        e.preventDefault();
+        const id = editId.value.trim();
+        const tipo = formTipo.value.trim();
+        const titulo = formTitulo.value.trim();
+        const autor = formAutor.value.trim();
+        const frase = formFrase.value.trim();
+        const book = formBook.value.trim();
+        const resumen = formResumen.value.trim();
+        if (!tipo || !titulo) {
+            mostrarToast('Tipo y Título son obligatorios', 'error');
+            return;
         }
-      }
 
-      async function loadCategoryArticles() {
-        const pages = ['tecnologia', 'historia', 'curiosidades', 'actualidad', 'biblioteca', 'ensayos'];
-        try {
-          const data = await readFileFromGitHub('data/articulos.json');
-          const all = data.content ? data.content.articulos || [] : [];
-          const categoryMap = {
-            tecnologia: 'Tecnología',
-            historia: 'Historia',
-            curiosidades: 'Ciencia',
-            actualidad: 'Actualidad',
-            biblioteca: 'Biblioteca',
-            ensayos: 'Ensayo'
-          };
-          pages.forEach(page => {
-            const container = document.getElementById(page + 'Container');
-            if (!container) return;
-            const cat = categoryMap[page] || page;
-            const filtered = all.filter(a => a.categoria && a.categoria.toLowerCase() === cat.toLowerCase());
-            const list = filtered.length ? filtered : all.slice(0, 4);
-            container.innerHTML = list.map(art => createArticleCard(art)).join('');
-          });
-          initFavorites();
-        } catch (error) {
-          console.error('Error cargando artículos por categoría:', error);
-        }
-      }
-
-      async function loadFrases() {
-        try {
-          const data = await readFileFromGitHub('data/frases.json');
-          const frases = data.content ? data.content.frases || [] : [];
-          const container = document.getElementById('frasesContainer');
-          if (!container) return;
-          container.innerHTML = frases.map(f => `
-            <div class="article-card" style="padding:1.5rem;">
-              <blockquote style="font-size:1.1rem; font-style:italic; margin-bottom:0.5rem;">“${f.texto}”</blockquote>
-              <cite style="color:var(--text-secondary);">— ${f.autor}</cite>
-              <div style="margin-top:0.5rem; font-size:0.8rem; color:var(--text-muted);">${f.categoria || 'Sin categoría'}</div>
-            </div>
-          `).join('');
-        } catch (error) {
-          console.error('Error cargando frases:', error);
-        }
-      }
-
-      async function initDailyQuote() {
-        try {
-          const data = await readFileFromGitHub('data/frases.json');
-          const frases = data.content ? data.content.frases || [] : [];
-          if (frases.length) {
-            const random = frases[Math.floor(Math.random() * frases.length)];
-            document.getElementById('dailyQuote').textContent = random.texto;
-            document.getElementById('quoteAuthor').textContent = '- ' + random.autor;
-          }
-        } catch (error) {
-          console.error('Error cargando frase del día:', error);
-        }
-      }
-
-      function createArticleCard(art) {
-        const color = art.color || 'linear-gradient(135deg, var(--gradient-start), var(--gradient-end))';
-        return `
-          <article class="article-card">
-            <div class="article-image" style="background: ${color};">
-              <span class="article-badge">${art.categoria || 'General'}</span>
-            </div>
-            <div class="article-content">
-              <h3>${art.titulo}</h3>
-              <p>${art.resumen || 'Descubre este fascinante contenido.'}</p>
-              <div class="article-meta">
-                <span><i class="far fa-clock"></i> ${art.tiempo_lectura || '5 min'}</span>
-                <span><i class="far fa-calendar"></i> ${art.fecha || 'Reciente'}</span>
-              </div>
-              <div class="article-actions">
-                <button class="favorite-btn" data-id="${art.id}"><i class="far fa-heart"></i></button>
-                <button class="share-btn" data-id="${art.id}"><i class="fas fa-share-alt"></i></button>
-                <a href="#" class="read-more">Leer más →</a>
-              </div>
-            </div>
-          </article>
-        `;
-      }
-
-      // ============================================================
-      // FAVORITOS Y COMPARTIR
-      // ============================================================
-
-      function initFavorites() {
-        const favs = JSON.parse(localStorage.getItem('favorites') || '[]');
-        document.querySelectorAll('.favorite-btn').forEach(btn => {
-          const id = btn.dataset.id;
-          if (favs.includes(id)) {
-            const icon = btn.querySelector('i');
-            icon.className = 'fas fa-heart';
-            btn.classList.add('active');
-          }
-          btn.addEventListener('click', function(e) {
-            e.preventDefault();
-            toggleFavorite(this);
-          });
-        });
-      }
-
-      function toggleFavorite(btn) {
-        const id = btn.dataset.id;
-        const icon = btn.querySelector('i');
-        let favs = JSON.parse(localStorage.getItem('favorites') || '[]');
-        const index = favs.indexOf(id);
-        if (index > -1) {
-          favs.splice(index, 1);
-          icon.className = 'far fa-heart';
-          btn.classList.remove('active');
-          showToast('Eliminado de favoritos 💔');
+        let nuevosItems = [...items];
+        if (id) {
+            const idx = nuevosItems.findIndex(i => String(i.id) === String(id));
+            if (idx === -1) { mostrarToast('ID no encontrado', 'error'); return; }
+            nuevosItems[idx] = { id, tipo, titulo, autor, frase, book, resumen };
         } else {
-          favs.push(id);
-          icon.className = 'fas fa-heart';
-          btn.classList.add('active');
-          showToast('Añadido a favoritos ❤️');
-        }
-        localStorage.setItem('favorites', JSON.stringify(favs));
-      }
-
-      function initShareButtons() {
-        document.addEventListener('click', function(e) {
-          const btn = e.target.closest('.share-btn');
-          if (!btn) return;
-          e.preventDefault();
-          const id = btn.dataset.id;
-          const url = window.location.href + '?id=' + id;
-          if (navigator.share) {
-            navigator.share({ title: 'Atlas del Saber', text: 'Mira esto', url })
-              .catch(() => copyToClipboard(url));
-          } else {
-            copyToClipboard(url);
-          }
-        });
-      }
-
-      function copyToClipboard(text) {
-        navigator.clipboard.writeText(text).then(() => {
-          showToast('Enlace copiado 📋');
-        }).catch(() => {
-          const ta = document.createElement('textarea');
-          ta.value = text;
-          document.body.appendChild(ta);
-          ta.select();
-          document.execCommand('copy');
-          ta.remove();
-          showToast('Enlace copiado 📋');
-        });
-      }
-
-      function showToast(msg) {
-        const existing = document.querySelector('.toast-notification');
-        if (existing) existing.remove();
-        const toast = document.createElement('div');
-        toast.className = 'toast-notification';
-        toast.textContent = msg;
-        document.body.appendChild(toast);
-        setTimeout(() => {
-          toast.style.animation = 'fadeOutDown 0.5s ease forwards';
-          setTimeout(() => toast.remove(), 500);
-        }, 3000);
-      }
-
-      // ============================================================
-      // TEMA OSCURO/CLARO
-      // ============================================================
-
-      function initTheme() {
-        const toggle = document.getElementById('themeToggle');
-        const html = document.documentElement;
-        const icon = toggle.querySelector('i');
-        const saved = localStorage.getItem('theme');
-        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        let theme = saved || (prefersDark ? 'dark' : 'light');
-        setTheme(theme);
-        toggle.addEventListener('click', () => {
-          const current = html.getAttribute('data-theme');
-          setTheme(current === 'light' ? 'dark' : 'light');
-        });
-        function setTheme(t) {
-          html.setAttribute('data-theme', t);
-          localStorage.setItem('theme', t);
-          icon.className = t === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
-        }
-      }
-
-      // ============================================================
-      // NAVEGACIÓN SPA
-      // ============================================================
-
-      function initNavigation() {
-        const sections = document.querySelectorAll('.page-section');
-        const navLinks = document.querySelectorAll('[data-page]');
-        function navigateTo(pageId) {
-          sections.forEach(s => s.classList.remove('active'));
-          const target = document.getElementById('page-' + pageId);
-          if (target) target.classList.add('active');
-          if (window.innerWidth <= 768) {
-            const search = document.querySelector('.nav-search');
-            if (search) search.style.display = 'none';
-          }
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-        navLinks.forEach(link => {
-          link.addEventListener('click', function(e) {
-            e.preventDefault();
-            const page = this.dataset.page;
-            if (page) navigateTo(page);
-          });
-        });
-        document.querySelectorAll('.category-card').forEach(card => {
-          card.addEventListener('click', function() {
-            const page = this.dataset.page;
-            if (page) navigateTo(page);
-          });
-        });
-        document.querySelector('.quote-link')?.addEventListener('click', function(e) {
-          e.preventDefault();
-          navigateTo('frases');
-        });
-        document.getElementById('navToggle')?.addEventListener('click', function() {
-          const search = document.querySelector('.nav-search');
-          if (search) {
-            search.style.display = search.style.display === 'none' ? 'block' : 'none';
-          }
-        });
-        window.navigateTo = navigateTo;
-      }
-
-      // ============================================================
-      // HERO STATS
-      // ============================================================
-
-      function initHeroStats() {
-        const stats = document.querySelectorAll('.stat-number');
-        const observer = new IntersectionObserver((entries) => {
-          entries.forEach(entry => {
-            if (entry.isIntersecting) {
-              const target = parseInt(entry.target.dataset.count);
-              animateNumber(entry.target, target);
-              observer.unobserve(entry.target);
-            }
-          });
-        }, { threshold: 0.5 });
-        stats.forEach(s => observer.observe(s));
-      }
-
-      function animateNumber(el, target) {
-        let current = 0;
-        const increment = target / 50;
-        const timer = setInterval(() => {
-          current += increment;
-          if (current >= target) { current = target; clearInterval(timer); }
-          el.textContent = Math.round(current);
-        }, 30);
-      }
-
-      // ============================================================
-      // BUSCADOR
-      // ============================================================
-
-      async function initSearch() {
-        const input = document.getElementById('globalSearch');
-        const results = document.getElementById('searchResults');
-        if (!input || !results) return;
-        let allData = [];
-        let timeout;
-
-        async function loadSearchData() {
-          try {
-            const [arts, frases, libros, ensayos] = await Promise.all([
-              readFileFromGitHub('data/articulos.json').catch(() => ({ content: { articulos: [] } })),
-              readFileFromGitHub('data/frases.json').catch(() => ({ content: { frases: [] } })),
-              readFileFromGitHub('data/libros.json').catch(() => ({ content: { libros: [] } })),
-              readFileFromGitHub('data/ensayos.json').catch(() => ({ content: { ensayos: [] } }))
-            ]);
-            allData = [
-              ...(arts.content?.articulos || []).map(i => ({ ...i, type: 'artículo' })),
-              ...(frases.content?.frases || []).map(i => ({ ...i, type: 'frase' })),
-              ...(libros.content?.libros || []).map(i => ({ ...i, type: 'libro' })),
-              ...(ensayos.content?.ensayos || []).map(i => ({ ...i, type: 'ensayo' }))
-            ];
-          } catch (error) {
-            console.error('Error cargando datos para búsqueda:', error);
-          }
+            let maxId = 0;
+            items.forEach(i => { const n = parseInt(i.id, 10); if (!isNaN(n) && n > maxId) maxId = n; });
+            const newId = String(maxId + 1);
+            nuevosItems.push({ id: newId, tipo, titulo, autor, frase, book, resumen });
         }
 
-        await loadSearchData();
-
-        input.addEventListener('input', function() {
-          clearTimeout(timeout);
-          const query = this.value.trim();
-          timeout = setTimeout(() => {
-            if (query.length < 2) { results.classList.remove('active'); return; }
-            const filtered = allData.filter(item => {
-              const searchable = [item.titulo, item.texto, item.autor, item.resumen, item.categoria]
-                .join(' ').toLowerCase();
-              return searchable.includes(query.toLowerCase());
+        try {
+            mostrarToast('Guardando…', 'info');
+            const payload = { action: 'set', items: nuevosItems };
+            await fetch(CONFIG.API_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
             });
-            displayResults(filtered.slice(0, 10));
-          }, 300);
-        });
-
-        document.addEventListener('click', function(e) {
-          if (!e.target.closest('.search-container')) results.classList.remove('active');
-        });
-
-        function displayResults(items) {
-          if (!items.length) {
-            results.innerHTML = `<div class="search-no-results"><i class="fas fa-search"></i><p>No encontramos resultados</p></div>`;
-            results.classList.add('active');
-            return;
-          }
-          results.innerHTML = items.map(item => `
-            <div class="search-result-item">
-              <span class="result-type">${item.type}</span>
-              <span class="result-title">${item.titulo || item.texto || 'Sin título'}</span>
-              ${item.autor ? `<span class="result-author">por ${item.autor}</span>` : ''}
-            </div>
-          `).join('');
-          results.classList.add('active');
+            mostrarToast(id ? '✅ Registro actualizado' : '✅ Nuevo registro agregado', 'success');
+            cerrarModal();
+            await cargarDatos(); // Recarga automática
+        } catch (err) {
+            console.error(err);
+            mostrarToast('❌ Error: ' + err.message, 'error');
         }
-      }
+    }
 
-      // ============================================================
-      // INICIALIZACIÓN DEL EDITOR
-      // ============================================================
-
-      function initEditor() {
-        const tabs = document.querySelectorAll('.editor-tab');
-        const toggleBtn = document.getElementById('toggleEditor');
-        const testBtn = document.getElementById('testConnectionBtn');
-
-        toggleBtn.addEventListener('click', function(e) {
-          e.preventDefault();
-          const panel = document.getElementById('githubEditor');
-          panel.classList.toggle('active');
-          this.innerHTML = panel.classList.contains('active') ?
-            '<i class="fas fa-times"></i> Cerrar Panel' :
-            '<i class="fas fa-edit"></i> Panel de Gestión';
-          if (panel.classList.contains('active')) {
-            loadData(currentType);
-          }
-        });
-
-        testBtn.addEventListener('click', testConnection);
-
-        tabs.forEach(tab => {
-          tab.addEventListener('click', function() {
-            tabs.forEach(t => t.classList.remove('active'));
-            this.classList.add('active');
-            const type = this.dataset.type;
-            currentType = type;
-            document.querySelectorAll('.editor-panel').forEach(p => p.classList.remove('active'));
-            document.getElementById('panel-' + type).classList.add('active');
-            loadData(type);
-          });
-        });
-
-        setupForm('articulos');
-        setupForm('frases');
-        setupForm('libros');
-        setupForm('ensayos');
-
-        loadData('articulos');
-      }
-
-      // ============================================================
-      // INICIO (DOMContentLoaded)
-      // ============================================================
-
-      document.addEventListener('DOMContentLoaded', function() {
-        if (GITHUB.token === 'TU_TOKEN_AQUI' || GITHUB.token === '') {
-          console.warn('⚠️ No has configurado el token de GitHub.');
-          document.getElementById('editorStatus').textContent = '⚠️ Configura tu token de GitHub en la variable GITHUB.token';
-          document.getElementById('editorStatus').className = 'editor-status error';
-          document.getElementById('editorStatus').style.display = 'block';
+    // ─── ELIMINAR (NO-CORS) ────────────────────────────────────────────
+    async function eliminarItem(id) {
+        if (!confirm('¿Eliminar este registro permanentemente?')) return;
+        try {
+            mostrarToast('Eliminando…', 'info');
+            const nuevosItems = items.filter(i => String(i.id) !== String(id));
+            const payload = { action: 'set', items: nuevosItems };
+            await fetch(CONFIG.API_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            mostrarToast('🗑️ Registro eliminado', 'success');
+            await cargarDatos(); // Recarga automática
+        } catch (err) {
+            console.error(err);
+            mostrarToast('❌ Error: ' + err.message, 'error');
         }
+    }
 
-        initTheme();
-        initNavigation();
-        initHeroStats();
-        initDailyQuote();
-        loadArticles();
-        loadCategoryArticles();
-        loadFrases();
-        initSearch();
-        initFavorites();
-        initShareButtons();
-        initEditor();
+    // ─── MODAL ──────────────────────────────────────────────────────────
+    function abrirModalAgregar() {
+        modalTitle.textContent = 'Agregar nuevo registro';
+        editId.value = '';
+        formTipo.value = '';
+        formTitulo.value = '';
+        formAutor.value = '';
+        formFrase.value = '';
+        formBook.value = '';
+        formResumen.value = '';
+        modalSubmitBtn.innerHTML = '<i class="fas fa-save"></i> Guardar';
+        modalOverlay.classList.add('open');
+        formTitulo.focus();
+    }
 
-        window.refreshPageContent = refreshPageContent;
-        window.testConnection = testConnection;
-      });
+    function editarItem(id) {
+        const item = items.find(i => String(i.id) === String(id));
+        if (!item) { mostrarToast('Elemento no encontrado', 'error'); return; }
+        modalTitle.textContent = 'Editar registro';
+        editId.value = item.id;
+        formTipo.value = item.tipo || '';
+        formTitulo.value = item.titulo || '';
+        formAutor.value = item.autor || '';
+        formFrase.value = item.frase || '';
+        formBook.value = item.book || '';
+        formResumen.value = item.resumen || '';
+        modalSubmitBtn.innerHTML = '<i class="fas fa-save"></i> Actualizar';
+        modalOverlay.classList.add('open');
+        formTitulo.focus();
+    }
 
-    })();
-  </script>
+    function cerrarModal() {
+        modalOverlay.classList.remove('open');
+    }
+
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') cerrarModal(); });
+    modalOverlay.addEventListener('click', (e) => { if (e.target === modalOverlay) cerrarModal(); });
+
+    // ─── TOAST ──────────────────────────────────────────────────────────
+    function mostrarToast(msg, tipo = 'info') {
+        const iconos = { info: 'fa-info-circle', success: 'fa-check-circle', error: 'fa-exclamation-circle' };
+        const colores = { info: '#0f172a', success: '#065f46', error: '#991b1b' };
+        const toast = document.createElement('div');
+        toast.className = `toast ${tipo}`;
+        toast.style.background = colores[tipo] || '#0f172a';
+        toast.innerHTML = `<i class="fas ${iconos[tipo] || 'fa-info-circle'}"></i> ${escapeHtml(msg)}`;
+        toastContainer.appendChild(toast);
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            toast.style.transform = 'translateX(40px)';
+            toast.style.transition = '0.3s';
+            setTimeout(() => toast.remove(), 350);
+        }, 3500);
+    }
+
+    // ─── UTILITIES ─────────────────────────────────────────────────────
+    function escapeHtml(text) {
+        if (!text) return '';
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
+    function recargarDatos() { cargarDatos(); }
+
+    function exportarCSV() {
+        if (items.length === 0) { mostrarToast('No hay datos para exportar', 'error'); return; }
+        const headers = ['id', 'tipo', 'titulo', 'autor', 'frase', 'book', 'resumen'];
+        const rows = items.map(item => headers.map(h => `"${(item[h] || '').replace(/"/g, '""')}"`).join(','));
+        const csv = [headers.join(','), ...rows].join('\n');
+        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = `biblioteca_${new Date().toISOString().slice(0,10)}.csv`;
+        link.click();
+        URL.revokeObjectURL(link.href);
+        mostrarToast('📥 CSV exportado', 'success');
+    }
+
+    // ─── EVENTOS ──────────────────────────────────────────────────────
+    searchInput.addEventListener('input', function() { searchTerm = this.value; renderizarTabla(); });
+    filterSelect.addEventListener('change', function() { filter = this.value; renderizarTabla(); });
+
+    // ─── INICIO ──────────────────────────────────────────────────────
+    cargarDatos();
+    console.log('📚 Admin · Biblioteca Digital Premium (NO-CORS)');
+</script>
 </body>
 </html>
