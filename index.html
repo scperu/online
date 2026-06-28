@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <meta name="description" content="Transforma tu negocio con tecnología, automatización e inteligencia artificial. Asesoría gratuita para profesionales, empresas y emprendedores.">
+    <title>SERVICOMP · Transformación Digital · Automatización · IA</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <style>
+        /* ===== RESET & BASE ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #0a2463;
+            --primary-light: #1e3a8a;
+            --primary-mid: #3b82f6;
+            --primary-soft: #60a5fa;
+            --white: #ffffff;
+            --off-white: #f8fafc;
+            --gray-100: #f1f5f9;
+            --gray-200: #e2e8f0;
+            --gray-300: #cbd5e1;
+            --gray-600: #64748b;
+            --gray-800: #1e293b;
+            --shadow-sm: 0 4px 20px rgba(10, 36, 99, 0.08);
+            --shadow-md: 0 8px 40px rgba(10, 36, 99, 0.12);
+            --shadow-lg: 0 20px 60px rgba(10, 36, 99, 0.20);
+            --radius: 20px;
+            --radius-sm: 12px;
+            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--white);
+            color: var(--gray-800);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+        img {
+            max-width: 100%;
+            display: block;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* ===== BOTÓN FLOTANTE WHATSAPP ===== */
+        .whatsapp-float {
+            position: fixed;
+            bottom: 28px;
+            right: 28px;
+            z-index: 999;
+            background: #25d366;
+            color: #fff;
+            width: 68px;
+            height: 68px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 38px;
+            box-shadow: 0 8px 32px rgba(37, 211, 102, 0.4);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            animation: pulse-whatsapp 2.5s infinite;
+        }
+        .whatsapp-float:hover {
+            transform: scale(1.08);
+            box-shadow: 0 12px 48px rgba(37, 211, 102, 0.5);
+        }
+        @keyframes pulse-whatsapp {
+            0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.5); }
+            70% { box-shadow: 0 0 0 18px rgba(37, 211, 102, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
+        }
+
+        /* ===== BOTONES ===== */
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--primary-mid);
+            color: #fff;
+            font-weight: 600;
+            font-size: 1.05rem;
+            padding: 16px 36px;
+            border-radius: 50px;
+            border: none;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
+            box-shadow: 0 8px 24px rgba(59, 130, 246, 0.3);
+        }
+        .btn-primary:hover {
+            background: var(--primary-light);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 32px rgba(59, 130, 246, 0.4);
+        }
+
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: transparent;
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 1.05rem;
+            padding: 14px 32px;
+            border-radius: 50px;
+            border: 2px solid var(--primary);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .btn-secondary:hover {
+            background: var(--primary);
+            color: #fff;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(10, 36, 99, 0.2);
+        }
+
+        .btn-whatsapp {
+            background: #25d366;
+            color: #fff;
+            border: none;
+            padding: 16px 36px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.05rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            transition: background 0.3s, transform 0.2s;
+            box-shadow: 0 8px 24px rgba(37, 211, 102, 0.3);
+            cursor: pointer;
+        }
+        .btn-whatsapp:hover {
+            background: #1ebe5c;
+            transform: translateY(-3px);
+        }
+
+        /* ===== HEADER / NAV ===== */
+        .navbar {
+            padding: 18px 0;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(226, 232, 240, 0.5);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .navbar .container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--primary);
+            letter-spacing: -0.5px;
+        }
+        .logo img {
+            height: 42px;
+            width: auto;
+        }
+        .logo span {
+            color: var(--primary-mid);
+        }
+        .nav-cta {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .nav-cta .btn-whatsapp {
+            padding: 10px 22px;
+            font-size: 0.95rem;
+            box-shadow: none;
+        }
+        .nav-cta .btn-whatsapp i {
+            font-size: 1.2rem;
+        }
+        @media (max-width: 640px) {
+            .nav-cta .btn-whatsapp span {
+                display: none;
+            }
+            .nav-cta .btn-whatsapp {
+                padding: 12px 16px;
+            }
+            .logo {
+                font-size: 1.2rem;
+            }
+            .logo img {
+                height: 34px;
+            }
+        }
+        @media (max-width: 400px) {
+            .logo {
+                font-size: 1rem;
+            }
+            .logo img {
+                height: 28px;
+            }
+        }
+
+        /* ===== HERO ===== */
+        .hero {
+            padding: 60px 0 80px;
+            background: linear-gradient(135deg, #f0f7ff 0%, #ffffff 60%, #e8f0fe 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -30%;
+            right: -10%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.08) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        .hero .container {
+            position: relative;
+            z-index: 2;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: center;
+        }
+        .hero-content h1 {
+            font-size: 3.2rem;
+            font-weight: 800;
+            line-height: 1.15;
+            letter-spacing: -1px;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+        .hero-content h1 i {
+            color: var(--primary-mid);
+        }
+        .hero-content p {
+            font-size: 1.25rem;
+            color: var(--gray-600);
+            max-width: 540px;
+            margin-bottom: 36px;
+        }
+        .hero-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            align-items: center;
+        }
+        .hero-image {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .hero-image .illustration {
+            font-size: 10rem;
+            color: var(--primary-soft);
+            opacity: 0.7;
+            background: rgba(59, 130, 246, 0.06);
+            padding: 40px;
+            border-radius: 60px;
+            border: 1px solid rgba(59, 130, 246, 0.12);
+            backdrop-filter: blur(4px);
+        }
+        @media (max-width: 992px) {
+            .hero .container {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            .hero-content p {
+                margin-left: auto;
+                margin-right: auto;
+            }
+            .hero-buttons {
+                justify-content: center;
+            }
+            .hero-content h1 {
+                font-size: 2.6rem;
+            }
+            .hero-image .illustration {
+                font-size: 7rem;
+                padding: 30px;
+            }
+        }
+        @media (max-width: 480px) {
+            .hero-content h1 {
+                font-size: 2rem;
+            }
+            .hero-content p {
+                font-size: 1rem;
+            }
+            .btn-primary, .btn-secondary, .btn-whatsapp {
+                font-size: 0.95rem;
+                padding: 14px 24px;
+            }
+            .hero-image .illustration {
+                font-size: 5rem;
+                padding: 20px;
+            }
+        }
+
+        /* ===== SECCIONES GENERALES ===== */
+        section {
+            padding: 80px 0;
+        }
+        .section-title {
+            font-size: 2.4rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-align: center;
+            margin-bottom: 16px;
+            letter-spacing: -0.5px;
+        }
+        .section-subtitle {
+            text-align: center;
+            font-size: 1.1rem;
+            color: var(--gray-600);
+            max-width: 700px;
+            margin: 0 auto 48px;
+        }
+        .section-title i {
+            color: var(--primary-mid);
+            margin-right: 8px;
+        }
+
+        /* ===== SERVICIOS ===== */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 24px;
+        }
+        .service-card {
+            background: var(--white);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-sm);
+            padding: 28px 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-sm);
+        }
+        .service-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--primary-soft);
+            box-shadow: var(--shadow-md);
+        }
+        .service-card i {
+            font-size: 2.6rem;
+            color: var(--primary-mid);
+            margin-bottom: 12px;
+        }
+        .service-card h4 {
+            font-weight: 600;
+            font-size: 1rem;
+            color: var(--primary);
+        }
+
+        /* ===== PROFESIONES ===== */
+        .sectors-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            gap: 20px;
+        }
+        .sector-item {
+            background: var(--white);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-sm);
+            padding: 20px 12px;
+            text-align: center;
+            transition: all 0.2s ease;
+        }
+        .sector-item:hover {
+            border-color: var(--primary-soft);
+            background: var(--off-white);
+            transform: scale(1.02);
+        }
+        .sector-item i {
+            font-size: 2rem;
+            color: var(--primary-mid);
+            margin-bottom: 8px;
+        }
+        .sector-item span {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--gray-800);
+        }
+
+        /* ===== BENEFICIOS ===== */
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 28px;
+        }
+        .benefit-item {
+            background: var(--white);
+            border-radius: var(--radius-sm);
+            padding: 28px 20px;
+            text-align: center;
+            border: 1px solid var(--gray-100);
+            transition: all 0.3s ease;
+        }
+        .benefit-item:hover {
+            box-shadow: var(--shadow-sm);
+            border-color: var(--primary-soft);
+        }
+        .benefit-item i {
+            font-size: 2.4rem;
+            color: var(--primary-mid);
+            margin-bottom: 12px;
+        }
+        .benefit-item h4 {
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        /* ===== PROCESO ===== */
+        .process-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 30px;
+            counter-reset: step;
+        }
+        .step {
+            text-align: center;
+            position: relative;
+            padding: 24px 16px;
+            background: var(--white);
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--gray-200);
+            transition: all 0.3s ease;
+        }
+        .step:hover {
+            border-color: var(--primary-soft);
+            box-shadow: var(--shadow-sm);
+        }
+        .step::before {
+            counter-increment: step;
+            content: counter(step);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 44px;
+            height: 44px;
+            background: var(--primary-mid);
+            color: #fff;
+            font-weight: 700;
+            font-size: 1.2rem;
+            border-radius: 50%;
+            margin-bottom: 16px;
+        }
+        .step h4 {
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 6px;
+        }
+        .step p {
+            font-size: 0.95rem;
+            color: var(--gray-600);
+        }
+
+        /* ===== CASOS DE USO ===== */
+        .cases-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 24px;
+        }
+        .case-card {
+            background: var(--white);
+            border-radius: var(--radius-sm);
+            padding: 28px 20px;
+            border: 1px solid var(--gray-200);
+            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-sm);
+        }
+        .case-card:hover {
+            transform: translateY(-6px);
+            border-color: var(--primary-soft);
+            box-shadow: var(--shadow-md);
+        }
+        .case-card i {
+            font-size: 2.8rem;
+            color: var(--primary-mid);
+            margin-bottom: 12px;
+        }
+        .case-card h4 {
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        /* ===== TESTIMONIOS ===== */
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 30px;
+        }
+        .testimonial {
+            background: var(--white);
+            border-radius: var(--radius-sm);
+            padding: 32px 24px;
+            border: 1px solid var(--gray-200);
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s ease;
+        }
+        .testimonial:hover {
+            box-shadow: var(--shadow-md);
+        }
+        .testimonial .stars {
+            color: #facc15;
+            margin-bottom: 12px;
+            font-size: 1.1rem;
+        }
+        .testimonial blockquote {
+            font-size: 1rem;
+            color: var(--gray-800);
+            font-style: italic;
+            margin-bottom: 16px;
+        }
+        .testimonial .author {
+            font-weight: 600;
+            color: var(--primary);
+        }
+        .testimonial .role {
+            font-size: 0.85rem;
+            color: var(--gray-600);
+        }
+
+        /* ===== SOBRE NOSOTROS ===== */
+        .about-text {
+            max-width: 800px;
+            margin: 0 auto;
+            font-size: 1.1rem;
+            color: var(--gray-600);
+            text-align: center;
+            line-height: 1.8;
+            background: var(--off-white);
+            padding: 40px 48px;
+            border-radius: var(--radius);
+            border: 1px solid var(--gray-200);
+        }
+
+        /* ===== CTA FINAL ===== */
+        .cta-final {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: #fff;
+            text-align: center;
+            padding: 80px 0;
+            border-radius: 0;
+        }
+        .cta-final h2 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            letter-spacing: -0.5px;
+        }
+        .cta-final p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 36px;
+        }
+        .cta-final .btn-whatsapp {
+            background: #25d366;
+            font-size: 1.3rem;
+            padding: 20px 48px;
+            box-shadow: 0 12px 40px rgba(37, 211, 102, 0.4);
+        }
+        .cta-final .btn-whatsapp:hover {
+            background: #1ebe5c;
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            background: var(--primary);
+            color: rgba(255, 255, 255, 0.8);
+            padding: 48px 0 32px;
+        }
+        .footer .container {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 40px;
+        }
+        .footer-brand h3 {
+            color: #fff;
+            font-weight: 700;
+            font-size: 1.6rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .footer-brand h3 img {
+            height: 40px;
+            width: auto;
+            filter: brightness(0) invert(1);
+        }
+        .footer-brand p {
+            margin-top: 8px;
+            max-width: 280px;
+        }
+        .footer-links h4 {
+            color: #fff;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+        .footer-links ul {
+            list-style: none;
+        }
+        .footer-links ul li {
+            margin-bottom: 10px;
+        }
+        .footer-links ul li a {
+            transition: color 0.2s;
+        }
+        .footer-links ul li a:hover {
+            color: var(--primary-soft);
+        }
+        .footer-social {
+            display: flex;
+            gap: 18px;
+            margin-top: 12px;
+        }
+        .footer-social a {
+            font-size: 1.8rem;
+            color: rgba(255, 255, 255, 0.7);
+            transition: color 0.2s;
+        }
+        .footer-social a:hover {
+            color: #fff;
+        }
+        .footer-bottom {
+            grid-column: 1 / -1;
+            border-top: 1px solid rgba(255, 255, 255, 0.15);
+            padding-top: 24px;
+            margin-top: 16px;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+        @media (max-width: 768px) {
+            .footer .container {
+                grid-template-columns: 1fr;
+                gap: 28px;
+            }
+            .footer-brand h3 {
+                font-size: 1.4rem;
+            }
+            .footer-brand h3 img {
+                height: 34px;
+            }
+        }
+
+        /* ===== RESPONSIVE AJUSTES ===== */
+        @media (max-width: 640px) {
+            section {
+                padding: 56px 0;
+            }
+            .section-title {
+                font-size: 1.8rem;
+            }
+            .services-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+            .sectors-grid {
+                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            }
+            .benefits-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .process-steps {
+                grid-template-columns: 1fr 1fr;
+            }
+            .cases-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .testimonials-grid {
+                grid-template-columns: 1fr;
+            }
+            .cta-final h2 {
+                font-size: 2rem;
+            }
+            .about-text {
+                padding: 28px 20px;
+                font-size: 1rem;
+            }
+        }
+        @media (max-width: 400px) {
+            .services-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .sectors-grid {
+                grid-template-columns: 1fr 1fr 1fr;
+            }
+            .benefits-grid {
+                grid-template-columns: 1fr;
+            }
+            .process-steps {
+                grid-template-columns: 1fr;
+            }
+            .cases-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ===== ANIMACIONES AL SCROLL ===== */
+        .fade-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+        .fade-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== NAVBAR ===== -->
+    <header class="navbar">
+        <div class="container">
+            <div class="logo">
+                <img src="logo.png" alt="SERVICOMP">
+                <span>SERVICOMP</span>
+            </div>
+            <div class="nav-cta">
+                <a href="https://wa.me/51974550179?text=Hola%2C%20Servicomp.%20Me%20gustar%C3%ADa%20conocer%20c%C3%B3mo%20la%20tecnolog%C3%ADa%2C%20la%20automatizaci%C3%B3n%20y%20la%20inteligencia%20artificial%20podr%C3%ADan%20ayudarme%20a%20mejorar%20mi%20negocio%2C%20profesi%C3%B3n%20o%20emprendimiento." target="_blank" class="btn-whatsapp" style="padding:10px 20px;">
+                    <i class="fab fa-whatsapp"></i> <span>WhatsApp</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- ===== HERO ===== -->
+    <section class="hero" id="inicio">
+        <div class="container">
+            <div class="hero-content">
+                <h1>Transforma tu negocio con <i>Tecnología</i>, Automatización e <i>Inteligencia Artificial</i></h1>
+                <p>Ayudamos a profesionales, empresas y emprendedores a organizar procesos, mejorar su productividad y aprovechar la tecnología para crecer.</p>
+                <div class="hero-buttons">
+                    <a href="https://wa.me/51974550179?text=Hola%2C%20Servicomp.%20Me%20gustar%C3%ADa%20conocer%20c%C3%B3mo%20la%20tecnolog%C3%ADa%2C%20la%20automatizaci%C3%B3n%20y%20la%20inteligencia%20artificial%20podr%C3%ADan%20ayudarme%20a%20mejorar%20mi%20negocio%2C%20profesi%C3%B3n%20o%20emprendimiento." target="_blank" class="btn-primary">
+                        <i class="fas fa-rocket"></i> Solicitar Asesoría Gratuita
+                    </a>
+                    <a href="https://wa.me/51974550179?text=Hola%2C%20Servicomp.%20Me%20gustar%C3%ADa%20conocer%20c%C3%B3mo%20la%20tecnolog%C3%ADa%2C%20la%20automatizaci%C3%B3n%20y%20la%20inteligencia%20artificial%20podr%C3%ADan%20ayudarme%20a%20mejorar%20mi%20negocio%2C%20profesi%C3%B3n%20o%20emprendimiento." target="_blank" class="btn-secondary">
+                        <i class="fab fa-whatsapp"></i> Hablar por WhatsApp
+                    </a>
+                </div>
+            </div>
+            <div class="hero-image">
+                <div class="illustration">
+                    <i class="fas fa-robot"></i>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== SERVICIOS ===== -->
+    <section id="servicios">
+        <div class="container">
+            <h2 class="section-title"><i class="fas fa-cogs"></i> Nuestros Servicios</h2>
+            <p class="section-subtitle">Soluciones tecnológicas diseñadas para potenciar cada área de tu negocio.</p>
+            <div class="services-grid">
+                <div class="service-card"><i class="fas fa-arrows-spin"></i><h4>Automatización de procesos</h4></div>
+                <div class="service-card"><i class="fas fa-brain"></i><h4>Inteligencia Artificial aplicada</h4></div>
+                <div class="service-card"><i class="fab fa-whatsapp"></i><h4>WhatsApp Business</h4></div>
+                <div class="service-card"><i class="fas fa-map-pin"></i><h4>Google Business Profile</h4></div>
+                <div class="service-card"><i class="fas fa-file-lines"></i><h4>Landing Pages</h4></div>
+                <div class="service-card"><i class="fas fa-globe"></i><h4>Páginas Web</h4></div>
+                <div class="service-card"><i class="fas fa-chart-simple"></i><h4>Dashboards y Reportes</h4></div>
+                <div class="service-card"><i class="fas fa-folder-tree"></i><h4>Gestión Documental</h4></div>
+                <div class="service-card"><i class="fas fa-bolt"></i><h4>Productividad Profesional</h4></div>
+                <div class="service-card"><i class="fas fa-arrow-trend-up"></i><h4>Transformación Digital</h4></div>
+                <div class="service-card"><i class="fas fa-headset"></i><h4>Asesoría Tecnológica</h4></div>
+                <div class="service-card"><i class="fas fa-chalkboard-user"></i><h4>Capacitación Digital</h4></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== PROFESIONES Y SECTORES ===== -->
+    <section id="sectores" style="background:var(--off-white);">
+        <div class="container">
+            <h2 class="section-title"><i class="fas fa-users"></i> Profesiones y Sectores</h2>
+            <p class="section-subtitle">Tecnología adaptada a tu industria. Impulsamos el crecimiento de cada perfil.</p>
+            <div class="sectors-grid">
+                <div class="sector-item"><i class="fas fa-calculator"></i><span>Contadores</span></div>
+                <div class="sector-item"><i class="fas fa-brain"></i><span>Psicólogos</span></div>
+                <div class="sector-item"><i class="fas fa-user-md"></i><span>Médicos</span></div>
+                <div class="sector-item"><i class="fas fa-user-nurse"></i><span>Enfermeras</span></div>
+                <div class="sector-item"><i class="fas fa-apple-alt"></i><span>Nutricionistas</span></div>
+                <div class="sector-item"><i class="fas fa-scale-balanced"></i><span>Abogados</span></div>
+                <div class="sector-item"><i class="fas fa-microchip"></i><span>Ingenieros</span></div>
+                <div class="sector-item"><i class="fas fa-drafting-compass"></i><span>Arquitectos</span></div>
+                <div class="sector-item"><i class="fas fa-chalkboard"></i><span>Docentes</span></div>
+                <div class="sector-item"><i class="fas fa-school"></i><span>Directores de colegios</span></div>
+                <div class="sector-item"><i class="fas fa-hotel"></i><span>Hoteles</span></div>
+                <div class="sector-item"><i class="fas fa-truck-fast"></i><span>Courier</span></div>
+                <div class="sector-item"><i class="fas fa-prescription-bottle"></i><span>Farmacias</span></div>
+                <div class="sector-item"><i class="fas fa-laptop"></i><span>Técnicos de soporte</span></div>
+                <div class="sector-item"><i class="fas fa-lightbulb"></i><span>Emprendedores</span></div>
+                <div class="sector-item"><i class="fas fa-building"></i><span>Empresas</span></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== BENEFICIOS ===== -->
+    <section id="beneficios">
+        <div class="container">
+            <h2 class="section-title"><i class="fas fa-star"></i> Beneficios Clave</h2>
+            <p class="section-subtitle">Lo que lograrás al integrar tecnología en tu día a día.</p>
+            <div class="benefits-grid">
+                <div class="benefit-item"><i class="fas fa-folder-open"></i><h4>Más organización</h4></div>
+                <div class="benefit-item"><i class="fas fa-gauge-high"></i><h4>Más productividad</h4></div>
+                <div class="benefit-item"><i class="fas fa-rotate-left"></i><h4>Menos tareas repetitivas</h4></div>
+                <div class="benefit-item"><i class="fas fa-headset"></i><h4>Mejor atención al cliente</h4></div>
+                <div class="benefit-item"><i class="fas fa-handshake"></i><h4>Más oportunidades de negocio</h4></div>
+                <div class="benefit-item"><i class="fas fa-robot"></i><h4>Aprovechamiento de IA</h4></div>
+                <div class="benefit-item"><i class="fas fa-digital-tiling"></i><h4>Transformación digital</h4></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== PROCESO ===== -->
+    <section id="proceso" style="background:var(--off-white);">
+        <div class="container">
+            <h2 class="section-title"><i class="fas fa-list-check"></i> Nuestro Proceso</h2>
+            <p class="section-subtitle">Un camino claro y estructurado para llevar tu negocio al siguiente nivel.</p>
+            <div class="process-steps">
+                <div class="step"><h4>Diagnóstico</h4><p>Analizamos tus necesidades y objetivos.</p></div>
+                <div class="step"><h4>Diseño de Solución</h4><p>Planificamos la estrategia tecnológica a medida.</p></div>
+                <div class="step"><h4>Implementación</h4><p>Ponemos en marcha las herramientas y procesos.</p></div>
+                <div class="step"><h4>Capacitación</h4><p>Formamos a tu equipo para que aproveche al máximo.</p></div>
+                <div class="step"><h4>Seguimiento</h4><p>Acompañamiento continuo y optimización.</p></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== CASOS DE USO ===== -->
+    <section id="casos">
+        <div class="container">
+            <h2 class="section-title"><i class="fas fa-briefcase"></i> Casos de Uso</h2>
+            <p class="section-subtitle">Ejemplos reales de cómo potenciamos diferentes perfiles.</p>
+            <div class="cases-grid">
+                <div class="case-card"><i class="fas fa-file-invoice"></i><h4>Contador Digital PRO</h4></div>
+                <div class="case-card"><i class="fas fa-heart"></i><h4>Psicólogo Digital PRO</h4></div>
+                <div class="case-card"><i class="fas fa-apple-alt"></i><h4>Nutricionista Growth PRO</h4></div>
+                <div class="case-card"><i class="fas fa-school"></i><h4>Colegio Growth PRO</h4></div>
+                <div class="case-card"><i class="fas fa-truck"></i><h4>Courier Digital PRO</h4></div>
+                <div class="case-card"><i class="fas fa-laptop-code"></i><h4>Soporte Técnico PRO</h4></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== TESTIMONIOS ===== -->
+    <section id="testimonios" style="background:var(--off-white);">
+        <div class="container">
+            <h2 class="section-title"><i class="fas fa-quote-left"></i> Testimonios</h2>
+            <p class="section-subtitle">Lo que dicen nuestros clientes sobre la transformación digital.</p>
+            <div class="testimonials-grid">
+                <div class="testimonial">
+                    <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                    <blockquote>“Gracias a la automatización, mi consultorio contable triplicó su capacidad de atención. Increíble.”</blockquote>
+                    <div class="author">Carlos M.</div>
+                    <div class="role">Contador</div>
+                </div>
+                <div class="testimonial">
+                    <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                    <blockquote>“La IA aplicada a nuestros procesos educativos nos permitió personalizar el aprendizaje. Recomendado.”</blockquote>
+                    <div class="author">Laura F.</div>
+                    <div class="role">Directora de Colegio</div>
+                </div>
+                <div class="testimonial">
+                    <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                    <blockquote>“Pasamos de tener desorden digital a un sistema integrado que nos ahorra horas cada semana.”</blockquote>
+                    <div class="author">Javier R.</div>
+                    <div class="role">Emprendedor</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== SOBRE NOSOTROS ===== -->
+    <section id="nosotros">
+        <div class="container">
+            <h2 class="section-title"><i class="fas fa-users-gear"></i> Sobre Nosotros</h2>
+            <div class="about-text">
+                <p>Somos <strong>SERVICOMP</strong>, un equipo apasionado por la tecnología y la innovación. Ayudamos a negocios y profesionales a implementar soluciones digitales de manera práctica, ágil y rentable. No solo instalamos herramientas, sino que acompañamos cada paso para que la tecnología se convierta en un motor de crecimiento real. Nuestro enfoque combina experiencia técnica, visión de negocio y un profundo compromiso con el éxito de nuestros clientes.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== CTA FINAL ===== -->
+    <section class="cta-final" id="contacto">
+        <div class="container">
+            <h2>¿Listo para modernizar tu negocio?</h2>
+            <p>Empieza hoy con una asesoría gratuita y descubre el potencial de la transformación digital.</p>
+            <a href="https://wa.me/51974550179?text=Hola%2C%20Servicomp.%20Me%20gustar%C3%ADa%20conocer%20c%C3%B3mo%20la%20tecnolog%C3%ADa%2C%20la%20automatizaci%C3%B3n%20y%20la%20inteligencia%20artificial%20podr%C3%ADan%20ayudarme%20a%20mejorar%20mi%20negocio%2C%20profesi%C3%B3n%20o%20emprendimiento." target="_blank" class="btn-whatsapp">
+                <i class="fab fa-whatsapp"></i> ¡Quiero Asesoría!
+            </a>
+        </div>
+    </section>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-brand">
+                <h3>
+                    <img src="logo.png" alt="SERVICOMP">
+                    SERVICOMP
+                </h3>
+                <p>Transformación digital, automatización e IA para profesionales y empresas.</p>
+                <div class="footer-social">
+                    <a href="https://wa.me/51974550179" target="_blank" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                    <a href="#" target="_blank" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+                    <a href="mailto:servicompbu@gmail.com" aria-label="Correo"><i class="fas fa-envelope"></i></a>
+                </div>
+            </div>
+            <div class="footer-links">
+                <h4>Servicios</h4>
+                <ul>
+                    <li><a href="#servicios">Automatización</a></li>
+                    <li><a href="#servicios">IA aplicada</a></li>
+                    <li><a href="#servicios">WhatsApp Business</a></li>
+                    <li><a href="#servicios">Landing Pages</a></li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h4>Contacto</h4>
+                <ul>
+                    <li><a href="https://wa.me/51974550179" target="_blank">+51 974550179</a></li>
+                    <li><a href="mailto:servicompbu@gmail.com">servicompbu@gmail.com</a></li>
+                    <li><a href="#inicio">Inicio</a></li>
+                </ul>
+            </div>
+            <div class="footer-bottom">
+                &copy; 2026 SERVICOMP · Todos los derechos reservados.
+            </div>
+        </div>
+    </footer>
+
+    <!-- ===== BOTÓN FLOTANTE WHATSAPP ===== -->
+    <a href="https://wa.me/51974550179?text=Hola%2C%20Servicomp.%20Me%20gustar%C3%ADa%20conocer%20c%C3%B3mo%20la%20tecnolog%C3%ADa%2C%20la%20automatizaci%C3%B3n%20y%20la%20inteligencia%20artificial%20podr%C3%ADan%20ayudarme%20a%20mejorar%20mi%20negocio%2C%20profesi%C3%B3n%20o%20emprendimiento." target="_blank" class="whatsapp-float" aria-label="WhatsApp">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <!-- ===== JAVASCRIPT (animaciones al scroll) ===== -->
+    <script>
+        (function() {
+            // Intersection Observer para efecto fade-up
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, {
+                threshold: 0.15,
+                rootMargin: '0px 0px -40px 0px'
+            });
+
+            // Aplicar clase fade-up a secciones y elementos
+            const sections = [
+                '#servicios .services-grid',
+                '#sectores .sectors-grid',
+                '#beneficios .benefits-grid',
+                '#proceso .process-steps',
+                '#casos .cases-grid',
+                '#testimonios .testimonials-grid',
+                '#nosotros .about-text',
+                '.cta-final .container'
+            ];
+
+            sections.forEach(selector => {
+                const el = document.querySelector(selector);
+                if (el) {
+                    el.classList.add('fade-up');
+                    observer.observe(el);
+                }
+            });
+
+            document.querySelectorAll('.service-card, .sector-item, .benefit-item, .step, .case-card, .testimonial').forEach(item => {
+                item.classList.add('fade-up');
+                observer.observe(item);
+            });
+
+            // Activar elementos ya visibles al cargar
+            setTimeout(() => {
+                document.querySelectorAll('.fade-up').forEach(el => {
+                    if (el.getBoundingClientRect().top < window.innerHeight * 0.8) {
+                        el.classList.add('visible');
+                    }
+                });
+            }, 200);
+
+            // Smooth scroll para enlaces internos
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    const href = this.getAttribute('href');
+                    if (href !== '#') {
+                        const target = document.querySelector(href);
+                        if (target) {
+                            e.preventDefault();
+                            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }
+                    }
+                });
+            });
+
+        })();
+    </script>
+
+</body>
+</html>
