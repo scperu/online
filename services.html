@@ -1,1293 +1,732 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Servicomp+ · Gestión de Servicios</title>
-    <!-- Google Fonts para tipografía premium -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet" />
-    <style>
-        /* ============================================================
-           RESET & VARIABLES DE LUJO
-           ============================================================ */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            --font: 'Inter', system-ui, -apple-system, sans-serif;
-
-            --color-primary: #1e3a5f;
-            --color-primary-light: #2a4b7a;
-            --color-accent: #d4af37;
-            --color-accent-light: #e8c95a;
-            --color-success: #0f7b3a;
-            --color-success-light: #1fa85a;
-            --color-info: #0b6b9e;
-            --color-danger: #b91c1c;
-
-            --bg-body: #f0f4fe;
-            --bg-card: rgba(255, 255, 255, 0.88);
-            --bg-input: #ffffff;
-
-            --text-primary: #0b1a2e;
-            --text-secondary: #2d4059;
-            --text-muted: #6b7f94;
-
-            --shadow-card: 0 20px 60px -12px rgba(0, 20, 40, 0.25);
-            --shadow-input: 0 2px 6px rgba(0, 0, 0, 0.04);
-            --shadow-btn: 0 4px 12px rgba(30, 58, 95, 0.20);
-            --shadow-modal: 0 30px 80px rgba(0, 0, 0, 0.35);
-
-            --radius-card: 24px;
-            --radius-input: 14px;
-            --radius-btn: 40px;
-
-            --transition: 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-        }
-
-        body {
-            font-family: var(--font);
-            background: var(--bg-body);
-            min-height: 100vh;
-            padding: 32px 24px;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            color: var(--text-primary);
-            background-image: radial-gradient(circle at 10% 20%, rgba(212, 175, 55, 0.06) 0%, transparent 40%),
-                              radial-gradient(circle at 90% 80%, rgba(30, 58, 95, 0.07) 0%, transparent 50%);
-            background-attachment: fixed;
-        }
-
-        /* ============================================================
-           CONTENEDOR PRINCIPAL
-           ============================================================ */
-        .container {
-            max-width: 1320px;
-            width: 100%;
-            background: var(--bg-card);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-radius: var(--radius-card);
-            padding: 32px 36px 28px;
-            box-shadow: var(--shadow-card);
-            border: 1px solid rgba(255, 255, 255, 0.6);
-            transition: opacity 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .container::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle at 70% 20%, rgba(212, 175, 55, 0.02) 0%, transparent 60%);
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        .container > * {
-            position: relative;
-            z-index: 1;
-        }
-
-        .container.loading {
-            opacity: 0.5;
-            pointer-events: none;
-        }
-
-        /* ============================================================
-           HEADER · LOGO + TÍTULO
-           ============================================================ */
-        .header {
-            display: flex;
-            align-items: center;
-            gap: 18px;
-            flex-wrap: wrap;
-            margin-bottom: 8px;
-        }
-
-        .header-logo {
-            flex-shrink: 0;
-            width: 64px;
-            height: 64px;
-            border-radius: 18px;
-            background: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
-            overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.5);
-        }
-
-        .header-logo img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            display: block;
-            padding: 8px;
-        }
-
-        .header-title-group {
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-        }
-
-        .header h1 {
-            font-size: 2.2rem;
-            font-weight: 800;
-            letter-spacing: -0.03em;
-            background: linear-gradient(145deg, var(--color-primary), var(--color-primary-light));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            line-height: 1.1;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .header h1 .icon {
-            -webkit-text-fill-color: initial;
-            color: var(--color-accent);
-        }
-
-        .header .subtitle {
-            font-size: 0.95rem;
-            font-weight: 500;
-            color: var(--text-muted);
-            letter-spacing: 0.3px;
-            margin-left: 2px;
-        }
-
-        .header .subtitle strong {
-            color: var(--color-primary);
-            font-weight: 600;
-        }
-
-        /* ============================================================
-           BARRA DE ESTADO
-           ============================================================ */
-        .status {
-            background: rgba(30, 58, 95, 0.04);
-            padding: 12px 22px;
-            border-radius: 60px;
-            margin: 14px 0 24px;
-            display: flex;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 10px;
-            font-size: 0.92rem;
-            align-items: center;
-            border: 1px solid rgba(30, 58, 95, 0.08);
-            backdrop-filter: blur(4px);
-        }
-
-        .status .badge {
-            background: var(--color-primary);
-            color: white;
-            padding: 4px 22px;
-            border-radius: 40px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-            white-space: nowrap;
-            box-shadow: 0 2px 8px rgba(30, 58, 95, 0.15);
-        }
-
-        .status .badge.success {
-            background: var(--color-success);
-        }
-
-        /* ============================================================
-           TOOLBAR
-           ============================================================ */
-        .toolbar {
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-            margin-bottom: 28px;
-        }
-
-        /* ============================================================
-           BOTONES (estilo lujo)
-           ============================================================ */
-        .btn {
-            padding: 10px 28px;
-            border: none;
-            border-radius: var(--radius-btn);
-            font-weight: 600;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: var(--transition);
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            background: #eef2f6;
-            color: var(--text-secondary);
-            text-decoration: none;
-            line-height: 1.2;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
-            letter-spacing: 0.2px;
-        }
-
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-btn);
-        }
-
-        .btn:active {
-            transform: scale(0.97);
-        }
-
-        .btn-primary {
-            background: var(--color-primary);
-            color: white;
-            box-shadow: 0 4px 14px rgba(30, 58, 95, 0.25);
-        }
-        .btn-primary:hover {
-            background: var(--color-primary-light);
-            box-shadow: 0 6px 20px rgba(30, 58, 95, 0.30);
-        }
-
-        .btn-success {
-            background: var(--color-success);
-            color: white;
-            box-shadow: 0 4px 14px rgba(15, 123, 58, 0.25);
-        }
-        .btn-success:hover {
-            background: var(--color-success-light);
-            box-shadow: 0 6px 20px rgba(15, 123, 58, 0.30);
-        }
-
-        .btn-info {
-            background: var(--color-info);
-            color: white;
-            box-shadow: 0 4px 14px rgba(11, 107, 158, 0.25);
-        }
-        .btn-info:hover {
-            background: #0a5a84;
-            box-shadow: 0 6px 20px rgba(11, 107, 158, 0.30);
-        }
-
-        .btn-outline {
-            background: transparent;
-            border: 1.5px solid #d0d8e2;
-            color: var(--text-secondary);
-            box-shadow: none;
-        }
-        .btn-outline:hover {
-            background: rgba(30, 58, 95, 0.04);
-            border-color: var(--color-primary);
-            transform: translateY(-2px);
-        }
-
-        .btn:disabled {
-            opacity: 0.5;
-            pointer-events: none;
-        }
-
-        .btn .spinner {
-            display: none;
-            width: 20px;
-            height: 20px;
-            border: 2.5px solid rgba(255, 255, 255, 0.3);
-            border-top-color: white;
-            border-radius: 50%;
-            animation: spin 0.7s linear infinite;
-        }
-
-        .btn.loading .spinner {
-            display: inline-block;
-        }
-        .btn.loading .btn-text {
-            display: none;
-        }
-
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
-        /* ============================================================
-           FORMULARIO
-           ============================================================ */
-        .form-section {
-            background: rgba(255, 255, 255, 0.6);
-            backdrop-filter: blur(6px);
-            border-radius: var(--radius-card);
-            padding: 22px 28px 28px;
-            margin-bottom: 32px;
-            border: 1px solid rgba(255, 255, 255, 0.8);
-            transition: var(--transition);
-            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.02);
-        }
-
-        .form-section:hover {
-            border-color: rgba(212, 175, 55, 0.25);
-            box-shadow: 0 8px 30px rgba(30, 58, 95, 0.05);
-        }
-
-        .form-section h2 {
-            font-size: 1.2rem;
-            font-weight: 700;
-            margin-bottom: 18px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: var(--color-primary);
-            letter-spacing: -0.01em;
-        }
-
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-            gap: 18px;
-            align-items: end;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-        }
-
-        .form-group label {
-            font-size: 0.7rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.6px;
-            color: var(--text-muted);
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .form-group label .emoji {
-            font-size: 0.9rem;
-        }
-
-        .form-group input,
-        .form-group select {
-            padding: 12px 16px;
-            border: 1.5px solid #e2e8f0;
-            border-radius: var(--radius-input);
-            font-size: 0.95rem;
-            background: var(--bg-input);
-            transition: var(--transition);
-            width: 100%;
-            font-family: var(--font);
-            color: var(--text-primary);
-            box-shadow: var(--shadow-input);
-        }
-
-        .form-group input:focus,
-        .form-group select:focus {
-            outline: none;
-            border-color: var(--color-accent);
-            box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.15);
-        }
-
-        .form-group input:invalid:not(:placeholder-shown) {
-            border-color: var(--color-danger);
-        }
-
-        .form-actions {
-            display: flex;
-            gap: 14px;
-            align-items: center;
-            flex-wrap: wrap;
-            margin-top: 22px;
-        }
-
-        /* ============================================================
-           TABLA
-           ============================================================ */
-        .table-wrapper {
-            overflow-x: auto;
-            border-radius: var(--radius-card);
-            border: 1px solid rgba(30, 58, 95, 0.06);
-            background: white;
-            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.02);
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.9rem;
-            min-width: 660px;
-        }
-
-        thead {
-            background: rgba(30, 58, 95, 0.03);
-            border-bottom: 1px solid #eef2f6;
-        }
-
-        th {
-            text-align: left;
-            padding: 16px 18px;
-            font-weight: 700;
-            color: var(--text-secondary);
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 0.6px;
-            border-bottom: 1px solid #eef2f6;
-        }
-
-        td {
-            padding: 14px 18px;
-            border-bottom: 1px solid #f1f4f8;
-            vertical-align: middle;
-            color: var(--text-primary);
-        }
-
-        tr:last-child td {
-            border-bottom: none;
-        }
-
-        tbody tr {
-            transition: var(--transition);
-        }
-
-        tbody tr:hover td {
-            background: rgba(212, 175, 55, 0.04);
-        }
-
-        .empty-row td {
-            padding: 56px 16px;
-            text-align: center;
-            color: var(--text-muted);
-            font-style: italic;
-            font-size: 1.05rem;
-        }
-
-        .table-footer {
-            background: rgba(30, 58, 95, 0.02);
-            font-weight: 700;
-            border-top: 2px solid #eef2f6;
-        }
-
-        .table-footer td {
-            padding: 14px 18px;
-            background: transparent;
-            color: var(--text-secondary);
-        }
-
-        .table-footer td:last-child {
-            color: var(--color-success);
-        }
-
-        /* ============================================================
-           MODAL (informe)
-           ============================================================ */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(11, 26, 46, 0.55);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            padding: 24px;
-            animation: fadeIn 0.3s ease;
-        }
-
-        .modal-overlay.active {
-            display: flex;
-        }
-
-        .modal {
-            background: white;
-            border-radius: var(--radius-card);
-            max-width: 960px;
-            width: 100%;
-            max-height: 90vh;
-            overflow-y: auto;
-            padding: 32px 36px;
-            box-shadow: var(--shadow-modal);
-            animation: slideUp 0.35s ease;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
-        }
-
-        @keyframes slideUp {
-            from {
-                transform: translateY(40px);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 22px;
-            border-bottom: 2px solid #f1f4f8;
-            padding-bottom: 16px;
-        }
-
-        .modal-header h2 {
-            font-size: 1.7rem;
-            font-weight: 800;
-            color: var(--color-primary);
-            letter-spacing: -0.02em;
-        }
-
-        .modal-close {
-            background: none;
-            border: none;
-            font-size: 2rem;
-            cursor: pointer;
-            color: var(--text-muted);
-            transition: var(--transition);
-            line-height: 1;
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal-close:hover {
-            color: var(--text-primary);
-            background: rgba(0, 0, 0, 0.04);
-            transform: rotate(90deg);
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 16px;
-            margin-bottom: 28px;
-        }
-
-        .stat-card {
-            background: rgba(30, 58, 95, 0.02);
-            border-radius: var(--radius-input);
-            padding: 18px 14px;
-            text-align: center;
-            border: 1px solid #f1f4f8;
-            transition: var(--transition);
-        }
-
-        .stat-card:hover {
-            border-color: var(--color-accent);
-            background: rgba(212, 175, 55, 0.04);
-        }
-
-        .stat-card .number {
-            font-size: 1.8rem;
-            font-weight: 800;
-            color: var(--color-primary);
-            line-height: 1.2;
-        }
-
-        .stat-card .label {
-            font-size: 0.65rem;
-            text-transform: uppercase;
-            color: var(--text-muted);
-            letter-spacing: 0.5px;
-            margin-top: 6px;
-        }
-
-        .modal-table-wrapper {
-            overflow-x: auto;
-            max-height: 280px;
-            overflow-y: auto;
-            border: 1px solid #f1f4f8;
-            border-radius: var(--radius-input);
-        }
-
-        .modal-table-wrapper table {
-            font-size: 0.85rem;
-            min-width: 400px;
-        }
-
-        .modal-table-wrapper th {
-            background: rgba(30, 58, 95, 0.03);
-            position: sticky;
-            top: 0;
-            z-index: 2;
-        }
-
-        /* ============================================================
-           TOAST
-           ============================================================ */
-        .toast {
-            position: fixed;
-            bottom: 32px;
-            right: 32px;
-            background: var(--color-primary);
-            color: white;
-            padding: 16px 32px;
-            border-radius: 60px;
-            font-weight: 600;
-            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.18);
-            z-index: 2000;
-            transition: all 0.45s cubic-bezier(0.22, 1, 0.36, 1);
-            transform: translateY(90px);
-            opacity: 0;
-            max-width: 92%;
-            font-size: 0.95rem;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            backdrop-filter: blur(6px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .toast.show {
-            transform: translateY(0);
-            opacity: 1;
-        }
-
-        .toast.success {
-            background: var(--color-success);
-        }
-        .toast.error {
-            background: var(--color-danger);
-        }
-
-        /* ============================================================
-           FOOTER
-           ============================================================ */
-        .footer {
-            margin-top: 32px;
-            padding-top: 16px;
-            border-top: 1px solid rgba(30, 58, 95, 0.06);
-            display: flex;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 10px;
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            align-items: center;
-        }
-
-        .footer a {
-            color: var(--color-primary);
-            text-decoration: none;
-            font-weight: 500;
-            transition: var(--transition);
-        }
-
-        .footer a:hover {
-            color: var(--color-accent);
-        }
-
-        /* ============================================================
-           RESPONSIVE
-           ============================================================ */
-        @media (max-width: 768px) {
-            body {
-                padding: 16px 12px;
-            }
-            .container {
-                padding: 20px 18px;
-            }
-            .header h1 {
-                font-size: 1.6rem;
-            }
-            .header-logo {
-                width: 52px;
-                height: 52px;
-            }
-            .form-grid {
-                grid-template-columns: 1fr;
-            }
-            .form-actions {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            .form-actions .btn {
-                justify-content: center;
-            }
-            .toolbar {
-                flex-direction: column;
-            }
-            .toolbar .btn {
-                justify-content: center;
-            }
-            .stats-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-            .modal {
-                padding: 20px;
-            }
-            th,
-            td {
-                padding: 10px 12px;
-                font-size: 0.8rem;
-            }
-            .status {
-                flex-direction: column;
-                align-items: flex-start;
-                border-radius: 24px;
-            }
-            .status .badge {
-                align-self: flex-start;
-            }
-            .footer {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 6px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .container {
-                padding: 16px 12px;
-            }
-            .header h1 {
-                font-size: 1.4rem;
-            }
-            .header .subtitle {
-                font-size: 0.8rem;
-            }
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-            .modal {
-                padding: 16px;
-            }
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5" />
+  <title>Servicios Premium</title>
+  <!-- Google Fonts & Font Awesome -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <style>
+    /* Reset & base */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(145deg, #f9f5f0 0%, #eae3db 100%);
+      min-height: 100vh;
+      padding: 2rem 1.5rem;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+    }
+    .app-container {
+      max-width: 1400px;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-radius: 48px;
+      padding: 2.5rem 2rem;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.12), 0 10px 20px rgba(0,0,0,0.05);
+      border: 1px solid rgba(255,255,255,0.3);
+      transition: all 0.3s ease;
+    }
+    /* Header con logo */
+    .header-main {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 0.25rem;
+    }
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .header-left img {
+      height: 52px;
+      width: auto;
+      object-fit: contain;
+      border-radius: 12px;
+    }
+    .header-left h1 {
+      font-size: 2.4rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: #2d1f14;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .header-left h1 i {
+      color: #b28b6f;
+      font-size: 2.6rem;
+    }
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+    .subtitle {
+      color: #6b5a4b;
+      font-weight: 400;
+      font-size: 1rem;
+      margin-bottom: 2rem;
+      border-left: 4px solid #b28b6f;
+      padding-left: 1rem;
+      opacity: 0.8;
+      width: 100%;
+    }
+    /* Formulario */
+    .form-card {
+      background: white;
+      border-radius: 32px;
+      padding: 1.8rem 2rem;
+      margin-bottom: 2.5rem;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.04);
+      border: 1px solid #f0ebe6;
+      transition: box-shadow 0.3s ease;
+    }
+    .form-card:hover {
+      box-shadow: 0 12px 36px rgba(0,0,0,0.06);
+    }
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1.2rem;
+      align-items: end;
+    }
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+    .form-group label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: #6b5a4b;
+    }
+    .form-group input,
+    .form-group textarea {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+      padding: 0.7rem 1rem;
+      border: 1.5px solid #e5ddd6;
+      border-radius: 18px;
+      background: #fcfaf8;
+      transition: border 0.2s, box-shadow 0.2s;
+      width: 100%;
+      outline: none;
+    }
+    .form-group input:focus,
+    .form-group textarea:focus {
+      border-color: #b28b6f;
+      box-shadow: 0 0 0 4px rgba(178, 139, 111, 0.15);
+    }
+    .form-group textarea {
+      resize: vertical;
+      min-height: 44px;
+      max-height: 100px;
+    }
+    .form-actions {
+      display: flex;
+      gap: 0.8rem;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-top: 0.5rem;
+    }
+    .btn {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 0.9rem;
+      padding: 0.7rem 1.6rem;
+      border: none;
+      border-radius: 40px;
+      background: #eae3db;
+      color: #2d1f14;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      letter-spacing: 0.01em;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.02);
+    }
+    .btn-primary {
+      background: #2d1f14;
+      color: white;
+      box-shadow: 0 8px 18px rgba(45, 31, 20, 0.25);
+    }
+    .btn-primary:hover {
+      background: #4d3425;
+      transform: translateY(-2px);
+      box-shadow: 0 12px 24px rgba(45, 31, 20, 0.3);
+    }
+    .btn-secondary {
+      background: #f0ebe6;
+    }
+    .btn-secondary:hover {
+      background: #e5ddd6;
+      transform: translateY(-2px);
+    }
+    .btn-danger {
+      background: #d94f4f;
+      color: white;
+    }
+    .btn-danger:hover {
+      background: #c23a3a;
+      transform: translateY(-2px);
+    }
+    .btn-success {
+      background: #3a7d5e;
+      color: white;
+    }
+    .btn-success:hover {
+      background: #2e644b;
+      transform: translateY(-2px);
+    }
+    .btn:disabled {
+      opacity: 0.5;
+      pointer-events: none;
+    }
+    .btn .spinner {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Tabla */
+    .table-wrapper {
+      overflow-x: auto;
+      border-radius: 28px;
+      background: white;
+      box-shadow: 0 8px 28px rgba(0,0,0,0.04);
+      border: 1px solid #f0ebe6;
+      padding: 0.5rem 0.5rem 0.5rem 0.5rem;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+      min-width: 600px;
+    }
+    th {
+      text-align: left;
+      padding: 1rem 0.8rem;
+      color: #6b5a4b;
+      font-weight: 600;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      border-bottom: 2px solid #f0ebe6;
+      background: #fcfaf8;
+    }
+    td {
+      padding: 0.9rem 0.8rem;
+      border-bottom: 1px solid #f3eee9;
+      color: #2d1f14;
+      vertical-align: middle;
+    }
+    tr:last-child td {
+      border-bottom: none;
+    }
+    tr:hover td {
+      background: #fcf9f6;
+    }
+    .col-id { font-weight: 600; color: #b28b6f; }
+    .col-cliente { font-weight: 500; }
+    .col-monto { font-family: 'Inter', monospace; font-weight: 600; }
+    .acciones {
+      display: flex;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+    }
+    .btn-icon {
+      background: transparent;
+      border: none;
+      padding: 0.4rem 0.8rem;
+      border-radius: 40px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+      color: #6b5a4b;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-weight: 500;
+    }
+    .btn-icon:hover {
+      background: #f0ebe6;
+      transform: scale(1.05);
+    }
+    .btn-icon.detail { color: #b28b6f; }
+    .btn-icon.detail:hover { background: #f0ebe6; }
+    .btn-icon.edit { color: #3a7d5e; }
+    .btn-icon.edit:hover { background: #e6f0ea; }
+    .btn-icon.delete { color: #d94f4f; }
+    .btn-icon.delete:hover { background: #fce8e8; }
+
+    /* Resumen */
+    .summary {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 1.5rem;
+      padding: 1.2rem 0.5rem;
+      border-top: 1px solid #e5ddd6;
+      font-size: 0.9rem;
+      color: #4d3e31;
+    }
+    .summary span i { margin-right: 0.5rem; color: #b28b6f; }
+
+    /* Modal (ventana emergente) */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.3);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 999;
+      padding: 1.5rem;
+    }
+    .modal-overlay.active { display: flex; }
+    .modal-box {
+      background: white;
+      max-width: 600px;
+      width: 100%;
+      border-radius: 48px;
+      padding: 2.5rem 2.2rem;
+      box-shadow: 0 40px 80px rgba(0,0,0,0.2);
+      position: relative;
+      animation: modalFade 0.25s ease;
+    }
+    @keyframes modalFade {
+      from { opacity: 0; transform: scale(0.96); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    .modal-close {
+      position: absolute;
+      top: 1.2rem;
+      right: 1.8rem;
+      font-size: 1.8rem;
+      background: none;
+      border: none;
+      color: #6b5a4b;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .modal-close:hover { transform: rotate(90deg); }
+    .modal-title {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #2d1f14;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .modal-title i { color: #b28b6f; }
+    .detail-item {
+      display: flex;
+      padding: 0.6rem 0;
+      border-bottom: 1px solid #f0ebe6;
+    }
+    .detail-item:last-child { border-bottom: none; }
+    .detail-label {
+      font-weight: 600;
+      color: #6b5a4b;
+      width: 120px;
+      flex-shrink: 0;
+    }
+    .detail-value {
+      color: #2d1f14;
+      word-break: break-word;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      body { padding: 1rem; }
+      .app-container { padding: 1.5rem 1rem; border-radius: 32px; }
+      .header-left h1 { font-size: 1.8rem; }
+      .header-left img { height: 40px; }
+      .form-grid { grid-template-columns: 1fr; }
+      .form-actions { flex-direction: column; align-items: stretch; }
+      .btn { justify-content: center; }
+      .summary { flex-direction: column; align-items: flex-start; }
+      .modal-box { padding: 1.8rem 1.2rem; }
+      .detail-item { flex-wrap: wrap; gap: 0.2rem; }
+      .detail-label { width: 100%; }
+      .btn-icon { font-size: 0.75rem; padding: 0.3rem 0.5rem; }
+    }
+    @media (max-width: 480px) {
+      .app-container { padding: 1rem 0.8rem; }
+      table { font-size: 0.8rem; }
+      th, td { padding: 0.5rem 0.4rem; }
+      .acciones { gap: 0.2rem; }
+    }
+  </style>
 </head>
 <body>
-    <div class="container" id="appContainer">
-        <!-- ==========================================================
-        HEADER con LOGO
-        ========================================================== -->
-        <div class="header">
-            <div class="header-logo">
-                <img src="logo.png" alt="Servicomp+" />
-            </div>
-            <div class="header-title-group">
-                <h1>Servicomp+</h1>
-                <span class="subtitle">Gestión de <strong>servicios</strong></span>
-            </div>
-        </div>
+<div class="app-container" id="app">
 
-        <!-- ==========================================================
-        BARRA DE ESTADO
-        ========================================================== -->
-        <div class="status" id="statusBar">
-            <span id="statusText">🔄 Cargando datos...</span>
-            <span class="badge" id="rowCount">0 servicios</span>
-        </div>
-
-        <!-- ==========================================================
-        TOOLBAR
-        ========================================================== -->
-        <div class="toolbar">
-            <button class="btn btn-info" id="reportBtn">📊 Informe Detallado</button>
-            <button class="btn btn-success" id="refreshBtn">🔄 Actualizar</button>
-        </div>
-
-        <!-- ==========================================================
-        FORMULARIO
-        ========================================================== -->
-        <div class="form-section">
-            <h2>✏️ Agregar servicio</h2>
-            <form id="dataForm" novalidate>
-                <div class="form-grid" id="formFields">
-                    <!-- Generado por JS -->
-                </div>
-                <div class="form-actions">
-                    <button type="submit" class="btn btn-primary" id="submitBtn">
-                        <span class="spinner"></span>
-                        <span class="btn-text">➕ Registrar</span>
-                    </button>
-                    <button type="reset" class="btn btn-outline" id="resetBtn">🗑️ Limpiar</button>
-                </div>
-            </form>
-        </div>
-
-        <!-- ==========================================================
-        TABLA
-        ========================================================== -->
-        <div class="table-wrapper">
-            <table id="dataTable">
-                <thead id="tableHead">
-                    <tr>
-                        <th>ID</th>
-                        <th>Fecha</th>
-                        <th>Descripción</th>
-                        <th>Inversión (S/)</th>
-                        <th>Venta (S/)</th>
-                        <th>Cliente</th>
-                    </tr>
-                </thead>
-                <tbody id="tableBody">
-                    <tr class="empty-row"><td colspan="6">No hay servicios registrados</td></tr>
-                </tbody>
-                <tfoot id="tableFoot" style="display:none;">
-                    <tr class="table-footer">
-                        <td colspan="3" style="text-align:right; font-weight:600;">Totales:</td>
-                        <td id="totalInversion">S/ 0.00</td>
-                        <td id="totalVenta">S/ 0.00</td>
-                        <td id="totalGanancia">S/ 0.00</td>
-                    </tr>
-                </tfoot>
-            </table>
-        </div>
-
-        <!-- ==========================================================
-        FOOTER
-        ========================================================== -->
-        <div class="footer">
-            <span>© 2026 Servicomp+ · Todos los derechos reservados</span>
-            <span>Datos sincronizados</span>
-        </div>
+  <!-- HEADER CON LOGO -->
+  <div class="header-main">
+    <div class="header-left">
+      <img src="logo.png" alt="Logo" id="logoImg" onerror="this.style.display='none'" />
+      <h1><i class="fas fa-concierge-bell"></i> Servicios</h1>
     </div>
-
-    <!-- ==========================================================
-    MODAL INFORME
-    ========================================================== -->
-    <div class="modal-overlay" id="reportModal">
-        <div class="modal">
-            <div class="modal-header">
-                <h2>📊 Informe Detallado</h2>
-                <button class="modal-close" id="closeModalBtn">&times;</button>
-            </div>
-            <div id="reportContent">
-                <!-- Generado por JS -->
-            </div>
-        </div>
+    <div class="header-right">
+      <button class="btn btn-secondary" onclick="loadData()">
+        <i class="fas fa-sync-alt"></i> Recargar
+      </button>
     </div>
+  </div>
+  <div class="subtitle">Registro premium de clientes · Moneda: S/</div>
 
-    <!-- ==========================================================
-    TOAST
-    ========================================================== -->
-    <div class="toast" id="toast"></div>
+  <!-- FORMULARIO -->
+  <div class="form-card">
+    <form id="serviceForm" onsubmit="return false;">
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="fecha"><i class="far fa-calendar-alt"></i> Fecha</label>
+          <input type="date" id="fecha" required />
+        </div>
+        <div class="form-group">
+          <label for="cliente"><i class="fas fa-user"></i> Cliente</label>
+          <input type="text" id="cliente" placeholder="Nombre del cliente" required />
+        </div>
+        <div class="form-group">
+          <label for="descripcion"><i class="fas fa-align-left"></i> Descripción</label>
+          <textarea id="descripcion" placeholder="Detalle del servicio" rows="1"></textarea>
+        </div>
+        <div class="form-group">
+          <label for="inversion"><i class="fas fa-arrow-down"></i> Inversión (S/)</label>
+          <input type="number" id="inversion" step="0.01" placeholder="0.00" required />
+        </div>
+        <div class="form-group">
+          <label for="venta"><i class="fas fa-arrow-up"></i> Venta (S/)</label>
+          <input type="number" id="venta" step="0.01" placeholder="0.00" required />
+        </div>
+        <div class="form-actions">
+          <button type="button" class="btn btn-primary" id="saveBtn" onclick="saveRecord()">
+            <i class="fas fa-save"></i> Guardar
+          </button>
+          <button type="button" class="btn btn-secondary" id="cancelBtn" onclick="cancelEdit()" style="display:none;">
+            <i class="fas fa-times"></i> Cancelar
+          </button>
+        </div>
+      </div>
+      <input type="hidden" id="editId" value="" />
+    </form>
+  </div>
 
-    <!-- ==========================================================
-    JAVASCRIPT (sin cambios funcionales)
-    ========================================================== -->
-    <script>
-        // ============================
-        // CONFIGURACIÓN
-        // ============================
-        const SHEET_ID = '1CnR6YNmJKuUY5nVsbAYTLCoAQU0ftOAGbH2UZOSls5I';
-        const SHEET_NAME = 'registros';
-        const WRITE_URL = 'https://script.google.com/macros/s/AKfycbyMS5-y3G7d-v5J5rbDvUzO9eC8Ark5PZhEUy6qf5N8LyQ0e-tw1XHYSEiXRBcpMLiinQ/exec';
-        const READ_URL = `https://opensheet.elk.sh/${SHEET_ID}/${SHEET_NAME}`;
+  <!-- TABLA -->
+  <div class="table-wrapper">
+    <table id="dataTable">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Fecha</th>
+          <th>Descripción</th>
+          <th>Inversión</th>
+          <th>Venta</th>
+          <th>Cliente</th>
+          <th style="text-align:center;">Acciones</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody">
+        <tr><td colspan="7" style="text-align:center; padding:2rem; color:#6b5a4b;">
+          <i class="fas fa-spinner fa-spin"></i> Cargando datos...
+        </td></tr>
+      </tbody>
+    </table>
+  </div>
 
-        // ============================
-        // DOM REFS
-        // ============================
-        const container = document.getElementById('appContainer');
-        const statusText = document.getElementById('statusText');
-        const rowCount = document.getElementById('rowCount');
-        const form = document.getElementById('dataForm');
-        const formFields = document.getElementById('formFields');
-        const submitBtn = document.getElementById('submitBtn');
-        const resetBtn = document.getElementById('resetBtn');
-        const tableBody = document.getElementById('tableBody');
-        const tableFoot = document.getElementById('tableFoot');
-        const totalInv = document.getElementById('totalInversion');
-        const totalVent = document.getElementById('totalVenta');
-        const totalGan = document.getElementById('totalGanancia');
-        const toast = document.getElementById('toast');
-        const reportBtn = document.getElementById('reportBtn');
-        const refreshBtn = document.getElementById('refreshBtn');
-        const reportModal = document.getElementById('reportModal');
-        const closeModalBtn = document.getElementById('closeModalBtn');
-        const reportContent = document.getElementById('reportContent');
+  <!-- RESUMEN -->
+  <div class="summary" id="summary">
+    <span><i class="fas fa-list-ul"></i> Registros: <strong id="countReg">0</strong></span>
+    <span><i class="fas fa-arrow-down" style="color:#3a7d5e;"></i> Total Inversión: <strong id="totalInv">S/ 0.00</strong></span>
+    <span><i class="fas fa-arrow-up" style="color:#b28b6f;"></i> Total Venta: <strong id="totalVen">S/ 0.00</strong></span>
+    <span><i class="fas fa-chart-line"></i> Ganancia: <strong id="totalGan">S/ 0.00</strong></span>
+  </div>
+</div>
 
-        let allData = [];
-        let toastTimeout;
+<!-- MODAL (VENTANA EMERGENTE) PARA INFORME DETALLADO -->
+<div class="modal-overlay" id="detailModal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button>
+    <div class="modal-title"><i class="fas fa-file-invoice"></i> Detalle del servicio</div>
+    <div id="detailContent">
+      <div class="detail-item"><span class="detail-label">ID</span><span class="detail-value" id="detId">-</span></div>
+      <div class="detail-item"><span class="detail-label">Fecha</span><span class="detail-value" id="detFecha">-</span></div>
+      <div class="detail-item"><span class="detail-label">Cliente</span><span class="detail-value" id="detCliente">-</span></div>
+      <div class="detail-item"><span class="detail-label">Descripción</span><span class="detail-value" id="detDesc">-</span></div>
+      <div class="detail-item"><span class="detail-label">Inversión</span><span class="detail-value" id="detInv">-</span></div>
+      <div class="detail-item"><span class="detail-label">Venta</span><span class="detail-value" id="detVen">-</span></div>
+      <div class="detail-item"><span class="detail-label">Ganancia</span><span class="detail-value" id="detGan">-</span></div>
+    </div>
+  </div>
+</div>
 
-        // ============================
-        // UTILITIES
-        // ============================
-        function showToast(msg, type = 'info', duration = 3000) {
-            toast.textContent = msg;
-            toast.className = 'toast ' + type;
-            void toast.offsetWidth;
-            toast.classList.add('show');
-            clearTimeout(toastTimeout);
-            toastTimeout = setTimeout(() => {
-                toast.classList.remove('show');
-            }, duration);
-        }
+<script>
+  // ================================================================
+  //  CONFIGURACIÓN
+  // ================================================================
+  const SHEET_ID = '1CnR6YNmJKuUY5nVsbAYTLCoAQU0ftOAGbH2UZOSls5I';
+  const SHEET_NAME = 'clientes';
+  const OPEN_SHEET_URL = `https://opensheet.elk.sh/${SHEET_ID}/${SHEET_NAME}`;
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbysQeeWNEowYStCnnpYuMJAjbE1LN8dOwi3Ec8xDoBSKg93aA-EqFOofIbA3YOOYQN_Pg/exec';
 
-        function setStatus(text, isLoading = false, badge = null) {
-            statusText.textContent = text;
-            container.classList.toggle('loading', isLoading);
-            if (badge !== null) {
-                rowCount.textContent = badge;
-            }
-        }
+  let editingId = null;
+  let records = [];
 
-        function updateRowCount() {
-            rowCount.textContent = `${allData.length} servicios`;
-        }
+  // ================================================================
+  //  FECHA ACTUAL POR DEFECTO
+  // ================================================================
+  function setDefaultDate() {
+    const today = new Date();
+    const y = today.getFullYear();
+    const m = String(today.getMonth() + 1).padStart(2, '0');
+    const d = String(today.getDate()).padStart(2, '0');
+    document.getElementById('fecha').value = `${y}-${m}-${d}`;
+  }
 
-        // ============================
-        // LEER DATOS (GET via OpenSheet)
-        // ============================
-        async function fetchData() {
-            try {
-                setStatus('🔄 Descargando datos...', true);
-                const res = await fetch(READ_URL);
-                if (!res.ok) throw new Error(`HTTP ${res.status} - ${res.statusText}`);
-                const data = await res.json();
+  // ================================================================
+  //  CARGAR DATOS (lectura con OpenSheet)
+  // ================================================================
+  async function loadData() {
+    try {
+      const resp = await fetch(OPEN_SHEET_URL);
+      if (!resp.ok) throw new Error('Error al obtener datos');
+      const data = await resp.json();
+      records = data.map(row => ({
+        id: parseInt(row.id) || 0,
+        fecha: row.fecha || '',
+        descripcion: row.descripcion || '',
+        inversion: parseFloat(row.inversion) || 0,
+        venta: parseFloat(row.venta) || 0,
+        cliente: row.cliente || ''
+      }));
+      renderTable();
+      updateSummary();
+    } catch (error) {
+      console.error('loadData error:', error);
+      document.getElementById('tableBody').innerHTML = `
+        <tr><td colspan="7" style="text-align:center; padding:2rem; color:#b28b6f;">
+          <i class="fas fa-exclamation-triangle"></i> Error al cargar.
+          <button class="btn btn-secondary" onclick="loadData()" style="margin-left:1rem;">
+            <i class="fas fa-redo"></i> Reintentar
+          </button>
+        </td></tr>
+      `;
+    }
+  }
 
-                if (!data || data.length === 0) {
-                    allData = [];
-                    setStatus('📭 Sin datos', false);
-                    renderTable();
-                    updateRowCount();
-                    tableFoot.style.display = 'none';
-                    return;
-                }
+  // ================================================================
+  //  RENDER TABLA
+  // ================================================================
+  function renderTable() {
+    const tbody = document.getElementById('tableBody');
+    if (!records.length) {
+      tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:1.5rem; color:#6b5a4b;">
+        <i class="fas fa-inbox"></i> No hay registros aún.
+      </td></tr>`;
+      return;
+    }
+    let html = '';
+    records.forEach(r => {
+      const gan = (r.venta - r.inversion).toFixed(2);
+      html += `
+        <tr>
+          <td class="col-id">${r.id}</td>
+          <td>${r.fecha}</td>
+          <td>${r.descripcion || '—'}</td>
+          <td class="col-monto">S/ ${r.inversion.toFixed(2)}</td>
+          <td class="col-monto">S/ ${r.venta.toFixed(2)}</td>
+          <td class="col-cliente">${r.cliente}</td>
+          <td>
+            <div class="acciones">
+              <button class="btn-icon detail" title="Ver detalle" onclick="showDetail(${r.id})">
+                <i class="fas fa-eye"></i> Detalle
+              </button>
+              <button class="btn-icon edit" title="Editar" onclick="editRecord(${r.id})">
+                <i class="fas fa-pen"></i> Editar
+              </button>
+              <button class="btn-icon delete" title="Eliminar" onclick="deleteRecord(${r.id})">
+                <i class="fas fa-trash"></i> Eliminar
+              </button>
+            </div>
+          </td>
+        </tr>
+      `;
+    });
+    tbody.innerHTML = html;
+  }
 
-                allData = data;
-                setStatus(`✅ ${allData.length} servicios cargados`, false);
-                renderTable();
-                updateRowCount();
-                calculateTotals();
-                tableFoot.style.display = 'table-footer-group';
-            } catch (err) {
-                console.error('Error al leer:', err);
-                setStatus('❌ Error al cargar datos', false);
-                showToast('Error al leer la hoja: ' + err.message, 'error', 5000);
-            }
-        }
+  // ================================================================
+  //  RESUMEN
+  // ================================================================
+  function updateSummary() {
+    const totalInv = records.reduce((s, r) => s + r.inversion, 0);
+    const totalVen = records.reduce((s, r) => s + r.venta, 0);
+    const gan = totalVen - totalInv;
+    document.getElementById('countReg').textContent = records.length;
+    document.getElementById('totalInv').textContent = `S/ ${totalInv.toFixed(2)}`;
+    document.getElementById('totalVen').textContent = `S/ ${totalVen.toFixed(2)}`;
+    document.getElementById('totalGan').textContent = `S/ ${gan.toFixed(2)}`;
+  }
 
-        // ============================
-        // RENDERIZAR TABLA + TOTALES
-        // ============================
-        function renderTable() {
-            if (allData.length === 0) {
-                tableBody.innerHTML = `<tr class="empty-row"><td colspan="6">📭 No hay servicios registrados</td></tr>`;
-                tableFoot.style.display = 'none';
-                return;
-            }
+  // ================================================================
+  //  ACCIONES: AGREGAR / EDITAR / ELIMINAR
+  // ================================================================
+  function saveRecord() {
+    const fecha = document.getElementById('fecha').value;
+    const cliente = document.getElementById('cliente').value.trim();
+    const descripcion = document.getElementById('descripcion').value.trim();
+    const inversion = parseFloat(document.getElementById('inversion').value) || 0;
+    const venta = parseFloat(document.getElementById('venta').value) || 0;
 
-            let html = '';
-            const sorted = [...allData].sort((a, b) => (parseInt(b.id) || 0) - (parseInt(a.id) || 0));
-            sorted.forEach(row => {
-                const fecha = formatDate(row.fecha);
-                const inversion = parseFloat(row.inversion) || 0;
-                const venta = parseFloat(row.venta) || 0;
-                html += `<tr>
-                            <td>${row.id || ''}</td>
-                            <td>${fecha}</td>
-                            <td>${escapeHtml(row.descripcion || '')}</td>
-                            <td>S/ ${inversion.toFixed(2)}</td>
-                            <td>S/ ${venta.toFixed(2)}</td>
-                            <td>${escapeHtml(row.cliente || '')}</td>
-                        </tr>`;
-            });
-            tableBody.innerHTML = html;
-        }
+    if (!fecha || !cliente) {
+      alert('Completa la fecha y el cliente.');
+      return;
+    }
 
-        function calculateTotals() {
-            let sumInv = 0,
-                sumVent = 0,
-                sumGan = 0;
-            allData.forEach(row => {
-                const inv = parseFloat(row.inversion) || 0;
-                const vent = parseFloat(row.venta) || 0;
-                sumInv += inv;
-                sumVent += vent;
-                sumGan += (vent - inv);
-            });
-            totalInv.textContent = `S/ ${sumInv.toFixed(2)}`;
-            totalVent.textContent = `S/ ${sumVent.toFixed(2)}`;
-            totalGan.textContent = `S/ ${sumGan.toFixed(2)}`;
-        }
+    const editId = document.getElementById('editId').value;
+    const action = editId ? 'update' : 'add';
+    const data = {
+      fecha,
+      cliente,
+      descripcion,
+      inversion,
+      venta,
+      id: editId ? parseInt(editId) : null
+    };
 
-        // ============================
-        // UTILIDADES DE FORMATEO
-        // ============================
-        function formatDate(dateStr) {
-            if (!dateStr) return '';
-            try {
-                const d = new Date(dateStr);
-                if (!isNaN(d)) return d.toLocaleDateString('es-ES');
-            } catch (e) {}
-            return dateStr;
-        }
+    sendAction(action, data);
+  }
 
-        function escapeHtml(text) {
-            if (!text) return '';
-            const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
-            return text.replace(/[&<>"']/g, m => map[m]);
-        }
+  function editRecord(id) {
+    const record = records.find(r => r.id === id);
+    if (!record) return;
+    document.getElementById('editId').value = id;
+    document.getElementById('fecha').value = record.fecha;
+    document.getElementById('cliente').value = record.cliente;
+    document.getElementById('descripcion').value = record.descripcion;
+    document.getElementById('inversion').value = record.inversion;
+    document.getElementById('venta').value = record.venta;
 
-        function getToday() {
-            const hoy = new Date();
-            return hoy.getFullYear() + '-' +
-                String(hoy.getMonth() + 1).padStart(2, '0') + '-' +
-                String(hoy.getDate()).padStart(2, '0');
-        }
+    document.getElementById('saveBtn').innerHTML = '<i class="fas fa-pen"></i> Actualizar';
+    document.getElementById('cancelBtn').style.display = 'inline-flex';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
 
-        // ============================
-        // CONSTRUIR FORMULARIO
-        // ============================
-        function buildFormFields() {
-            const fechaActual = getToday();
-            const campos = [
-                { name: 'fecha', label: '📅 Fecha', type: 'date', value: fechaActual },
-                { name: 'descripcion', label: '📝 Descripción', type: 'text', placeholder: 'Ej: Mantenimiento' },
-                { name: 'inversion', label: '💰 Inversión (S/)', type: 'number', step: '0.01', min: '0',
-                placeholder: '0.00' },
-                { name: 'venta', label: '💵 Venta (S/)', type: 'number', step: '0.01', min: '0', placeholder: '0.00' },
-                { name: 'cliente', label: '👤 Cliente', type: 'text', placeholder: 'Nombre del cliente' }
-            ];
+  function cancelEdit() {
+    document.getElementById('editId').value = '';
+    setDefaultDate();
+    document.getElementById('cliente').value = '';
+    document.getElementById('descripcion').value = '';
+    document.getElementById('inversion').value = '';
+    document.getElementById('venta').value = '';
+    document.getElementById('saveBtn').innerHTML = '<i class="fas fa-save"></i> Guardar';
+    document.getElementById('cancelBtn').style.display = 'none';
+    editingId = null;
+  }
 
-            let html = '';
-            campos.forEach(campo => {
-                const valueAttr = campo.value ? `value="${campo.value}"` : '';
-                const minAttr = campo.min ? `min="${campo.min}"` : '';
-                const stepAttr = campo.step ? `step="${campo.step}"` : '';
-                const placeholder = campo.placeholder ? `placeholder="${campo.placeholder}"` : '';
-                html += `
-                            <div class="form-group">
-                                <label for="field_${campo.name}"><span class="emoji">${campo.label.split(' ')[0]}</span> ${campo.label.split(' ').slice(1).join(' ')}</label>
-                                <input type="${campo.type}" id="field_${campo.name}" name="${campo.name}" 
-                                       ${valueAttr} ${minAttr} ${stepAttr} ${placeholder} 
-                                       ${campo.type === 'date' ? '' : 'required'} />
-                            </div>
-                        `;
-            });
-            formFields.innerHTML = html;
-        }
+  function deleteRecord(id) {
+    if (!confirm(`¿Eliminar el servicio con ID ${id}?`)) return;
+    sendAction('delete', { id });
+  }
 
-        // ============================
-        // ENVIAR REGISTRO (POST)
-        // ============================
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
+  // ================================================================
+  //  ENVÍO AL SCRIPT (POST con mode: 'no-cors')
+  //  + RECARGA AUTOMÁTICA (500ms para actualización casi inmediata)
+  // ================================================================
+  async function sendAction(action, data) {
+    const payload = { action, data };
+    const saveBtn = document.getElementById('saveBtn');
+    // Mostrar spinner en el botón
+    const originalText = saveBtn.innerHTML;
+    saveBtn.innerHTML = '<span class="spinner"></span> Guardando...';
+    saveBtn.disabled = true;
+    document.querySelectorAll('.btn').forEach(b => b.disabled = true);
 
-            const inv = parseFloat(document.getElementById('field_inversion').value);
-            const vent = parseFloat(document.getElementById('field_venta').value);
-            if (inv < 0 || vent < 0) {
-                showToast('⚠️ Inversión y Venta deben ser números positivos.', 'error', 4000);
-                return;
-            }
+    try {
+      await fetch(SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
 
-            const payload = {
-                fecha: document.getElementById('field_fecha').value || '',
-                descripcion: document.getElementById('field_descripcion').value.trim() || '',
-                inversion: document.getElementById('field_inversion').value || '0',
-                venta: document.getElementById('field_venta').value || '0',
-                cliente: document.getElementById('field_cliente').value.trim() || ''
-            };
+      // Recarga rápida (500ms) para que la tabla se actualice casi al instante
+      setTimeout(() => {
+        cancelEdit();
+        loadData();
+        // Restaurar botón
+        saveBtn.innerHTML = originalText;
+        saveBtn.disabled = false;
+        document.querySelectorAll('.btn').forEach(b => b.disabled = false);
+      }, 500);
 
-            submitBtn.classList.add('loading');
-            submitBtn.disabled = true;
-            setStatus('⏳ Registrando...', true);
+    } catch (error) {
+      console.error('sendAction error:', error);
+      alert('Error al comunicarse con el servidor.');
+      saveBtn.innerHTML = originalText;
+      saveBtn.disabled = false;
+      document.querySelectorAll('.btn').forEach(b => b.disabled = false);
+    }
+  }
 
-            try {
-                await fetch(WRITE_URL, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ action: 'add', sheetName: SHEET_NAME, row: payload }),
-                });
+  // ================================================================
+  //  MODAL (VENTANA EMERGENTE) PARA INFORME DETALLADO
+  // ================================================================
+  function showDetail(id) {
+    const record = records.find(r => r.id === id);
+    if (!record) return;
+    document.getElementById('detId').textContent = record.id;
+    document.getElementById('detFecha').textContent = record.fecha;
+    document.getElementById('detCliente').textContent = record.cliente;
+    document.getElementById('detDesc').textContent = record.descripcion || '—';
+    document.getElementById('detInv').textContent = `S/ ${record.inversion.toFixed(2)}`;
+    document.getElementById('detVen').textContent = `S/ ${record.venta.toFixed(2)}`;
+    const gan = (record.venta - record.inversion).toFixed(2);
+    document.getElementById('detGan').textContent = `S/ ${gan}`;
+    document.getElementById('detailModal').classList.add('active');
+  }
 
-                showToast('✅ Servicio registrado. Actualizando...', 'success', 3000);
-                form.reset();
-                document.getElementById('field_fecha').value = getToday();
+  function closeModal() {
+    document.getElementById('detailModal').classList.remove('active');
+  }
 
-                setTimeout(() => {
-                    fetchData();
-                }, 2000);
+  // Cerrar modal al hacer clic fuera del cuadro
+  document.getElementById('detailModal').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+  });
 
-            } catch (err) {
-                console.error('Error en POST:', err);
-                showToast('❌ Error al registrar: ' + err.message, 'error', 5000);
-                setStatus('❌ Error en envío', false);
-            } finally {
-                submitBtn.classList.remove('loading');
-                submitBtn.disabled = false;
-                setStatus('Listo', false);
-            }
-        });
-
-        // ============================
-        // RESET DEL FORMULARIO
-        // ============================
-        resetBtn.addEventListener('click', () => {
-            form.reset();
-            document.getElementById('field_fecha').value = getToday();
-        });
-
-        // ============================
-        // INFORME DETALLADO (MODAL)
-        // ============================
-        function generarInforme() {
-            if (allData.length === 0) {
-                reportContent.innerHTML =
-                    `<p style="text-align:center;color:var(--text-muted);padding:40px 0;">📭 No hay servicios para mostrar.</p>`;
-                return;
-            }
-
-            const total = allData.length;
-            let totalInv = 0,
-                totalVent = 0,
-                totalGan = 0;
-            let mayorVenta = 0,
-                servicioMayor = '';
-            const clienteCount = {};
-
-            allData.forEach(p => {
-                const inv = parseFloat(p.inversion) || 0;
-                const vent = parseFloat(p.venta) || 0;
-                totalInv += inv;
-                totalVent += vent;
-                totalGan += (vent - inv);
-                if (vent > mayorVenta) {
-                    mayorVenta = vent;
-                    servicioMayor = p.descripcion || 'N/A';
-                }
-                const cli = p.cliente || 'Sin cliente';
-                clienteCount[cli] = (clienteCount[cli] || 0) + 1;
-            });
-
-            let maxCli = '',
-                maxCount = 0;
-            for (const [cli, count] of Object.entries(clienteCount)) {
-                if (count > maxCount) { maxCount = count;
-                    maxCli = cli; }
-            }
-
-            const gananciaPromedio = total > 0 ? totalGan / total : 0;
-
-            let html = `
-                        <div class="stats-grid">
-                            <div class="stat-card"><div class="number">${total}</div><div class="label">Total Servicios</div></div>
-                            <div class="stat-card"><div class="number">S/ ${totalInv.toFixed(2)}</div><div class="label">Inversión Total</div></div>
-                            <div class="stat-card"><div class="number">S/ ${totalVent.toFixed(2)}</div><div class="label">Venta Total</div></div>
-                            <div class="stat-card"><div class="number">S/ ${totalGan.toFixed(2)}</div><div class="label">Ganancia Total</div></div>
-                            <div class="stat-card"><div class="number">S/ ${gananciaPromedio.toFixed(2)}</div><div class="label">Ganancia Promedio</div></div>
-                            <div class="stat-card"><div class="number">${escapeHtml(servicioMayor)}</div><div class="label">Servicio más caro (S/ ${mayorVenta.toFixed(2)})</div></div>
-                            <div class="stat-card"><div class="number">${escapeHtml(maxCli)}</div><div class="label">Cliente más frecuente (${maxCount})</div></div>
-                        </div>
-                        <h3 style="margin: 20px 0 12px; font-size:1rem; font-weight:700; color:var(--text-secondary);">📋 Lista completa de servicios</h3>
-                        <div class="modal-table-wrapper">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Fecha</th>
-                                        <th>Descripción</th>
-                                        <th>Inversión</th>
-                                        <th>Venta</th>
-                                        <th>Cliente</th>
-                                        <th>Ganancia</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                        `;
-
-            const sorted = [...allData].sort((a, b) => (parseInt(b.id) || 0) - (parseInt(a.id) || 0));
-            sorted.forEach(p => {
-                const inv = parseFloat(p.inversion) || 0;
-                const vent = parseFloat(p.venta) || 0;
-                const gan = vent - inv;
-                const fecha = formatDate(p.fecha);
-                html += `
-                                <tr>
-                                    <td>${p.id || ''}</td>
-                                    <td>${fecha}</td>
-                                    <td>${escapeHtml(p.descripcion || '')}</td>
-                                    <td>S/ ${inv.toFixed(2)}</td>
-                                    <td>S/ ${vent.toFixed(2)}</td>
-                                    <td>${escapeHtml(p.cliente || '')}</td>
-                                    <td>S/ ${gan.toFixed(2)}</td>
-                                </tr>
-                            `;
-            });
-
-            html += `
-                                </tbody>
-                            </table>
-                        </div>
-                    `;
-            reportContent.innerHTML = html;
-        }
-
-        // ============================
-        // EVENTOS DEL MODAL
-        // ============================
-        reportBtn.addEventListener('click', () => {
-            generarInforme();
-            reportModal.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        });
-
-        closeModalBtn.addEventListener('click', () => {
-            reportModal.classList.remove('active');
-            document.body.style.overflow = '';
-        });
-
-        reportModal.addEventListener('click', (e) => {
-            if (e.target === reportModal) {
-                reportModal.classList.remove('active');
-                document.body.style.overflow = '';
-            }
-        });
-
-        // ============================
-        // REFRESCAR
-        // ============================
-        refreshBtn.addEventListener('click', () => {
-            fetchData();
-            showToast('🔄 Actualizando datos...', 'info', 2000);
-        });
-
-        // ============================
-        // INICIO
-        // ============================
-        (function init() {
-            buildFormFields();
-            if (!SHEET_ID || SHEET_ID === '') {
-                setStatus('⚠️ Configura SHEET_ID en el código', false);
-                showToast('⚠️ Configura SHEET_ID', 'error', 6000);
-                return;
-            }
-            if (!WRITE_URL || WRITE_URL.includes('TU_SCRIPT_ID')) {
-                setStatus('⚠️ Configura WRITE_URL (URL del script)', false);
-                showToast('⚠️ Configura WRITE_URL con la URL de tu web app', 'error', 6000);
-            }
-            fetchData();
-        })();
-    </script>
+  // ================================================================
+  //  INICIO
+  // ================================================================
+  setDefaultDate();
+  loadData();
+</script>
 </body>
 </html>
