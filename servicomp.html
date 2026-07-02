@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>📋 Servicomp+ · Gestión de Servicios</title>
+    <style>
+        /* ===== RESET Y VARIABLES ===== */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        :root {
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --success: #16a34a;
+            --success-hover: #15803d;
+            --info: #0ea5e9;
+            --danger: #ef4444;
+            --gray-50: #f8fafc;
+            --gray-100: #f1f5f9;
+            --gray-200: #e2e8f0;
+            --gray-300: #cbd5e1;
+            --gray-500: #64748b;
+            --gray-700: #334155;
+            --gray-900: #0f172a;
+            --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+            --shadow-lg: 0 10px 30px rgba(0,0,0,0.10);
+            --radius: 16px;
+            --radius-sm: 10px;
+            --transition: 0.2s ease;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, system-ui, -apple-system, sans-serif;
+            background: linear-gradient(145deg, #f0f4ff 0%, #e6edf7 100%);
+            min-height: 100vh;
+            padding: 24px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            color: var(--gray-900);
+        }
+        .container {
+            max-width: 1280px;
+            width: 100%;
+            background: rgba(255,255,255,0.85);
+            backdrop-filter: blur(8px);
+            border-radius: var(--radius);
+            padding: 28px 32px;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid rgba(255,255,255,0.6);
+            transition: opacity 0.3s;
+        }
+        .container.loading {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        /* ===== HEADER ===== */
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 6px;
+        }
+        .header img {
+            height: 56px;
+            width: auto;
+            border-radius: 12px;
+            object-fit: contain;
+            background: white;
+            padding: 4px;
+            box-shadow: var(--shadow-sm);
+        }
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            letter-spacing: -0.5px;
+        }
+        .header .subtitle {
+            color: var(--gray-500);
+            font-size: 0.95rem;
+            margin-left: auto;
+            font-weight: 500;
+        }
+
+        /* ===== STATUS BAR ===== */
+        .status {
+            background: var(--gray-50);
+            padding: 12px 18px;
+            border-radius: var(--radius-sm);
+            margin: 12px 0 20px;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 8px;
+            border: 1px solid var(--gray-200);
+            font-size: 0.95rem;
+            align-items: center;
+        }
+        .status .badge {
+            background: var(--primary);
+            color: white;
+            padding: 4px 18px;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        .status .badge.success {
+            background: var(--success);
+        }
+
+        /* ===== TOOLBAR ===== */
+        .toolbar {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 24px;
+        }
+        .toolbar .btn {
+            flex: 0 1 auto;
+        }
+
+        /* ===== FORMULARIO ===== */
+        .form-section {
+            background: var(--gray-50);
+            border-radius: var(--radius);
+            padding: 20px 24px 24px;
+            margin-bottom: 28px;
+            border: 1px solid var(--gray-200);
+            transition: var(--transition);
+        }
+        .form-section:hover {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.05);
+        }
+        .form-section h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--gray-700);
+        }
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+            align-items: end;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .form-group label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--gray-500);
+        }
+        .form-group input,
+        .form-group select {
+            padding: 10px 14px;
+            border: 1.5px solid var(--gray-200);
+            border-radius: var(--radius-sm);
+            font-size: 0.95rem;
+            background: white;
+            transition: var(--transition);
+            width: 100%;
+            font-family: inherit;
+        }
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+        }
+        .form-group input:invalid:not(:placeholder-shown) {
+            border-color: var(--danger);
+        }
+        .form-actions {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-top: 16px;
+        }
+
+        /* ===== BOTONES ===== */
+        .btn {
+            padding: 10px 24px;
+            border: none;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--gray-200);
+            color: var(--gray-700);
+            text-decoration: none;
+            line-height: 1.2;
+        }
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-sm);
+        }
+        .btn:active {
+            transform: scale(0.97);
+        }
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        .btn-primary:hover {
+            background: var(--primary-hover);
+        }
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+        .btn-success:hover {
+            background: var(--success-hover);
+        }
+        .btn-info {
+            background: var(--info);
+            color: white;
+        }
+        .btn-info:hover {
+            background: #0284c7;
+        }
+        .btn-outline {
+            background: transparent;
+            border: 1.5px solid var(--gray-300);
+        }
+        .btn-outline:hover {
+            background: var(--gray-50);
+            border-color: var(--gray-500);
+        }
+        .btn:disabled {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+        .btn .spinner {
+            display: none;
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+        }
+        .btn.loading .spinner {
+            display: inline-block;
+        }
+        .btn.loading .btn-text {
+            display: none;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* ===== TABLA ===== */
+        .table-wrapper {
+            overflow-x: auto;
+            border-radius: var(--radius);
+            border: 1px solid var(--gray-200);
+            background: white;
+            margin-top: 4px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+            min-width: 600px;
+        }
+        thead {
+            background: var(--gray-100);
+        }
+        th {
+            text-align: left;
+            padding: 14px 16px;
+            font-weight: 600;
+            color: var(--gray-700);
+            border-bottom: 2px solid var(--gray-200);
+            white-space: nowrap;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        td {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--gray-100);
+            vertical-align: middle;
+        }
+        tr:last-child td {
+            border-bottom: none;
+        }
+        tbody tr:hover td {
+            background: #fafcff;
+        }
+        .empty-row td {
+            padding: 48px 16px;
+            text-align: center;
+            color: var(--gray-500);
+            font-style: italic;
+            font-size: 1.05rem;
+        }
+        .table-footer {
+            background: var(--gray-50);
+            font-weight: 600;
+            border-top: 2px solid var(--gray-200);
+        }
+        .table-footer td {
+            padding: 12px 16px;
+            background: var(--gray-50);
+        }
+
+        /* ===== MODAL ===== */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.55);
+            backdrop-filter: blur(6px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 20px;
+            animation: fadeIn 0.25s ease;
+        }
+        .modal-overlay.active {
+            display: flex;
+        }
+        .modal {
+            background: white;
+            border-radius: var(--radius);
+            max-width: 880px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 28px 32px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+            animation: slideUp 0.3s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--gray-200);
+            padding-bottom: 12px;
+        }
+        .modal-header h2 {
+            font-size: 1.6rem;
+            font-weight: 700;
+        }
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 2rem;
+            cursor: pointer;
+            color: var(--gray-500);
+            transition: var(--transition);
+            line-height: 1;
+        }
+        .modal-close:hover {
+            color: var(--gray-900);
+            transform: rotate(90deg);
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .stat-card {
+            background: var(--gray-50);
+            border-radius: var(--radius-sm);
+            padding: 16px;
+            text-align: center;
+            border: 1px solid var(--gray-200);
+        }
+        .stat-card .number {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--gray-900);
+        }
+        .stat-card .label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            color: var(--gray-500);
+            letter-spacing: 0.5px;
+            margin-top: 4px;
+        }
+        .modal-table-wrapper {
+            overflow-x: auto;
+            max-height: 280px;
+            overflow-y: auto;
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-sm);
+        }
+        .modal-table-wrapper table {
+            font-size: 0.85rem;
+            min-width: 400px;
+        }
+        .modal-table-wrapper th {
+            background: var(--gray-100);
+            position: sticky;
+            top: 0;
+            z-index: 2;
+        }
+
+        /* ===== TOAST ===== */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--gray-900);
+            color: white;
+            padding: 14px 28px;
+            border-radius: 40px;
+            font-weight: 500;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+            z-index: 2000;
+            transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+            transform: translateY(80px);
+            opacity: 0;
+            max-width: 90%;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        .toast.success { background: var(--success); }
+        .toast.error { background: var(--danger); }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .container { padding: 20px; }
+            .header h1 { font-size: 1.5rem; }
+            .header .subtitle { margin-left: 0; width: 100%; }
+            .form-grid { grid-template-columns: 1fr; }
+            .form-actions { flex-direction: column; align-items: stretch; }
+            .form-actions .btn { justify-content: center; }
+            .toolbar { flex-direction: column; }
+            .toolbar .btn { justify-content: center; }
+            .stats-grid { grid-template-columns: 1fr 1fr; }
+            .modal { padding: 20px; }
+            th, td { padding: 10px 12px; font-size: 0.8rem; }
+        }
+        @media (max-width: 480px) {
+            .container { padding: 12px; }
+            .status { flex-direction: column; align-items: flex-start; }
+            .status .badge { align-self: flex-start; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="appContainer">
+        <!-- HEADER -->
+        <div class="header">
+            <img src="https://via.placeholder.com/56x56?text=📋" alt="Servicomp+" 
+                 onerror="this.style.display='none'" />
+            <h1>📋 Servicomp+</h1>
+            <span class="subtitle">Gestión de Servicios</span>
+        </div>
+
+        <!-- STATUS BAR -->
+        <div class="status" id="statusBar">
+            <span id="statusText">🔄 Cargando datos...</span>
+            <span class="badge" id="rowCount">0 servicios</span>
+        </div>
+
+        <!-- TOOLBAR -->
+        <div class="toolbar">
+            <button class="btn btn-info" id="reportBtn">📊 Informe Detallado</button>
+            <button class="btn btn-success" id="refreshBtn">🔄 Actualizar</button>
+        </div>
+
+        <!-- FORMULARIO -->
+        <div class="form-section">
+            <h2>✏️ Agregar servicio</h2>
+            <form id="dataForm" novalidate>
+                <div class="form-grid" id="formFields">
+                    <!-- Generado por JS -->
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary" id="submitBtn">
+                        <span class="spinner"></span>
+                        <span class="btn-text">➕ Registrar</span>
+                    </button>
+                    <button type="reset" class="btn btn-outline" id="resetBtn">🗑️ Limpiar</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- TABLA -->
+        <div class="table-wrapper">
+            <table id="dataTable">
+                <thead id="tableHead">
+                    <tr>
+                        <th>ID</th>
+                        <th>Fecha</th>
+                        <th>Descripción</th>
+                        <th>Inversión (S/)</th>
+                        <th>Venta (S/)</th>
+                        <th>Cliente</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    <tr class="empty-row"><td colspan="6">No hay servicios registrados</td></tr>
+                </tbody>
+                <tfoot id="tableFoot" style="display:none;">
+                    <tr class="table-footer">
+                        <td colspan="3" style="text-align:right; font-weight:600;">Totales:</td>
+                        <td id="totalInversion">S/ 0.00</td>
+                        <td id="totalVenta">S/ 0.00</td>
+                        <td id="totalGanancia">S/ 0.00</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+
+    <!-- ===== MODAL INFORME ===== -->
+    <div class="modal-overlay" id="reportModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>📊 Informe Detallado</h2>
+                <button class="modal-close" id="closeModalBtn">&times;</button>
+            </div>
+            <div id="reportContent">
+                <!-- Generado por JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST -->
+    <div class="toast" id="toast"></div>
+
+    <script>
+        // ============================
+        // 🔧 CONFIGURACIÓN CORREGIDA
+        // ============================
+        const SHEET_ID = '1CnR6YNmJKuUY5nVsbAYTLCoAQU0ftOAGbH2UZOSls5I';
+        const SHEET_NAME = 'registros'; // ✅ ¡Ahora coincide con tu hoja!
+        const WRITE_URL = 'https://script.google.com/macros/s/AKfycbyMS5-y3G7d-v5J5rbDvUzO9eC8Ark5PZhEUy6qf5N8LyQ0e-tw1XHYSEiXRBcpMLiinQ/exec';
+        const READ_URL = `https://opensheet.elk.sh/${SHEET_ID}/${SHEET_NAME}`;
+
+        // ============================
+        // DOM REFS
+        // ============================
+        const container = document.getElementById('appContainer');
+        const statusText = document.getElementById('statusText');
+        const rowCount = document.getElementById('rowCount');
+        const form = document.getElementById('dataForm');
+        const formFields = document.getElementById('formFields');
+        const submitBtn = document.getElementById('submitBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const tableBody = document.getElementById('tableBody');
+        const tableFoot = document.getElementById('tableFoot');
+        const totalInv = document.getElementById('totalInversion');
+        const totalVent = document.getElementById('totalVenta');
+        const totalGan = document.getElementById('totalGanancia');
+        const toast = document.getElementById('toast');
+        const reportBtn = document.getElementById('reportBtn');
+        const refreshBtn = document.getElementById('refreshBtn');
+        const reportModal = document.getElementById('reportModal');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        const reportContent = document.getElementById('reportContent');
+
+        let allData = [];
+        let toastTimeout;
+
+        // ============================
+        // UTILITIES
+        // ============================
+        function showToast(msg, type = 'info', duration = 3000) {
+            toast.textContent = msg;
+            toast.className = 'toast ' + type;
+            void toast.offsetWidth;
+            toast.classList.add('show');
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toast.classList.remove('show');
+            }, duration);
+        }
+
+        function setStatus(text, isLoading = false, badge = null) {
+            statusText.textContent = text;
+            container.classList.toggle('loading', isLoading);
+            if (badge !== null) {
+                rowCount.textContent = badge;
+            }
+        }
+
+        function updateRowCount() {
+            rowCount.textContent = `${allData.length} servicios`;
+        }
+
+        // ============================
+        // LEER DATOS (GET via OpenSheet)
+        // ============================
+        async function fetchData() {
+            try {
+                setStatus('🔄 Descargando datos...', true);
+                const res = await fetch(READ_URL);
+                if (!res.ok) throw new Error(`HTTP ${res.status} - ${res.statusText}`);
+                const data = await res.json();
+
+                if (!data || data.length === 0) {
+                    allData = [];
+                    setStatus('📭 Sin datos', false);
+                    renderTable();
+                    updateRowCount();
+                    tableFoot.style.display = 'none';
+                    return;
+                }
+
+                allData = data;
+                setStatus(`✅ ${allData.length} servicios cargados`, false);
+                renderTable();
+                updateRowCount();
+                calculateTotals();
+                tableFoot.style.display = 'table-footer-group';
+            } catch (err) {
+                console.error('Error al leer:', err);
+                setStatus('❌ Error al cargar datos', false);
+                showToast('Error al leer la hoja: ' + err.message, 'error', 5000);
+            }
+        }
+
+        // ============================
+        // RENDERIZAR TABLA + TOTALES
+        // ============================
+        function renderTable() {
+            if (allData.length === 0) {
+                tableBody.innerHTML = `<tr class="empty-row"><td colspan="6">📭 No hay servicios registrados</td></tr>`;
+                tableFoot.style.display = 'none';
+                return;
+            }
+
+            let html = '';
+            const sorted = [...allData].sort((a, b) => (parseInt(b.id) || 0) - (parseInt(a.id) || 0));
+            sorted.forEach(row => {
+                const fecha = formatDate(row.fecha);
+                const inversion = parseFloat(row.inversion) || 0;
+                const venta = parseFloat(row.venta) || 0;
+                html += `<tr>
+                            <td>${row.id || ''}</td>
+                            <td>${fecha}</td>
+                            <td>${escapeHtml(row.descripcion || '')}</td>
+                            <td>S/ ${inversion.toFixed(2)}</td>
+                            <td>S/ ${venta.toFixed(2)}</td>
+                            <td>${escapeHtml(row.cliente || '')}</td>
+                        </tr>`;
+            });
+            tableBody.innerHTML = html;
+        }
+
+        function calculateTotals() {
+            let sumInv = 0, sumVent = 0, sumGan = 0;
+            allData.forEach(row => {
+                const inv = parseFloat(row.inversion) || 0;
+                const vent = parseFloat(row.venta) || 0;
+                sumInv += inv;
+                sumVent += vent;
+                sumGan += (vent - inv);
+            });
+            totalInv.textContent = `S/ ${sumInv.toFixed(2)}`;
+            totalVent.textContent = `S/ ${sumVent.toFixed(2)}`;
+            totalGan.textContent = `S/ ${sumGan.toFixed(2)}`;
+        }
+
+        // ============================
+        // UTILIDADES DE FORMATEO
+        // ============================
+        function formatDate(dateStr) {
+            if (!dateStr) return '';
+            try {
+                const d = new Date(dateStr);
+                if (!isNaN(d)) return d.toLocaleDateString('es-ES');
+            } catch (e) {}
+            return dateStr;
+        }
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
+            return text.replace(/[&<>"']/g, m => map[m]);
+        }
+
+        function getToday() {
+            const hoy = new Date();
+            return hoy.getFullYear() + '-' +
+                String(hoy.getMonth() + 1).padStart(2, '0') + '-' +
+                String(hoy.getDate()).padStart(2, '0');
+        }
+
+        // ============================
+        // CONSTRUIR FORMULARIO
+        // ============================
+        function buildFormFields() {
+            const fechaActual = getToday();
+            const campos = [
+                { name: 'fecha', label: 'Fecha', type: 'date', value: fechaActual },
+                { name: 'descripcion', label: 'Descripción', type: 'text', placeholder: 'Ej: Mantenimiento' },
+                { name: 'inversion', label: 'Inversión (S/)', type: 'number', step: '0.01', min: '0', placeholder: '0.00' },
+                { name: 'venta', label: 'Venta (S/)', type: 'number', step: '0.01', min: '0', placeholder: '0.00' },
+                { name: 'cliente', label: 'Cliente', type: 'text', placeholder: 'Nombre del cliente' }
+            ];
+
+            let html = '';
+            campos.forEach(campo => {
+                const valueAttr = campo.value ? `value="${campo.value}"` : '';
+                const minAttr = campo.min ? `min="${campo.min}"` : '';
+                const stepAttr = campo.step ? `step="${campo.step}"` : '';
+                const placeholder = campo.placeholder ? `placeholder="${campo.placeholder}"` : '';
+                html += `
+                            <div class="form-group">
+                                <label for="field_${campo.name}">${campo.label}</label>
+                                <input type="${campo.type}" id="field_${campo.name}" name="${campo.name}" 
+                                       ${valueAttr} ${minAttr} ${stepAttr} ${placeholder} 
+                                       ${campo.type === 'date' ? '' : 'required'} />
+                            </div>
+                        `;
+            });
+            formFields.innerHTML = html;
+        }
+
+        // ============================
+        // ENVIAR REGISTRO (POST)
+        // ============================
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const inv = parseFloat(document.getElementById('field_inversion').value);
+            const vent = parseFloat(document.getElementById('field_venta').value);
+            if (inv < 0 || vent < 0) {
+                showToast('⚠️ Inversión y Venta deben ser números positivos.', 'error', 4000);
+                return;
+            }
+
+            const payload = {
+                fecha: document.getElementById('field_fecha').value || '',
+                descripcion: document.getElementById('field_descripcion').value.trim() || '',
+                inversion: document.getElementById('field_inversion').value || '0',
+                venta: document.getElementById('field_venta').value || '0',
+                cliente: document.getElementById('field_cliente').value.trim() || ''
+            };
+
+            submitBtn.classList.add('loading');
+            submitBtn.disabled = true;
+            setStatus('⏳ Registrando...', true);
+
+            try {
+                await fetch(WRITE_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: 'add', sheetName: SHEET_NAME, row: payload }),
+                });
+
+                showToast('✅ Servicio registrado. Actualizando...', 'success', 3000);
+                form.reset();
+                document.getElementById('field_fecha').value = getToday();
+
+                setTimeout(() => {
+                    fetchData();
+                }, 2000);
+
+            } catch (err) {
+                console.error('Error en POST:', err);
+                showToast('❌ Error al registrar: ' + err.message, 'error', 5000);
+                setStatus('❌ Error en envío', false);
+            } finally {
+                submitBtn.classList.remove('loading');
+                submitBtn.disabled = false;
+                setStatus('Listo', false);
+            }
+        });
+
+        // ============================
+        // RESET DEL FORMULARIO
+        // ============================
+        resetBtn.addEventListener('click', () => {
+            form.reset();
+            document.getElementById('field_fecha').value = getToday();
+        });
+
+        // ============================
+        // INFORME DETALLADO (MODAL)
+        // ============================
+        function generarInforme() {
+            if (allData.length === 0) {
+                reportContent.innerHTML = `<p style="text-align:center;color:var(--gray-500);padding:40px 0;">📭 No hay servicios para mostrar.</p>`;
+                return;
+            }
+
+            const total = allData.length;
+            let totalInv = 0, totalVent = 0, totalGan = 0;
+            let mayorVenta = 0, servicioMayor = '';
+            const clienteCount = {};
+
+            allData.forEach(p => {
+                const inv = parseFloat(p.inversion) || 0;
+                const vent = parseFloat(p.venta) || 0;
+                totalInv += inv;
+                totalVent += vent;
+                totalGan += (vent - inv);
+                if (vent > mayorVenta) {
+                    mayorVenta = vent;
+                    servicioMayor = p.descripcion || 'N/A';
+                }
+                const cli = p.cliente || 'Sin cliente';
+                clienteCount[cli] = (clienteCount[cli] || 0) + 1;
+            });
+
+            let maxCli = '', maxCount = 0;
+            for (const [cli, count] of Object.entries(clienteCount)) {
+                if (count > maxCount) { maxCount = count; maxCli = cli; }
+            }
+
+            const gananciaPromedio = total > 0 ? totalGan / total : 0;
+
+            let html = `
+                        <div class="stats-grid">
+                            <div class="stat-card"><div class="number">${total}</div><div class="label">Total Servicios</div></div>
+                            <div class="stat-card"><div class="number">S/ ${totalInv.toFixed(2)}</div><div class="label">Inversión Total</div></div>
+                            <div class="stat-card"><div class="number">S/ ${totalVent.toFixed(2)}</div><div class="label">Venta Total</div></div>
+                            <div class="stat-card"><div class="number">S/ ${totalGan.toFixed(2)}</div><div class="label">Ganancia Total</div></div>
+                            <div class="stat-card"><div class="number">S/ ${gananciaPromedio.toFixed(2)}</div><div class="label">Ganancia Promedio</div></div>
+                            <div class="stat-card"><div class="number">${escapeHtml(servicioMayor)}</div><div class="label">Servicio más caro (S/ ${mayorVenta.toFixed(2)})</div></div>
+                            <div class="stat-card"><div class="number">${escapeHtml(maxCli)}</div><div class="label">Cliente más frecuente (${maxCount})</div></div>
+                        </div>
+                        <h3 style="margin: 20px 0 12px; font-size:1.1rem;">📋 Lista completa de servicios</h3>
+                        <div class="modal-table-wrapper">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Fecha</th>
+                                        <th>Descripción</th>
+                                        <th>Inversión</th>
+                                        <th>Venta</th>
+                                        <th>Cliente</th>
+                                        <th>Ganancia</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                        `;
+
+            const sorted = [...allData].sort((a, b) => (parseInt(b.id) || 0) - (parseInt(a.id) || 0));
+            sorted.forEach(p => {
+                const inv = parseFloat(p.inversion) || 0;
+                const vent = parseFloat(p.venta) || 0;
+                const gan = vent - inv;
+                const fecha = formatDate(p.fecha);
+                html += `
+                                <tr>
+                                    <td>${p.id || ''}</td>
+                                    <td>${fecha}</td>
+                                    <td>${escapeHtml(p.descripcion || '')}</td>
+                                    <td>S/ ${inv.toFixed(2)}</td>
+                                    <td>S/ ${vent.toFixed(2)}</td>
+                                    <td>${escapeHtml(p.cliente || '')}</td>
+                                    <td>S/ ${gan.toFixed(2)}</td>
+                                </tr>
+                            `;
+            });
+
+            html += `
+                                </tbody>
+                            </table>
+                        </div>
+                    `;
+            reportContent.innerHTML = html;
+        }
+
+        // ============================
+        // EVENTOS DEL MODAL
+        // ============================
+        reportBtn.addEventListener('click', () => {
+            generarInforme();
+            reportModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+
+        closeModalBtn.addEventListener('click', () => {
+            reportModal.classList.remove('active');
+            document.body.style.overflow = '';
+        });
+
+        reportModal.addEventListener('click', (e) => {
+            if (e.target === reportModal) {
+                reportModal.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        });
+
+        // ============================
+        // REFRESCAR
+        // ============================
+        refreshBtn.addEventListener('click', () => {
+            fetchData();
+            showToast('🔄 Actualizando datos...', 'info', 2000);
+        });
+
+        // ============================
+        // INICIO
+        // ============================
+        (function init() {
+            buildFormFields();
+            if (!SHEET_ID || SHEET_ID === '') {
+                setStatus('⚠️ Configura SHEET_ID en el código', false);
+                showToast('⚠️ Configura SHEET_ID', 'error', 6000);
+                return;
+            }
+            if (!WRITE_URL || WRITE_URL.includes('TU_SCRIPT_ID')) {
+                setStatus('⚠️ Configura WRITE_URL (URL del script)', false);
+                showToast('⚠️ Configura WRITE_URL con la URL de tu web app', 'error', 6000);
+            }
+            fetchData();
+        })();
+    </script>
+</body>
+</html>
