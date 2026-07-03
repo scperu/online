@@ -914,7 +914,7 @@
     <!-- ===== MAIN ===== -->
     <div class="main-container">
 
-        <!-- ===== SEARCH BAR - LÍNEA INDEPENDIENTE ===== -->
+        <!-- ===== SEARCH BAR ===== -->
         <div class="search-section">
             <i class="fas fa-search search-icon"></i>
             <input type="text" id="searchInput" placeholder="Buscar por cualquier criterio (ID, cliente, descripción, fecha...)" />
@@ -1107,18 +1107,24 @@
             let searchTerm = '';
 
             // ============================================
-            // UTILIDADES
+            // UTILIDADES - FORMATO DE FECHA
             // ============================================
+            
             function formatDate(dateStr) {
                 if (!dateStr) return '-';
                 try {
+                    if (dateStr.includes('/')) {
+                        const parts = dateStr.split('/');
+                        if (parts.length === 3) {
+                            return dateStr;
+                        }
+                    }
                     const date = new Date(dateStr);
                     if (isNaN(date.getTime())) return dateStr;
-                    return date.toLocaleDateString('es-PE', {
-                        year: 'numeric',
-                        month: '2-digit',
-                        day: '2-digit'
-                    });
+                    const day = String(date.getDate()).padStart(2, '0');
+                    const month = String(date.getMonth() + 1).padStart(2, '0');
+                    const year = date.getFullYear();
+                    return `${day}/${month}/${year}`;
                 } catch {
                     return dateStr;
                 }
@@ -1127,6 +1133,15 @@
             function formatDateForInput(dateStr) {
                 if (!dateStr) return '';
                 try {
+                    if (dateStr.includes('/')) {
+                        const parts = dateStr.split('/');
+                        if (parts.length === 3) {
+                            const day = parts[0].padStart(2, '0');
+                            const month = parts[1].padStart(2, '0');
+                            const year = parts[2];
+                            return `${year}-${month}-${day}`;
+                        }
+                    }
                     const date = new Date(dateStr);
                     if (isNaN(date.getTime())) return '';
                     return date.toISOString().split('T')[0];
@@ -1135,8 +1150,57 @@
                 }
             }
 
+            function getTodayForSheet() {
+                const today = new Date();
+                const day = String(today.getDate()).padStart(2, '0');
+                const month = String(today.getMonth() + 1).padStart(2, '0');
+                const year = today.getFullYear();
+                return `${day}/${month}/${year}`;
+            }
+
+            function formatDateForSheet(dateStr) {
+                if (!dateStr) return getTodayForSheet();
+                try {
+                    const parts = dateStr.split('-');
+                    if (parts.length === 3) {
+                        const year = parts[0];
+                        const month = parts[1];
+                        const day = parts[2];
+                        return `${day}/${month}/${year}`;
+                    }
+                    return dateStr;
+                } catch {
+                    return dateStr;
+                }
+            }
+
             function formatCurrency(value) {
                 return Number(value).toFixed(2);
+            }
+
+            /**
+             * GENERA ID EN FORMATO SERV-0001, SERV-0002, etc.
+             */
+            function generateServiceId() {
+                if (servicios.length === 0) {
+                    return 'SERV-0001';
+                }
+                
+                // Extraer números de todos los IDs existentes
+                const numbers = servicios
+                    .map(s => {
+                        const match = s.id?.match(/SERV-(\d+)/);
+                        return match ? parseInt(match[1], 10) : 0;
+                    })
+                    .filter(n => n > 0);
+
+                if (numbers.length === 0) {
+                    return 'SERV-0001';
+                }
+
+                const maxNum = Math.max(...numbers);
+                const nextNum = maxNum + 1;
+                return `SERV-${String(nextNum).padStart(4, '0')}`;
             }
 
             // ============================================
@@ -1254,9 +1318,13 @@
             async function addServicio(data) {
                 showLoading('Guardando servicio...');
                 try {
-                    const result = await apiFetch('add', data, 'POST');
+                    // Generar ID automáticamente
+                    const newId = generateServiceId();
+                    const dataWithId = { ...data, id: newId };
+                    
+                    const result = await apiFetch('add', dataWithId, 'POST');
                     await loadServicios(false);
-                    showToast('Servicio agregado correctamente', 'success');
+                    showToast(`Servicio ${newId} agregado correctamente`, 'success');
                     return result;
                 } catch (error) {
                     showToast(`Error al guardar: ${error.message}`, 'error');
@@ -1271,7 +1339,7 @@
                 try {
                     const result = await apiFetch('update', { ...data, id }, 'POST');
                     await loadServicios(false);
-                    showToast('Servicio actualizado correctamente', 'success');
+                    showToast(`Servicio ${id} actualizado correctamente`, 'success');
                     return result;
                 } catch (error) {
                     showToast(`Error al actualizar: ${error.message}`, 'error');
@@ -1282,12 +1350,12 @@
             }
 
             async function deleteServicio(id) {
-                if (!confirm('¿Estás seguro de eliminar este servicio?')) return;
+                if (!confirm(`¿Estás seguro de eliminar el servicio ${id}?`)) return;
                 showLoading('Eliminando servicio...');
                 try {
                     const result = await apiFetch('delete', { id }, 'POST');
                     await loadServicios(false);
-                    showToast('Servicio eliminado correctamente', 'success');
+                    showToast(`Servicio ${id} eliminado correctamente`, 'success');
                     return result;
                 } catch (error) {
                     showToast(`Error al eliminar: ${error.message}`, 'error');
@@ -1298,7 +1366,7 @@
             }
 
             // ============================================
-            // RENDER - BÚSQUEDA INTELIGENTE
+            // RENDER
             // ============================================
             function filterServicios(data, term) {
                 if (!term || term.trim() === '') return data;
@@ -1306,7 +1374,6 @@
                 const lower = term.toLowerCase().trim();
 
                 return data.filter(s => {
-                    // Buscar en TODAS las columnas
                     const searchable = [
                         s.id || '',
                         s.fecha ? formatDate(s.fecha) : '',
@@ -1344,7 +1411,7 @@
 
                     html += `
                         <tr>
-                            <td><code style="background:#f0f4f8;padding:0.2rem 0.6rem;border-radius:4px;font-size:0.75rem;color:#4a7fb5;">${s.id || 'N/A'}</code></td>
+                            <td><code style="background:#f0f4f8;padding:0.2rem 0.6rem;border-radius:4px;font-size:0.75rem;color:#4a7fb5;font-weight:600;">${s.id || 'N/A'}</code></td>
                             <td>${formatDate(s.fecha)}</td>
                             <td>${s.descripcion || '-'}</td>
                             <td>S/ ${formatCurrency(inversionNum)}</td>
@@ -1372,7 +1439,6 @@
                     btn.addEventListener('click', () => deleteServicio(btn.dataset.id));
                 });
 
-                // Mostrar/ocultar botón limpiar
                 clearSearch.classList.toggle('visible', searchTerm.length > 0);
             }
 
@@ -1444,7 +1510,7 @@
                 servicios.forEach(s => {
                     html += `
                         <tr>
-                            <td><code style="background:#f0f4f8;padding:0.1rem 0.4rem;border-radius:3px;font-size:0.7rem;color:#4a7fb5;">${s.id || 'N/A'}</code></td>
+                            <td><code style="background:#f0f4f8;padding:0.1rem 0.4rem;border-radius:3px;font-size:0.7rem;color:#4a7fb5;font-weight:600;">${s.id || 'N/A'}</code></td>
                             <td>${formatDate(s.fecha)}</td>
                             <td>${s.descripcion || '-'}</td>
                             <td>S/ ${formatCurrency(Number(s.inversion) || 0)}</td>
@@ -1489,7 +1555,8 @@
                     cliente.value = data.cliente || '';
                     btnSubmitText.textContent = 'Actualizar';
                 } else {
-                    fecha.value = new Date().toISOString().split('T')[0];
+                    const today = new Date();
+                    fecha.value = today.toISOString().split('T')[0];
                     descripcion.value = '';
                     inversion.value = '';
                     venta.value = '';
@@ -1526,7 +1593,6 @@
             // EVENT HANDLERS
             // ============================================
 
-            // Búsqueda inteligente con debounce
             let searchTimeout;
             searchInput.addEventListener('input', () => {
                 clearTimeout(searchTimeout);
@@ -1536,7 +1602,6 @@
                 }, DEBOUNCE_DELAY);
             });
 
-            // Limpiar búsqueda
             clearSearch.addEventListener('click', () => {
                 searchInput.value = '';
                 searchTerm = '';
@@ -1547,26 +1612,25 @@
 
             btnOpenAdd.addEventListener('click', () => openModal('Nuevo Servicio'));
 
-            // Reporte
             btnReport.addEventListener('click', generateReport);
             reportClose.addEventListener('click', closeReport);
             reportOverlay.addEventListener('click', (e) => {
                 if (e.target === reportOverlay) closeReport();
             });
 
-            // Cerrar modal
             modalClose.addEventListener('click', closeModal);
             btnCancel.addEventListener('click', closeModal);
             modalOverlay.addEventListener('click', (e) => {
                 if (e.target === modalOverlay) closeModal();
             });
 
-            // Submit form
             serviceForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
 
+                const fechaFormatted = formatDateForSheet(fecha.value);
+
                 const data = {
-                    fecha: fecha.value,
+                    fecha: fechaFormatted,
                     descripcion: descripcion.value.trim(),
                     inversion: parseFloat(inversion.value) || 0,
                     venta: parseFloat(venta.value) || 0,
@@ -1612,7 +1676,6 @@
                         closeModal();
                     }
                 }
-                // Ctrl+F o Cmd+F para focus en búsqueda
                 if ((e.ctrlKey || e.metaKey) && e.key === 'f') {
                     e.preventDefault();
                     searchInput.focus();
