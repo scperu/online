@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
     <title>Mis Cuentas - Pepito Bodega</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -16,38 +16,44 @@
             box-sizing: border-box;
         }
 
+        html {
+            font-size: 16px;
+        }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
             transition: background-color 0.3s ease, color 0.3s ease;
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 1rem;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
         /* Modo claro (por defecto) */
         body.light-mode {
-            background-color: #f8f9fa;
+            background-color: #f0f2f5;
             color: #1a1a1a;
         }
 
         /* Modo oscuro */
         body.dark-mode {
-            background-color: #1a1a1a;
+            background-color: #121212;
             color: #f0f0f0;
         }
 
         /* Tarjeta principal */
         .main-card {
             width: 100%;
-            max-width: 28rem;
+            max-width: 420px;
             border-radius: 1.5rem;
             padding: 1.5rem;
             position: relative;
             text-align: center;
             transition: background-color 0.3s ease, box-shadow 0.3s ease;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
         }
 
         body.light-mode .main-card {
@@ -55,21 +61,22 @@
         }
 
         body.dark-mode .main-card {
-            background-color: #2d2d2d;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
+            background-color: #1e1e1e;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
         }
 
         /* Avatar con logo */
         .avatar {
-            width: 6rem;
-            height: 6rem;
-            border-radius: 9999px;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
             margin: 0 auto 0.75rem;
             display: flex;
             align-items: center;
             justify-content: center;
             overflow: hidden;
             transition: background-color 0.3s ease;
+            flex-shrink: 0;
         }
 
         body.light-mode .avatar {
@@ -77,7 +84,7 @@
         }
 
         body.dark-mode .avatar {
-            background-color: #404040;
+            background-color: #333;
         }
 
         .avatar img {
@@ -88,10 +95,11 @@
 
         /* Título */
         .title {
-            font-size: 1.5rem;
+            font-size: clamp(1.2rem, 4vw, 1.5rem);
             font-weight: 700;
             margin-bottom: 1.5rem;
             transition: color 0.3s ease;
+            word-break: break-word;
         }
 
         body.light-mode .title {
@@ -105,18 +113,23 @@
         /* Botón de modo oscuro */
         .theme-toggle {
             position: absolute;
-            top: 1.5rem;
-            right: 1.5rem;
-            width: 2.5rem;
-            height: 2.5rem;
-            border-radius: 9999px;
+            top: 1rem;
+            right: 1rem;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
             border: none;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: background-color 0.3s ease, color 0.3s ease;
-            font-size: 1.25rem;
+            transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+            font-size: 1.1rem;
+            z-index: 10;
+        }
+
+        .theme-toggle:active {
+            transform: scale(0.92);
         }
 
         body.light-mode .theme-toggle {
@@ -130,43 +143,104 @@
         }
 
         body.dark-mode .theme-toggle {
-            background-color: #404040;
+            background-color: #333;
             color: #9ca3af;
         }
 
         body.dark-mode .theme-toggle:hover {
-            background-color: #4b4b4b;
+            background-color: #444;
             color: #e5e7eb;
         }
 
         /* Tarjetas de cuentas */
         .account-card {
             border-radius: 1rem;
-            padding: 1rem;
+            padding: 0.875rem;
             display: flex;
             align-items: center;
             justify-content: space-between;
             transition: transform 0.2s ease, box-shadow 0.2s ease;
-            margin-bottom: 1rem;
+            margin-bottom: 0.75rem;
             gap: 0.75rem;
+            min-height: 72px;
         }
 
         .account-card:last-child {
             margin-bottom: 0;
         }
 
-        .account-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        .account-card:active {
+            transform: scale(0.98);
         }
 
         .account-card .clickable {
             cursor: pointer;
             transition: opacity 0.2s ease;
+            -webkit-tap-highlight-color: transparent;
         }
 
-        .account-card .clickable:hover {
-            opacity: 0.8;
+        .account-card .clickable:active {
+            opacity: 0.6;
+        }
+
+        /* Logo del banco en tarjeta */
+        .bank-logo {
+            width: 48px;
+            height: 48px;
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.7rem;
+            color: white;
+            flex-shrink: 0;
+            background: rgba(255, 255, 255, 0.2);
+            overflow: hidden;
+        }
+
+        .bank-logo img {
+            width: 70%;
+            height: 70%;
+            object-fit: contain;
+        }
+
+        /* Información de la cuenta */
+        .account-info {
+            flex: 1;
+            min-width: 0;
+            text-align: left;
+        }
+
+        .account-name {
+            font-weight: 700;
+            font-size: clamp(0.85rem, 2.2vw, 0.95rem);
+            color: white;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .account-number {
+            font-size: clamp(0.7rem, 1.8vw, 0.8rem);
+            color: rgba(255, 255, 255, 0.9);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .account-number-cci {
+            font-size: clamp(0.65rem, 1.6vw, 0.75rem);
+            color: rgba(255, 255, 255, 0.7);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: flex;
+            align-items: center;
+            gap: 4px;
         }
 
         /* Botón QR */
@@ -180,36 +254,36 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 0.5rem;
-            padding: 0.5rem 1rem;
+            gap: 0.4rem;
+            padding: 0.4rem 0.8rem;
             border-radius: 0.75rem;
-            font-size: 0.75rem;
+            font-size: clamp(0.65rem, 1.6vw, 0.75rem);
             font-weight: 600;
-        }
-
-        .qr-button:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: scale(1.05);
+            -webkit-tap-highlight-color: transparent;
+            min-height: 36px;
+            min-width: 52px;
         }
 
         .qr-button:active {
-            transform: scale(0.95);
+            transform: scale(0.92);
+            background: rgba(255, 255, 255, 0.35);
         }
 
         .qr-button i {
-            font-size: 1rem;
+            font-size: clamp(0.8rem, 2vw, 1rem);
         }
 
         /* Skeleton loading */
         .skeleton {
-            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background: linear-gradient(90deg, #e8e8e8 25%, #d5d5d5 50%, #e8e8e8 75%);
             background-size: 200% 100%;
             animation: loading 1.5s infinite;
-            border-radius: 0.5rem;
+            border-radius: 0.75rem;
+            min-height: 72px;
         }
 
         body.dark-mode .skeleton {
-            background: linear-gradient(90deg, #3a3a3a 25%, #4a4a4a 50%, #3a3a3a 75%);
+            background: linear-gradient(90deg, #2a2a2a 25%, #3a3a3a 50%, #2a2a2a 75%);
         }
 
         @keyframes loading {
@@ -217,25 +291,30 @@
             100% { background-position: -200% 0; }
         }
 
+        .skeleton-space {
+            margin-bottom: 0.75rem;
+        }
+
         /* Modal para QR */
         .modal-overlay {
             position: fixed;
             inset: 0;
-            background-color: rgba(0, 0, 0, 0.6);
+            background-color: rgba(0, 0, 0, 0.7);
             display: flex;
             align-items: center;
             justify-content: center;
             z-index: 50;
-            padding: 1rem;
-            backdrop-filter: blur(4px);
-            animation: fadeIn 0.3s ease;
+            padding: 1.5rem;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            animation: fadeIn 0.25s ease;
         }
 
         .modal-content {
             background-color: white;
-            border-radius: 1rem;
+            border-radius: 1.25rem;
             padding: 1.5rem;
-            max-width: 24rem;
+            max-width: 380px;
             width: 100%;
             max-height: 90vh;
             overflow-y: auto;
@@ -244,51 +323,107 @@
         }
 
         body.dark-mode .modal-content {
-            background-color: #2d2d2d;
+            background-color: #1e1e1e;
             color: #f0f0f0;
         }
 
-        /* Logo del banco en el modal (esquina superior izquierda) */
+        /* Logo del banco en el modal */
         .modal-logo {
             position: absolute;
             top: 1rem;
-            left: 1.5rem;
-            width: 2.5rem;
-            height: 2.5rem;
+            left: 1.25rem;
+            width: 40px;
+            height: 40px;
             border-radius: 0.5rem;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: 700;
-            font-size: 0.75rem;
+            font-size: 0.65rem;
             color: white;
             overflow: hidden;
-            background: rgba(0, 0, 0, 0.1);
+            background: rgba(0, 0, 0, 0.08);
         }
 
         .modal-logo img {
-            width: 100%;
-            height: 100%;
+            width: 70%;
+            height: 70%;
             object-fit: contain;
         }
 
-        .modal-logo .logo-text {
-            font-size: 0.65rem;
-            font-weight: 700;
+        .modal-close {
+            margin-left: auto;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.25rem;
+            transition: opacity 0.2s ease;
+            color: #9ca3af;
         }
 
-        /* Nombre del titular en el modal */
+        .modal-close:hover {
+            opacity: 0.7;
+        }
+
+        .modal-close:active {
+            transform: scale(0.9);
+        }
+
+        .modal-qr-container {
+            background: #f9fafb;
+            border-radius: 0.75rem;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        body.dark-mode .modal-qr-container {
+            background: #2a2a2a;
+        }
+
+        .modal-qr-container img {
+            width: 100%;
+            height: auto;
+            border-radius: 0.5rem;
+            display: block;
+        }
+
         .modal-titular {
             text-align: center;
-            font-size: 1.25rem;
+            font-size: clamp(1.1rem, 3vw, 1.25rem);
             font-weight: 700;
-            margin-top: 1rem;
-            padding-top: 1rem;
-            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            margin-top: 0.75rem;
+            padding-top: 0.75rem;
+            border-top: 1px solid rgba(0, 0, 0, 0.08);
+            color: #111827;
         }
 
         body.dark-mode .modal-titular {
-            border-top-color: rgba(255, 255, 255, 0.1);
+            border-top-color: rgba(255, 255, 255, 0.08);
+            color: #f0f0f0;
+        }
+
+        .modal-close-btn {
+            width: 100%;
+            padding: 0.75rem;
+            border: none;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            margin-top: 1rem;
+            background-color: #f3f4f6;
+            color: #1f2937;
+        }
+
+        body.dark-mode .modal-close-btn {
+            background-color: #333;
+            color: #f0f0f0;
+        }
+
+        .modal-close-btn:active {
+            transform: scale(0.97);
         }
 
         @keyframes fadeIn {
@@ -297,37 +432,44 @@
         }
 
         @keyframes slideUp {
-            from { transform: translateY(20px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
+            from { transform: translateY(30px) scale(0.95); opacity: 0; }
+            to { transform: translateY(0) scale(1); opacity: 1; }
         }
 
         /* Notificación */
         .notification {
             position: fixed;
-            top: 1rem;
+            top: 1.5rem;
             left: 50%;
             transform: translateX(-50%);
             padding: 0.75rem 1.5rem;
             border-radius: 0.75rem;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
             z-index: 100;
             font-weight: 500;
-            animation: slideDown 0.3s ease;
+            font-size: 0.9rem;
+            animation: slideDown 0.35s ease;
             max-width: 90%;
             text-align: center;
+            backdrop-filter: blur(4px);
         }
 
         @keyframes slideDown {
-            from { transform: translateX(-50%) translateY(-20px); opacity: 0; }
+            from { transform: translateX(-50%) translateY(-30px); opacity: 0; }
             to { transform: translateX(-50%) translateY(0); opacity: 1; }
         }
 
         /* Footer */
         .footer {
             margin-top: 1.5rem;
-            font-size: 0.7rem;
-            opacity: 0.6;
-            transition: color 0.3s ease;
+            font-size: clamp(0.6rem, 1.6vw, 0.7rem);
+            opacity: 0.5;
+            transition: opacity 0.3s ease;
+            letter-spacing: 0.3px;
+        }
+
+        .footer:hover {
+            opacity: 0.8;
         }
 
         .footer a {
@@ -338,73 +480,49 @@
             cursor: pointer;
         }
 
-        .footer a:hover {
-            opacity: 0.8;
+        .footer a:active {
+            opacity: 0.6;
         }
 
-        /* Responsive */
-        @media (max-width: 480px) {
-            .main-card {
-                padding: 1rem;
-            }
-            
-            .account-card {
-                padding: 0.75rem;
-                flex-wrap: wrap;
-                gap: 0.5rem;
-            }
-            
-            .account-card .flex {
-                min-width: 0;
-                flex: 1;
-            }
-            
-            .account-card .truncate {
-                max-width: 100%;
-            }
-            
-            .qr-button {
-                padding: 0.4rem 0.75rem;
-                font-size: 0.7rem;
-            }
-            
-            .qr-button i {
-                font-size: 0.85rem;
-            }
-            
-            .avatar {
-                width: 4.5rem;
-                height: 4.5rem;
-            }
-            
-            .title {
-                font-size: 1.25rem;
+        /* Tooltip */
+        .clickable {
+            position: relative;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .clickable .tooltip {
+            visibility: hidden;
+            opacity: 0;
+            position: absolute;
+            bottom: calc(100% + 6px);
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.85);
+            color: white;
+            padding: 0.25rem 0.6rem;
+            border-radius: 0.25rem;
+            font-size: 0.6rem;
+            white-space: nowrap;
+            transition: opacity 0.2s ease, visibility 0.2s ease;
+            pointer-events: none;
+            backdrop-filter: blur(4px);
+        }
+
+        .clickable:hover .tooltip {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        @media (hover: none) {
+            .clickable .tooltip {
+                display: none;
             }
         }
 
-        @media (max-width: 380px) {
-            .account-card {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            
-            .account-card .flex {
-                justify-content: center;
-            }
-            
-            .account-card .text-left {
-                text-align: center;
-            }
-            
-            .qr-button {
-                justify-content: center;
-                padding: 0.5rem;
-            }
-        }
-
-        /* Scrollbar personalizada */
+        /* Scrollbar */
         ::-webkit-scrollbar {
-            width: 6px;
+            width: 4px;
         }
         
         ::-webkit-scrollbar-track {
@@ -413,51 +531,103 @@
         
         ::-webkit-scrollbar-thumb {
             background: #c4c4c4;
-            border-radius: 3px;
+            border-radius: 2px;
         }
         
         body.dark-mode ::-webkit-scrollbar-thumb {
             background: #555;
         }
 
-        /* Tooltip para los textos clickeables */
-        .clickable {
-            position: relative;
-            cursor: pointer;
+        /* Mejoras para móviles */
+        @media (max-width: 480px) {
+            .main-card {
+                padding: 1rem;
+                border-radius: 1.25rem;
+            }
+
+            .account-card {
+                padding: 0.75rem;
+                gap: 0.5rem;
+                min-height: 64px;
+                border-radius: 0.875rem;
+            }
+
+            .bank-logo {
+                width: 40px;
+                height: 40px;
+                border-radius: 0.625rem;
+            }
+
+            .avatar {
+                width: 64px;
+                height: 64px;
+            }
+
+            .theme-toggle {
+                width: 36px;
+                height: 36px;
+                top: 0.75rem;
+                right: 0.75rem;
+                font-size: 1rem;
+            }
+
+            .qr-button {
+                padding: 0.35rem 0.6rem;
+                min-height: 32px;
+                min-width: 44px;
+                border-radius: 0.625rem;
+            }
+
+            .modal-content {
+                padding: 1.25rem;
+                border-radius: 1rem;
+            }
+
+            .modal-logo {
+                width: 34px;
+                height: 34px;
+                top: 0.75rem;
+                left: 1rem;
+            }
         }
 
-        .clickable .tooltip {
-            visibility: hidden;
-            opacity: 0;
-            position: absolute;
-            bottom: 100%;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(0, 0, 0, 0.8);
-            color: white;
-            padding: 0.25rem 0.5rem;
-            border-radius: 0.25rem;
-            font-size: 0.65rem;
-            white-space: nowrap;
-            transition: opacity 0.2s ease, visibility 0.2s ease;
-            margin-bottom: 0.25rem;
-            pointer-events: none;
+        @media (max-width: 380px) {
+            .main-card {
+                padding: 0.75rem;
+            }
+
+            .account-card {
+                flex-wrap: wrap;
+                gap: 0.4rem;
+                padding: 0.625rem;
+            }
+
+            .account-card .account-info {
+                flex: 1 1 100%;
+                text-align: center;
+            }
+
+            .account-card .bank-logo {
+                margin: 0 auto;
+            }
+
+            .qr-button {
+                flex: 1;
+                justify-content: center;
+                min-height: 36px;
+            }
         }
 
-        .clickable:hover .tooltip {
-            visibility: visible;
-            opacity: 1;
-        }
+        @media (min-width: 768px) {
+            .account-card:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+            }
 
-        /* Mismo tamaño de fuente para CTA y CCI */
-        .text-account {
-            font-size: 0.75rem;
-            line-height: 1rem;
-        }
-
-        .text-cci {
-            font-size: 0.75rem;
-            line-height: 1rem;
+            .qr-button:hover {
+                background: rgba(255, 255, 255, 0.3);
+                transform: scale(1.04);
+            }
         }
     </style>
 </head>
@@ -465,7 +635,7 @@
 
     <div class="main-card">
         
-        <!-- Botón Modo Oscuro (funcional) -->
+        <!-- Botón Modo Oscuro -->
         <button class="theme-toggle" id="themeToggle" aria-label="Cambiar modo oscuro">
             <i class="fa-regular fa-moon"></i>
         </button>
@@ -479,18 +649,16 @@
         <h1 class="title">pepito bodega</h1>
 
         <!-- Contenedor de Tarjetas -->
-        <div id="cuentas-container" class="space-y-4">
+        <div id="cuentas-container" class="space-y-3">
             <!-- Skeleton loading -->
-            <div class="space-y-4">
-                <div class="skeleton h-20 w-full"></div>
-                <div class="skeleton h-20 w-full"></div>
-                <div class="skeleton h-20 w-full"></div>
-                <div class="skeleton h-20 w-full"></div>
-                <div class="skeleton h-20 w-full"></div>
-            </div>
+            <div class="skeleton skeleton-space"></div>
+            <div class="skeleton skeleton-space"></div>
+            <div class="skeleton skeleton-space"></div>
+            <div class="skeleton skeleton-space"></div>
+            <div class="skeleton skeleton-space"></div>
         </div>
 
-        <!-- Footer con enlace a WhatsApp con mensaje personalizado -->
+        <!-- Footer -->
         <div class="footer">
             Diseñado por 
             <a href="https://wa.me/51973952322?text=Hola%2C%20quiero%20uno%20igual%20por%20favor" target="_blank" rel="noopener noreferrer">
@@ -568,46 +736,37 @@
         // --- Función para mostrar el QR en modal ---
         function mostrarQR(imageQr, banco, nombre, logoBanco) {
             if (!imageQr || imageQr.length === 0) {
-                mostrarNotificacion('⚠️ No hay código QR disponible para este banco', 'info');
+                mostrarNotificacion('⚠️ No hay código QR disponible', 'info');
                 return;
             }
 
             const overlay = document.createElement('div');
             overlay.className = 'modal-overlay';
             
-            // Determinar si hay logo o usar texto
             const logoHtml = logoBanco ? 
                 `<img src="${logoBanco}" alt="${banco}">` : 
-                `<span class="logo-text">${banco.substring(0, 4).toUpperCase()}</span>`;
+                `<span>${banco.substring(0, 4).toUpperCase()}</span>`;
             
             overlay.innerHTML = `
                 <div class="modal-content" onclick="event.stopPropagation()">
-                    <!-- Logo del banco en la esquina superior izquierda -->
                     <div class="modal-logo" style="background: ${darkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)'};">
                         ${logoHtml}
                     </div>
                     
-                    <div class="flex justify-end items-center mb-4">
-                        <button onclick="this.closest('.modal-overlay').remove()" 
-                                class="text-gray-400 hover:text-gray-600 transition text-xl"
-                                style="color: ${darkMode ? '#9ca3af' : '#9ca3af'}">
+                    <div class="flex justify-end items-center">
+                        <button class="modal-close" onclick="this.closest('.modal-overlay').remove()">
                             <i class="fa-regular fa-circle-xmark"></i>
                         </button>
                     </div>
                     
-                    <div class="mb-4 bg-gray-50 rounded-lg p-4" style="background: ${darkMode ? '#3a3a3a' : '#f9fafb'}">
-                        <img src="${imageQr}" alt="QR ${banco}" class="w-full h-auto rounded-lg" 
-                             onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22200%22 height=%22200%22%3E%3Crect width=%22200%22 height=%22200%22 fill=%22%23f3f4f6%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%236b7280%22 font-family=%22sans-serif%22 font-size=%2216%22%3EQR no disponible%3C/text%3E%3C/svg%3E'">
+                    <div class="modal-qr-container">
+                        <img src="${imageQr}" alt="QR ${banco}" 
+                             onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%22300%22%3E%3Crect width=%22300%22 height=%22300%22 fill=%22%23f3f4f6%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%236b7280%22 font-family=%22sans-serif%22 font-size=%2218%22%3EQR no disponible%3C/text%3E%3C/svg%3E'">
                     </div>
                     
-                    <!-- Solo el nombre del titular al final -->
-                    <div class="modal-titular" style="color: ${darkMode ? '#f0f0f0' : '#111827'}">
-                        ${nombre}
-                    </div>
+                    <div class="modal-titular">${nombre}</div>
                     
-                    <button onclick="this.closest('.modal-overlay').remove()" 
-                            class="mt-4 w-full py-2 px-4 rounded-lg transition font-medium"
-                            style="background-color: ${darkMode ? '#404040' : '#f3f4f6'}; color: ${darkMode ? '#f0f0f0' : '#1f2937'};">
+                    <button class="modal-close-btn" onclick="this.closest('.modal-overlay').remove()">
                         <i class="fa-regular fa-circle-xmark"></i> Cerrar
                     </button>
                 </div>
@@ -639,7 +798,7 @@
             
             setTimeout(() => {
                 notificacion.style.opacity = '0';
-                notificacion.style.transform = 'translateX(-50%) translateY(-20px)';
+                notificacion.style.transform = 'translateX(-50%) translateY(-30px)';
                 setTimeout(() => notificacion.remove(), 300);
             }, 2500);
         }
@@ -657,10 +816,9 @@
             } catch (error) {
                 console.error('Error:', error);
                 container.innerHTML = `
-                    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert" style="${darkMode ? 'background-color: #7f1d1d; border-color: #991b1b; color: #fca5a5;' : ''}">
-                        <strong class="font-bold">¡Ups!</strong>
-                        <span class="block sm:inline"> No se pudieron cargar las cuentas.</span>
-                        <button onclick="cargarCuentas()" class="mt-2 font-bold py-1 px-3 rounded text-sm transition" style="background-color: ${darkMode ? '#991b1b' : '#ef4444'}; color: white;">
+                    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-xl text-sm" role="alert" style="${darkMode ? 'background-color: #7f1d1d; border-color: #991b1b; color: #fca5a5;' : ''}">
+                        <strong>¡Ups!</strong> No se pudieron cargar las cuentas.
+                        <button onclick="cargarCuentas()" class="mt-2 block mx-auto font-bold py-1.5 px-4 rounded-lg text-sm transition" style="background-color: ${darkMode ? '#991b1b' : '#ef4444'}; color: white;">
                             Reintentar
                         </button>
                     </div>
@@ -672,8 +830,8 @@
         function renderizarCuentas(cuentas) {
             if (!cuentas || cuentas.length === 0) {
                 container.innerHTML = `
-                    <div class="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded relative" role="alert" style="${darkMode ? 'background-color: #78350f; border-color: #92400e; color: #fde68a;' : ''}">
-                        <span class="block sm:inline">No se encontraron cuentas en la hoja de cálculo.</span>
+                    <div class="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded-xl text-sm" role="alert" style="${darkMode ? 'background-color: #78350f; border-color: #92400e; color: #fde68a;' : ''}">
+                        No se encontraron cuentas en la hoja de cálculo.
                     </div>
                 `;
                 return;
@@ -681,7 +839,6 @@
 
             let html = '';
             cuentas.forEach((cuenta, index) => {
-                const id = cuenta.id || index + 1;
                 const banco = cuenta.banco || 'Banco';
                 const nombre = cuenta.nombre || 'Titular';
                 const telefono = cuenta.telefono || '';
@@ -694,30 +851,32 @@
                 const esYapePlin = telefono && telefono.length > 0;
                 const tieneQR = imageQr && imageQr.length > 0;
 
+                const logoHtml = logoBanco ? 
+                    `<img src="${logoBanco}" alt="${banco}">` : 
+                    banco.substring(0, 4).toUpperCase();
+
                 html += `
                     <div class="account-card" style="background: ${color};">
-                        <div class="flex items-center gap-3 flex-1 min-w-0">
-                            <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center font-bold text-sm text-white flex-shrink-0">
-                                ${logoBanco ? `<img src="${logoBanco}" alt="${banco}" class="w-8 h-8 object-contain">` : banco.substring(0, 4).toUpperCase()}
-                            </div>
-                            <div class="text-left truncate">
-                                <p class="font-bold text-sm truncate text-white">${nombre}</p>
-                                ${esYapePlin ? `
-                                    <p class="text-account opacity-90 text-white clickable" onclick="copiarTexto('${telefono}', event)">
-                                        ${telefono}
-                                        <span class="tooltip">Click para copiar</span>
-                                    </p>
-                                ` : `
-                                    <p class="text-account opacity-90 text-white clickable" onclick="copiarTexto('${cta}', event)">
-                                        Cta: ${cta}
-                                        <span class="tooltip">Click para copiar</span>
-                                    </p>
-                                    <p class="text-cci opacity-70 text-white truncate clickable" onclick="copiarTexto('${cci}', event)">
-                                        CCI: ${cci}
-                                        <span class="tooltip">Click para copiar</span>
-                                    </p>
-                                `}
-                            </div>
+                        <div class="bank-logo">
+                            ${logoHtml}
+                        </div>
+                        <div class="account-info">
+                            <div class="account-name">${nombre}</div>
+                            ${esYapePlin ? `
+                                <div class="account-number clickable" onclick="copiarTexto('${telefono}', event)">
+                                    ${telefono}
+                                    <span class="tooltip">Click para copiar</span>
+                                </div>
+                            ` : `
+                                <div class="account-number clickable" onclick="copiarTexto('${cta}', event)">
+                                    Cta: ${cta}
+                                    <span class="tooltip">Click para copiar</span>
+                                </div>
+                                <div class="account-number-cci clickable" onclick="copiarTexto('${cci}', event)">
+                                    CCI: ${cci}
+                                    <span class="tooltip">Click para copiar</span>
+                                </div>
+                            `}
                         </div>
                         ${tieneQR ? `
                             <button class="qr-button" onclick="mostrarQR('${imageQr}', '${banco}', '${nombre}', '${logoBanco}')">
