@@ -44,10 +44,10 @@
             color: #f0f0f0;
         }
 
-        /* Tarjeta principal */
+        /* Tarjeta principal - MÁS ANCHA */
         .main-card {
             width: 100%;
-            max-width: 420px;
+            max-width: 520px;
             border-radius: 1.5rem;
             padding: 1.5rem;
             position: relative;
@@ -77,10 +77,8 @@
             overflow: hidden;
             transition: background-color 0.3s ease;
             flex-shrink: 0;
-        }
-
-        body.light-mode .avatar {
             background-color: #e9e7e2;
+            padding: 12px;
         }
 
         body.dark-mode .avatar {
@@ -90,7 +88,8 @@
         .avatar img {
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            object-fit: contain;
+            border-radius: 50%;
         }
 
         /* Título */
@@ -152,7 +151,7 @@
             color: #e5e7eb;
         }
 
-        /* Tarjetas de cuentas */
+        /* Tarjetas de cuentas - MÁS ESPACIOSAS */
         .account-card {
             border-radius: 1rem;
             padding: 1rem;
@@ -197,15 +196,17 @@
             flex-shrink: 0;
             background: rgba(255, 255, 255, 0.2);
             overflow: hidden;
+            padding: 6px;
         }
 
         .bank-logo img {
-            width: 70%;
-            height: 70%;
+            width: 100%;
+            height: 100%;
             object-fit: contain;
+            border-radius: 0.5rem;
         }
 
-        /* Información de la cuenta */
+        /* Información de la cuenta - AHORA CON WRAP */
         .account-info {
             flex: 1;
             min-width: 0;
@@ -224,23 +225,25 @@
         .account-number {
             font-size: clamp(0.8rem, 2vw, 0.9rem);
             color: rgba(255, 255, 255, 0.95);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
             display: flex;
             align-items: center;
             gap: 4px;
+            word-break: break-all;
+            /* Permite que el número se rompa en varias líneas si es muy largo */
+            white-space: normal;
+            /* Permite que el texto se envuelva */
+            line-height: 1.4;
         }
 
         .account-number-cci {
             font-size: clamp(0.75rem, 1.8vw, 0.85rem);
             color: rgba(255, 255, 255, 0.8);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
             display: flex;
             align-items: center;
             gap: 4px;
+            word-break: break-all;
+            white-space: normal;
+            line-height: 1.4;
         }
 
         /* Botón QR */
@@ -343,12 +346,14 @@
             color: white;
             overflow: hidden;
             background: rgba(0, 0, 0, 0.08);
+            padding: 4px;
         }
 
         .modal-logo img {
-            width: 70%;
-            height: 70%;
+            width: 100%;
+            height: 100%;
             object-fit: contain;
+            border-radius: 0.3rem;
         }
 
         .modal-close {
@@ -543,6 +548,7 @@
             .main-card {
                 padding: 1rem;
                 border-radius: 1.25rem;
+                max-width: 100%;
             }
 
             .account-card {
@@ -550,17 +556,20 @@
                 gap: 0.5rem;
                 min-height: 72px;
                 border-radius: 0.875rem;
+                flex-wrap: nowrap;
             }
 
             .bank-logo {
                 width: 44px;
                 height: 44px;
                 border-radius: 0.625rem;
+                padding: 5px;
             }
 
             .avatar {
                 width: 64px;
                 height: 64px;
+                padding: 10px;
             }
 
             .theme-toggle {
@@ -588,6 +597,7 @@
                 height: 34px;
                 top: 0.75rem;
                 left: 1rem;
+                padding: 3px;
             }
         }
 
