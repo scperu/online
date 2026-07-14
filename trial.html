@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>Mis Herramientas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* --- Estilos Base --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { font-size: 18px; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif; transition: background-color 0.3s ease, color 0.3s ease; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 1rem; -webkit-font-smoothing: antialiased; }
+        body.light-mode { background-color: #f0f2f5; color: #1a1a1a; }
+        body.dark-mode { background-color: #121212; color: #f0f0f0; }
+        
+        /* --- Tarjeta Principal --- */
+        .main-card { width: 100%; max-width: 620px; border-radius: 1.5rem; padding: 1.5rem; position: relative; text-align: center; transition: background-color 0.3s ease, box-shadow 0.3s ease; box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08); }
+        body.light-mode .main-card { background-color: #ffffff; }
+        body.dark-mode .main-card { background-color: #1e1e1e; box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4); }
+        
+        /* --- Avatar --- */
+        .avatar { width: 80px; height: 80px; border-radius: 50%; margin: 0 auto 0.75rem; display: flex; align-items: center; justify-content: center; overflow: hidden; transition: background-color 0.3s ease; flex-shrink: 0; background-color: #e9e7e2; padding: 12px; }
+        body.dark-mode .avatar { background-color: #333; }
+        .avatar img { width: 100%; height: 100%; object-fit: contain; border-radius: 50%; }
+        
+        /* --- Títulos --- */
+        .title { font-size: clamp(1.4rem, 4.5vw, 1.7rem); font-weight: 700; margin-bottom: 1rem; transition: color 0.3s ease; word-break: break-word; }
+        body.light-mode .title { color: #111827; }
+        body.dark-mode .title { color: #f3f4f6; }
+        
+        /* --- Botón Tema Oscuro --- */
+        .theme-toggle { position: absolute; top: 1rem; right: 1rem; width: 40px; height: 40px; border-radius: 50%; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease; font-size: 1.2rem; z-index: 10; }
+        .theme-toggle:active { transform: scale(0.92); }
+        body.light-mode .theme-toggle { background-color: #f3f4f6; color: #6b7280; }
+        body.light-mode .theme-toggle:hover { background-color: #e5e7eb; color: #374151; }
+        body.dark-mode .theme-toggle { background-color: #333; color: #9ca3af; }
+        body.dark-mode .theme-toggle:hover { background-color: #444; color: #e5e7eb; }
+        
+        /* --- Selector de Categorías (SIN ÍCONOS) --- */
+        .filter-container { margin-bottom: 1.25rem; display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: center; }
+        .filter-btn { padding: 0.4rem 1rem; border-radius: 2rem; border: 2px solid #e5e7eb; background: transparent; cursor: pointer; font-size: 0.8rem; font-weight: 600; transition: all 0.3s ease; color: #6b7280; }
+        body.dark-mode .filter-btn { border-color: #374151; color: #9ca3af; }
+        .filter-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .filter-btn.active { background: #6366f1; color: white; border-color: #6366f1; }
+        body.dark-mode .filter-btn.active { background: #818cf8; border-color: #818cf8; color: #1e1e1e; }
+        
+        /* --- Tarjetas de Herramientas --- */
+        .tool-card { border-radius: 1rem; padding: 0.85rem 1rem; display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem; min-height: 76px; transition: transform 0.2s ease, opacity 0.3s ease, box-shadow 0.2s ease; }
+        .tool-card:last-child { margin-bottom: 0; }
+        .tool-card:active { transform: scale(0.98); }
+        
+        /* --- Logo --- */
+        .tool-logo { width: 48px; height: 48px; border-radius: 0.75rem; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.7rem; color: white; flex-shrink: 0; overflow: hidden; padding: 5px; background: rgba(255, 255, 255, 0.2); }
+        .tool-logo img { width: 100%; height: 100%; object-fit: contain; border-radius: 0.5rem; }
+        
+        /* --- Información (SIN ÍCONOS) --- */
+        .tool-info { flex: 1; min-width: 0; text-align: left; }
+        .tool-name { font-weight: 700; font-size: clamp(0.9rem, 2.5vw, 1rem); color: white; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .tool-category { font-size: clamp(0.65rem, 1.8vw, 0.75rem); color: rgba(255, 255, 255, 0.8); white-space: normal; line-height: 1.3; margin-top: 1px; }
+        
+        /* --- Grupo de Botones Premium --- */
+        .btn-group { display: flex; gap: 0.35rem; flex-shrink: 0; }
+        .btn-premium { padding: 0.4rem 0.7rem; border: none; border-radius: 0.6rem; font-size: 0.7rem; font-weight: 600; cursor: pointer; transition: all 0.25s ease; display: flex; align-items: center; gap: 0.35rem; color: white; background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); min-height: 32px; position: relative; overflow: hidden; }
+        .btn-premium::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(255,255,255,0.2), transparent); opacity: 0; transition: opacity 0.3s ease; }
+        .btn-premium:hover::before { opacity: 1; }
+        .btn-premium:active { transform: scale(0.92); }
+        .btn-premium i { font-size: 0.85rem; }
+        
+        .btn-copy { background: rgba(59, 130, 246, 0.75); }
+        .btn-copy:hover { background: rgba(59, 130, 246, 0.95); transform: translateY(-2px); box-shadow: 0 4px 16px rgba(59, 130, 246, 0.35); }
+        
+        .btn-share { background: rgba(16, 185, 129, 0.75); }
+        .btn-share:hover { background: rgba(16, 185, 129, 0.95); transform: translateY(-2px); box-shadow: 0 4px 16px rgba(16, 185, 129, 0.35); }
+        
+        .btn-open { background: rgba(139, 92, 246, 0.75); }
+        .btn-open:hover { background: rgba(139, 92, 246, 0.95); transform: translateY(-2px); box-shadow: 0 4px 16px rgba(139, 92, 246, 0.35); }
+        
+        .btn-premium .label { display: inline; }
+        @media (max-width: 520px) { 
+            .btn-premium { padding: 0.35rem 0.5rem; min-height: 30px; gap: 0.2rem; }
+            .btn-premium .label { display: none; }
+            .btn-premium i { font-size: 0.9rem; }
+        }
+        @media (max-width: 420px) {
+            .tool-card { flex-wrap: wrap; gap: 0.3rem; padding: 0.6rem; }
+            .tool-card .tool-info { flex: 1 1 100%; text-align: center; }
+            .tool-card .tool-logo { margin: 0 auto; }
+            .btn-group { flex: 1; justify-content: center; }
+            .btn-premium { padding: 0.3rem 0.6rem; min-height: 28px; }
+        }
+        
+        /* --- Skeleton --- */
+        .skeleton { background: linear-gradient(90deg, #e8e8e8 25%, #d5d5d5 50%, #e8e8e8 75%); background-size: 200% 100%; animation: loading 1.5s infinite; border-radius: 0.75rem; min-height: 76px; }
+        body.dark-mode .skeleton { background: linear-gradient(90deg, #2a2a2a 25%, #3a3a3a 50%, #2a2a2a 75%); }
+        @keyframes loading { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+        .skeleton-space { margin-bottom: 0.75rem; }
+        
+        /* --- Notificación --- */
+        .notification { position: fixed; top: 1.5rem; left: 50%; transform: translateX(-50%); padding: 0.7rem 1.5rem; border-radius: 0.75rem; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15); z-index: 100; font-weight: 500; font-size: 0.95rem; animation: slideDown 0.35s ease; max-width: 90%; text-align: center; backdrop-filter: blur(4px); }
+        @keyframes slideDown { from { transform: translateX(-50%) translateY(-30px); opacity: 0; } to { transform: translateX(-50%) translateY(0); opacity: 1; } }
+        
+        /* --- Footer --- */
+        .footer { margin-top: 1.5rem; font-size: clamp(0.65rem, 1.8vw, 0.75rem); opacity: 0.5; transition: opacity 0.3s ease; letter-spacing: 0.3px; }
+        .footer:hover { opacity: 0.8; }
+        .footer a { color: inherit; text-decoration: none; font-weight: 600; transition: opacity 0.2s ease; cursor: pointer; }
+        .footer a:active { opacity: 0.6; }
+        
+        /* --- Scrollbar --- */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #c4c4c4; border-radius: 2px; }
+        body.dark-mode ::-webkit-scrollbar-thumb { background: #555; }
+        
+        /* --- Responsive --- */
+        @media (max-width: 480px) {
+            .main-card { padding: 1rem; border-radius: 1.25rem; max-width: 100%; }
+            .tool-card { padding: 0.7rem 0.8rem; gap: 0.5rem; min-height: 64px; border-radius: 0.875rem; }
+            .tool-logo { width: 40px; height: 40px; border-radius: 0.625rem; padding: 4px; }
+            .avatar { width: 64px; height: 64px; padding: 10px; }
+            .theme-toggle { width: 36px; height: 36px; top: 0.75rem; right: 0.75rem; font-size: 1.1rem; }
+            .filter-btn { padding: 0.25rem 0.7rem; font-size: 0.65rem; }
+            .filter-container { gap: 0.35rem; }
+        }
+        @media (min-width: 768px) {
+            .tool-card:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12); }
+            .btn-premium:hover { transform: translateY(-2px); }
+        }
+        
+        /* --- Contador de resultados --- */
+        .result-count { font-size: 0.75rem; color: #6b7280; margin-bottom: 0.6rem; text-align: left; opacity: 0.7; }
+        body.dark-mode .result-count { color: #9ca3af; }
+        
+        .empty-state { text-align: center; padding: 2rem 1rem; opacity: 0.6; }
+        .empty-state i { font-size: 2.5rem; margin-bottom: 0.5rem; display: block; }
+        .empty-state p { font-size: 0.9rem; }
+    </style>
+</head>
+<body class="light-mode">
+
+    <div class="main-card">
+        <!-- Botón Modo Oscuro -->
+        <button class="theme-toggle" id="themeToggle" aria-label="Cambiar modo oscuro">
+            <i class="fa-regular fa-moon"></i>
+        </button>
+
+        <!-- Avatar -->
+        <div class="avatar">
+            <img src="logo.png" alt="Logo" onerror="this.style.display='none'; this.parentElement.textContent='PE'; this.parentElement.style.fontSize='1.5rem'; this.parentElement.style.fontWeight='700';">
+        </div>
+
+        <!-- Título -->
+        <h1 class="title">Mis Herramientas</h1>
+
+        <!-- Selector de Categorías (SIN ÍCONOS) -->
+        <div id="filterContainer" class="filter-container">
+            <button class="filter-btn active" data-categoria="todas">Todas</button>
+        </div>
+
+        <!-- Contador -->
+        <div id="resultCount" class="result-count">Mostrando 0 herramientas</div>
+
+        <!-- Contenedor de Tarjetas -->
+        <div id="herramientas-container" class="space-y-3">
+            <div class="skeleton skeleton-space"></div>
+            <div class="skeleton skeleton-space"></div>
+            <div class="skeleton skeleton-space"></div>
+            <div class="skeleton skeleton-space"></div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            Diseñado por 
+            <a href="https://wa.me/51973952322?text=Hola%2C%20quiero%20uno%20igual%20por%20favor" target="_blank" rel="noopener noreferrer">
+                ServiComp+
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // --- CONFIGURACIÓN ---
+        const SHEET_ID = '1DvVobHQzR0z6oubI2g-0CG9nmBeDb_tytR3STro87Sg';
+        const SHEET_NAME = 'triales';
+        const API_URL = `https://opensheet.elk.sh/${SHEET_ID}/${SHEET_NAME}`;
+
+        // --- Estado ---
+        let darkMode = false;
+        let herramientasData = [];
+        let categoriaActual = 'todas';
+        const themeToggle = document.getElementById('themeToggle');
+        const container = document.getElementById('herramientas-container');
+        const filterContainer = document.getElementById('filterContainer');
+        const resultCount = document.getElementById('resultCount');
+
+        // --- Tema ---
+        function toggleTheme() {
+            darkMode = !darkMode;
+            const body = document.body;
+            const icon = themeToggle.querySelector('i');
+            if (darkMode) {
+                body.classList.remove('light-mode');
+                body.classList.add('dark-mode');
+                icon.className = 'fa-regular fa-sun';
+            } else {
+                body.classList.remove('dark-mode');
+                body.classList.add('light-mode');
+                icon.className = 'fa-regular fa-moon';
+            }
+            localStorage.setItem('theme', darkMode ? 'dark' : 'light');
+        }
+
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                darkMode = true;
+                document.body.classList.remove('light-mode');
+                document.body.classList.add('dark-mode');
+                themeToggle.querySelector('i').className = 'fa-regular fa-sun';
+            }
+        }
+        themeToggle.addEventListener('click', toggleTheme);
+
+        // --- Utilidades ---
+        function copiarTexto(texto, evento) {
+            if (evento) evento.stopPropagation();
+            if (!texto || texto.trim() === '') {
+                mostrarNotificacion('⚠️ No hay enlace disponible', 'info');
+                return;
+            }
+            navigator.clipboard.writeText(texto).then(() => {
+                mostrarNotificacion('✅ ¡Enlace copiado!', 'success');
+            }).catch(() => {
+                const textarea = document.createElement('textarea');
+                textarea.value = texto;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                mostrarNotificacion('✅ ¡Enlace copiado!', 'success');
+            });
+        }
+
+        function compartirEnlace(texto, evento) {
+            if (evento) evento.stopPropagation();
+            if (!texto || texto.trim() === '') {
+                mostrarNotificacion('⚠️ No hay enlace para compartir', 'info');
+                return;
+            }
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Mira esta herramienta',
+                    text: 'Te comparto esta herramienta:',
+                    url: texto
+                }).then(() => {
+                    mostrarNotificacion('✅ ¡Compartido!', 'success');
+                }).catch(() => {
+                    copiarTexto(texto, evento);
+                });
+            } else {
+                copiarTexto(texto, evento);
+            }
+        }
+
+        function abrirEnlace(texto, evento) {
+            if (evento) evento.stopPropagation();
+            if (!texto || texto.trim() === '') {
+                mostrarNotificacion('⚠️ No hay enlace para abrir', 'info');
+                return;
+            }
+            window.open(texto, '_blank');
+        }
+
+        function mostrarNotificacion(mensaje, tipo = 'success') {
+            const colores = {
+                success: darkMode ? '#059669' : '#10b981',
+                info: darkMode ? '#2563eb' : '#3b82f6',
+                error: darkMode ? '#dc2626' : '#ef4444'
+            };
+            const notificacion = document.createElement('div');
+            notificacion.className = 'notification';
+            notificacion.style.backgroundColor = colores[tipo] || colores.success;
+            notificacion.style.color = '#ffffff';
+            notificacion.textContent = mensaje;
+            document.body.appendChild(notificacion);
+            setTimeout(() => {
+                notificacion.style.opacity = '0';
+                notificacion.style.transform = 'translateX(-50%) translateY(-30px)';
+                setTimeout(() => notificacion.remove(), 300);
+            }, 2500);
+        }
+
+        // --- Cargar Datos ---
+        async function cargarHerramientas() {
+            try {
+                const response = await fetch(API_URL);
+                if (!response.ok) {
+                    let errorMsg = `Error ${response.status}`;
+                    try {
+                        const errorText = await response.text();
+                        errorMsg += `: ${errorText}`;
+                    } catch (e) {
+                        errorMsg += `: ${response.statusText}`;
+                    }
+                    throw new Error(errorMsg);
+                }
+                
+                let herramientas = await response.json();
+                herramientas = herramientas.filter(item => item.id && item.id.trim() !== '');
+                herramientas.sort((a, b) => {
+                    const idA = parseInt(a.id) || 9999;
+                    const idB = parseInt(b.id) || 9999;
+                    return idA - idB;
+                });
+                
+                herramientasData = herramientas;
+                generarFiltros(herramientas);
+                renderizarHerramientas(herramientas);
+
+            } catch (error) {
+                console.error('❌ Error:', error);
+                container.innerHTML = `
+                    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-xl text-sm" role="alert" style="${darkMode ? 'background-color: #7f1d1d; border-color: #991b1b; color: #fca5a5;' : ''}">
+                        <strong>⚠️ Error al cargar</strong>
+                        <p class="text-xs mt-1 opacity-75">${error.message}</p>
+                        <button onclick="cargarHerramientas()" class="mt-2 block mx-auto font-bold py-1.5 px-4 rounded-lg text-sm transition" style="background-color: ${darkMode ? '#991b1b' : '#ef4444'}; color: white;">
+                            <i class="fa-solid fa-rotate"></i> Reintentar
+                        </button>
+                    </div>
+                `;
+            }
+        }
+
+        // --- Generar Filtros (SIN ÍCONOS) ---
+        function generarFiltros(herramientas) {
+            const categorias = new Set();
+            categorias.add('todas');
+            herramientas.forEach(h => {
+                if (h.categoria && h.categoria.trim() !== '') {
+                    categorias.add(h.categoria.trim());
+                }
+            });
+
+            filterContainer.innerHTML = '';
+            categorias.forEach(cat => {
+                const btn = document.createElement('button');
+                btn.className = `filter-btn ${cat === 'todas' ? 'active' : ''}`;
+                btn.dataset.categoria = cat;
+                btn.textContent = cat === 'todas' ? 'Todas' : cat;
+                btn.addEventListener('click', () => filtrarPorCategoria(cat));
+                filterContainer.appendChild(btn);
+            });
+        }
+
+        // --- Filtrar por Categoría ---
+        function filtrarPorCategoria(categoria) {
+            categoriaActual = categoria;
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.categoria === categoria);
+            });
+            renderizarHerramientas(herramientasData);
+        }
+
+        // --- Renderizar con Filtro ---
+        function renderizarHerramientas(herramientas) {
+            const filtradas = categoriaActual === 'todas' 
+                ? herramientas 
+                : herramientas.filter(h => h.categoria && h.categoria.trim() === categoriaActual);
+
+            resultCount.textContent = `Mostrando ${filtradas.length} herramienta${filtradas.length !== 1 ? 's' : ''}`;
+
+            if (filtradas.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fa-regular fa-search"></i>
+                        <p>No hay herramientas en esta categoría</p>
+                    </div>
+                `;
+                return;
+            }
+
+            let html = '';
+            filtradas.forEach((herramienta) => {
+                const imagen = herramienta.imagen || '';
+                const soft = herramienta.soft || 'Herramienta';
+                const categoria = herramienta.categoria || 'Sin categoría';
+                const link = herramienta.link || '';
+                const color = herramienta.color || '#6b7280';
+
+                const logoHtml = imagen ? 
+                    `<img src="${imagen}" alt="${soft}" onerror="this.style.display='none'; this.parentElement.textContent='${soft.substring(0, 4).toUpperCase()}';">` : 
+                    soft.substring(0, 4).toUpperCase();
+
+                const linkEscapado = link.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+
+                html += `
+                    <div class="tool-card" style="background: ${color};">
+                        <div class="tool-logo">${logoHtml}</div>
+                        <div class="tool-info">
+                            <div class="tool-name">${soft}</div>
+                            <div class="tool-category">${categoria}</div>
+                        </div>
+                        <div class="btn-group">
+                            <button class="btn-premium btn-copy" onclick="copiarTexto('${linkEscapado}', event)" title="Copiar enlace">
+                                <i class="fa-solid fa-copy"></i>
+                                <span class="label">Copiar</span>
+                            </button>
+                            <button class="btn-premium btn-share" onclick="compartirEnlace('${linkEscapado}', event)" title="Compartir">
+                                <i class="fa-solid fa-share-nodes"></i>
+                                <span class="label">Compartir</span>
+                            </button>
+                            <button class="btn-premium btn-open" onclick="abrirEnlace('${linkEscapado}', event)" title="Abrir enlace">
+                                <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                                <span class="label">Abrir</span>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        // --- Iniciar ---
+        loadTheme();
+        cargarHerramientas();
+    </script>
+
+</body>
+</html>
