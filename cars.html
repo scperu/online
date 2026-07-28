@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SERVICOMP+ CARS - Control Vehicular & Mantenimiento</title>
+
+    <!-- PWA Meta Tags & Manifest -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0f172a">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="SERVICOMP+ CARS">
+    
+    <style>
+        :root {
+            --bg-primary: #0f172a;
+            --bg-card: #1e293b;
+            --bg-card-hover: #334155;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent-primary: #3b82f6;
+            --accent-primary-hover: #2563eb;
+            --status-good: #10b981;
+            --status-warn: #f59e0b;
+            --status-danger: #ef4444;
+            --border-color: #334155;
+            --radius-lg: 16px;
+            --radius-md: 12px;
+            --radius-sm: 8px;
+            --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+        }
+
+        body.light-theme {
+            --bg-primary: #f1f5f9;
+            --bg-card: #ffffff;
+            --bg-card-hover: #f8fafc;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --accent-primary: #2563eb;
+            --accent-primary-hover: #1d4ed8;
+            --border-color: #e2e8f0;
+            --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-main);
+            padding: 16px;
+            max-width: 500px;
+            margin: 0 auto;
+            min-height: 100vh;
+            padding-bottom: 40px;
+        }
+
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-logo-container {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius-md);
+            background: linear-gradient(135deg, var(--accent-primary), #1d4ed8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .brand-logo-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .brand-logo-placeholder { font-size: 24px; }
+        .brand h1 { font-size: 1.2rem; font-weight: 800; letter-spacing: -0.5px; color: var(--text-main); }
+        .brand p { font-size: 0.72rem; color: var(--text-muted); font-weight: 500; }
+
+        .header-actions { display: flex; gap: 6px; }
+
+        #pwaInstallBanner {
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+            border: 1px solid var(--accent-primary);
+            border-radius: var(--radius-md);
+            padding: 12px 16px;
+            margin-bottom: 16px;
+            display: none;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        #pwaInstallBanner p { font-size: 0.8rem; color: #f8fafc; }
+
+        .card {
+            background-color: var(--bg-card);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            margin-bottom: 16px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+        }
+
+        .card-title {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .form-group { margin-bottom: 14px; }
+
+        label {
+            display: block;
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px 14px;
+            background-color: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            color: var(--text-main);
+            font-size: 0.95rem;
+            outline: none;
+        }
+
+        input:focus, select:focus {
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--accent-primary);
+            color: white;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+        }
+
+        .status-badge {
+            font-size: 0.75rem;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .status-ok { background-color: rgba(16, 185, 129, 0.15); color: var(--status-good); border: 1px solid rgba(16, 185, 129, 0.3); }
+        .status-warn { background-color: rgba(245, 158, 11, 0.15); color: var(--status-warn); border: 1px solid rgba(245, 158, 11, 0.3); }
+        .status-alert { background-color: rgba(239, 68, 68, 0.15); color: var(--status-danger); border: 1px solid rgba(239, 68, 68, 0.3); }
+
+        .maint-list { display: flex; flex-direction: column; gap: 12px; }
+
+        .maint-item {
+            background-color: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .maint-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .maint-info h4 { font-size: 0.95rem; font-weight: 600; margin-bottom: 4px; }
+        .maint-info p { font-size: 0.78rem; color: var(--text-muted); }
+        .maint-metric { text-align: right; }
+        .km-remaining { font-weight: 700; font-size: 0.95rem; }
+
+        /* Mantenimiento Detalle Inferior por Servicio */
+        .maint-extra {
+            background: rgba(30, 41, 59, 0.35);
+            border-top: 1px solid var(--border-color);
+            padding-top: 10px;
+            margin-top: 4px;
+            font-size: 0.78rem;
+            line-height: 1.45;
+        }
+
+        .maint-recom { color: var(--text-main); margin-bottom: 6px; }
+        .maint-brands { color: var(--accent-primary); font-weight: 600; margin-bottom: 6px; }
+        .maint-source { font-size: 0.72rem; color: var(--text-muted); border-top: 1px dashed var(--border-color); padding-top: 4px; margin-top: 4px; }
+
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+        .info-box {
+            background: rgba(15, 23, 42, 0.4);
+            border: 1px solid var(--border-color);
+            border-left: 3px solid var(--accent-primary);
+            padding: 12px;
+            border-radius: var(--radius-sm);
+            margin-bottom: 12px;
+            font-size: 0.78rem;
+        }
+
+        .brand-tag {
+            display: inline-block;
+            background: rgba(59, 130, 246, 0.15);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            color: var(--accent-primary);
+            font-size: 0.72rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-right: 4px;
+            margin-top: 4px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header con Marca, Logo y Toggle Modo Oscuro/Claro -->
+    <header>
+        <div class="brand">
+            <div class="brand-logo-container">
+                <!-- <img src="logo.png" alt="SERVICOMP+ CARS Logo"> -->
+                <span class="brand-logo-placeholder">🏎️</span>
+            </div>
+            <div>
+                <h1>SERVICOMP+ CARS</h1>
+                <p>Gestión Vehicular Inteligente</p>
+            </div>
+        </div>
+        <div class="header-actions">
+            <button id="btnThemeToggle" class="btn btn-outline" style="width: auto; padding: 6px 10px; font-size: 0.85rem;" title="Cambiar Tema">🌙</button>
+            <button id="btnReset" class="btn btn-outline" style="width: auto; padding: 6px 12px; font-size: 0.75rem;">Limpiar</button>
+        </div>
+    </header>
+
+    <div id="pwaInstallBanner">
+        <p>📲 <strong>Instala SERVICOMP+ CARS</strong> para usarla sin conexión.</p>
+        <button id="btnInstallPwa" class="btn" style="width: auto; padding: 6px 12px; font-size: 0.75rem;">Instalar</button>
+    </div>
+
+    <!-- Mi Vehículo -->
+    <section class="card">
+        <div class="card-header">
+            <span class="card-title">🚘 Mi Vehículo</span>
+            <span id="vehicleBadge" class="status-badge status-ok">Activo</span>
+        </div>
+        <div class="form-group">
+            <label for="carModel">Marca y Modelo</label>
+            <input type="text" id="carModel" placeholder="Ej. Toyota Yaris 2021" value="Toyota Hilux 2.4D">
+        </div>
+        <div class="form-group">
+            <label for="currentKm">Kilometraje Actual (km)</label>
+            <input type="number" id="currentKm" placeholder="Ej. 85000" value="85000">
+        </div>
+        <button id="btnUpdateKm" class="btn">Actualizar Odometer</button>
+    </section>
+
+    <!-- Registrar Servicio -->
+    <section class="card">
+        <div class="card-header">
+            <span class="card-title">🛠️ Registrar Servicio</span>
+        </div>
+        <form id="serviceForm">
+            <div class="form-group">
+                <label for="servicePreset">Tipo de Servicio</label>
+                <select id="servicePreset"></select>
+            </div>
+
+            <!-- Caja Informativa Dinámica al Seleccionar -->
+            <div id="presetInfoBox" class="info-box">
+                <div id="presetRecom" style="margin-bottom: 6px;"></div>
+                <div id="presetBrands" style="margin-bottom: 6px;"></div>
+                <div id="presetFuente" class="maint-source"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="serviceName">Nombre del Servicio</label>
+                <input type="text" id="serviceName" required>
+            </div>
+
+            <div class="grid-2">
+                <div class="form-group">
+                    <label for="lastDoneKm">Realizado a los (km)</label>
+                    <input type="number" id="lastDoneKm" required>
+                </div>
+                <div class="form-group">
+                    <label for="intervalKm">Repetir cada (km)</label>
+                    <input type="number" id="intervalKm" required>
+                </div>
+            </div>
+
+            <button type="submit" class="btn" style="background-color: #10b981;">Guardar Servicio</button>
+        </form>
+    </section>
+
+    <!-- Controles Registrados -->
+    <section class="card">
+        <div class="card-header">
+            <span class="card-title">📋 Estado de Controles</span>
+        </div>
+        <div id="maintList" class="maint-list"></div>
+    </section>
+
+    <script>
+        // Catálogo de Servicios con Recomendaciones, Bibliografía y exactamente 6 Marcas Sugeridas por Servicio
+        const basePresets = [
+            { 
+                id: 'aceite_sintetico', 
+                name: 'Aceite Sintético de Motor', 
+                intervalKm: 10000, 
+                fuente: '📚 Ref: SAE J300 Viscosity Standard & API SP Engine Oil Certification (2020+).',
+                recom: '💡 Cambiar junto con el filtro de aceite. Usar viscosidad exacta indicada en la tapa del motor (ej. 5W-30, 0W-20).',
+                marcas: ['Mobil 1', 'Liqui Moly', 'Castrol Edge', 'Shell Helix Ultra', 'Motul 8100', 'Valvoline SynPower']
+            },
+            { 
+                id: 'aceite_semisintetico', 
+                name: 'Aceite Semi-sintético de Motor', 
+                intervalKm: 7500, 
+                fuente: '📚 Ref: SAE J300 Standards & API Service SP / SN Classification.',
+                recom: '💡 Equilibrio ideal para uso urbano y carretera. Reemplazar como máximo a los 6 meses.',
+                marcas: ['Mobil Super 2000', 'Castrol Magnatec', 'Liqui Moly Super Leichtlauf', 'Shell Helix HX7', 'Motul 6100', 'Havoline Synthetic Blend']
+            },
+            { 
+                id: 'aceite_mineral', 
+                name: 'Aceite Mineral de Motor', 
+                intervalKm: 5000, 
+                fuente: '📚 Ref: API Service Categories & Filter Manufacturers Council Guidelines.',
+                recom: '💡 Recomendado para motores antiguos o de trabajo pesado. Monitorear nivel de aceite semanalmente.',
+                marcas: ['Mobil Special', 'Castrol GTX', 'Shell Helix HX5', 'Pennzoil Yellow', 'Chevron Supreme', 'Pento High Performance']
+            },
+            { 
+                id: 'faja_distribucion', 
+                name: 'Faja / Correa de Distribución', 
+                intervalKm: 80000, 
+                fuente: '📚 Ref: Gates Corporation Automotive Timing Belt Guide & OEM Technical Manuals.',
+                recom: '🛑 ¡Servicio Crítico! Reemplazar el kit completo (faja + templadores + bomba de agua) para evitar doblar válvulas.',
+                marcas: ['Gates PowerGrip', 'Continental Contitech', 'Dayco High Performance', 'SKF Timing Kits', 'Ina Schaeffler', 'Bosch Belt Systems']
+            },
+            { 
+                id: 'rotacion_llantas', 
+                name: 'Rotación y Alineación de Llantas', 
+                intervalKm: 10000, 
+                fuente: '📚 Ref: TIA (Tire Industry Association) Passenger Tire Care Standards.',
+                recom: '💡 Rotar en cruz para emparejar desgaste entre eje motriz y libre. Balancear para eliminar vibraciones.',
+                marcas: ['Michelin', 'Bridgestone', 'Continental', 'Goodyear', 'Pirelli', 'Yokohama']
+            },
+            { 
+                id: 'pastillas_freno', 
+                name: 'Pastillas de Freno', 
+                intervalKm: 30000, 
+                fuente: '📚 Ref: Bosch Automotive Handbook (10th Ed.) & Brake Friction Standards.',
+                recom: '💡 Revisar grosor cada 10,000 km. Cambiar si la pasta de fricción es menor a 3 mm o genera chillido.',
+                marcas: ['Bosch QuietCast', 'Brembo Ceramic', 'Akebono ProACT', 'TRW Automotive', 'Ferodo Racing', 'Wagner OEX']
+            },
+            { 
+                id: 'liquido_frenos', 
+                name: 'Líquido de Frenos', 
+                intervalKm: 40000, 
+                fuente: '📚 Ref: FMVSS 116 (DOT 3 / DOT 4) & ISO 4925 Brake Fluid Standards.',
+                recom: '⚠️ Purgar sistema completo cada 2 años. El líquido absorbe agua del ambiente y reduce eficiencia de frenado.',
+                marcas: ['Bosch DOT 4 HP', 'ATE Typ 200', 'Motul DOT 5.1', 'Castrol React Performance', 'Prestone DOT 4', 'Pentosin Super DOT']
+            },
+            { 
+                id: 'filtro_aire', 
+                name: 'Filtro de Aire de Motor', 
+                intervalKm: 20000, 
+                fuente: '📚 Ref: Filter Manufacturers Council Technical Service Bulletins.',
+                recom: '💡 Un filtro limpio reduce el consumo de combustible en 10%. Adelantar cambio si transita por rutas polvorientas.',
+                marcas: ['Mann Filter', 'Bosch Premium Filters', 'Wix Filters', 'Fram Extra Guard', 'K&N High-Flow', 'Mahle Original']
+            },
+            { 
+                id: 'bujias_iridio', 
+                name: 'Bujías de Iridio / Platino', 
+                intervalKm: 80000, 
+                fuente: '📚 Ref: NGK & Denso Spark Plug Technical Engineering Specifications.',
+                recom: '💡 Mantienen chispa de alta intensidad y encendido óptimo. Nunca limar ni re-calibrar el electrodo de iridio.',
+                marcas: ['NGK Iridium IX', 'Denso Iridium Power', 'Bosch Double Iridium', 'Champion Laser Iridium', 'ACDelco Professional', 'Autolite Iridium']
+            },
+            { 
+                id: 'aceite_caja', 
+                name: 'Aceite de Transmisión (Caja)', 
+                intervalKm: 50000, 
+                fuente: '📚 Ref: ZF Transmission Maintenance Standards & ISO Lubricant Guidelines.',
+                recom: '⚙️ En cajas automáticas/CVT alarga la vida útil de solenoides y discos. Usar estrictamente la norma del fabricante.',
+                marcas: ['Motul ATF / CVT', 'Liqui Moly Top Tec ATF', 'Aisin Automatic Fluid', 'Valvoline MaxLife ATF', 'Castrol Transmax', 'Shell Spirax']
+            },
+            { 
+                id: 'refrigerante', 
+                name: 'Líquido Refrigerante', 
+                intervalKm: 50000, 
+                fuente: '📚 Ref: ASTM D3306 Standard Specifications for Engine Coolants.',
+                recom: '❄️ Usar mezcla 50/50 concentrado + agua desmineralizada. Jamás agregar agua de grifo (causa sarro y corrosión).',
+                marcas: ['Prestone 50/50', 'Peak Long Life', 'Liqui Moly Radiator Coolant', 'Pentosin Pentofrost', 'Zerex Organic', 'Motul Inugard']
+            },
+            { 
+                id: 'custom', 
+                name: 'Otro Servicio Personalizado', 
+                intervalKm: 5000, 
+                fuente: '📚 Ref: Manual del Propietario / Especificaciones del Fabricante.',
+                recom: '💡 Mantenimiento configurado según los intervalos específicos descritos en tu libreta de servicio.',
+                marcas: ['Original OEM', 'Bosch', 'Mann Filter', 'Mobil 1', 'Gates', 'NGK']
+            }
+        ];
+
+        const defaultServices = [
+            { 
+                id: 1, 
+                name: "Aceite Sintético de Motor", 
+                lastKm: 80000, 
+                intervalKm: 10000, 
+                fuente: "📚 Ref: SAE J300 Viscosity Standard & API SP Engine Oil Certification (2020+).",
+                recom: "💡 Cambiar junto con el filtro de aceite. Usar viscosidad exacta indicada en la tapa del motor (ej. 5W-30, 0W-20).",
+                marcas: ["Mobil 1", "Liqui Moly", "Castrol Edge", "Shell Helix Ultra", "Motul 8100", "Valvoline SynPower"]
+            },
+            { 
+                id: 2, 
+                name: "Faja / Correa de Distribución", 
+                lastKm: 20000, 
+                intervalKm: 80000, 
+                fuente: "📚 Ref: Gates Corporation Automotive Timing Belt Guide & OEM Technical Manuals.",
+                recom: "🛑 ¡Servicio Crítico! Reemplazar el kit completo (faja + templadores + bomba de agua) para evitar doblar válvulas.",
+                marcas: ["Gates PowerGrip", "Continental Contitech", "Dayco High Performance", "SKF Timing Kits", "Ina Schaeffler", "Bosch Belt Systems"]
+            }
+        ];
+
+        let carState = JSON.parse(localStorage.getItem('servicomp_car')) || {
+            model: "Toyota Hilux 2.4D",
+            currentKm: 85000,
+            services: defaultServices
+        };
+
+        const carModelInput = document.getElementById('carModel');
+        const currentKmInput = document.getElementById('currentKm');
+        const btnUpdateKm = document.getElementById('btnUpdateKm');
+        const servicePreset = document.getElementById('servicePreset');
+        const serviceName = document.getElementById('serviceName');
+        const lastDoneKm = document.getElementById('lastDoneKm');
+        const intervalKm = document.getElementById('intervalKm');
+        const presetRecom = document.getElementById('presetRecom');
+        const presetBrands = document.getElementById('presetBrands');
+        const presetFuente = document.getElementById('presetFuente');
+        const serviceForm = document.getElementById('serviceForm');
+        const maintList = document.getElementById('maintList');
+        const btnReset = document.getElementById('btnReset');
+
+        // Toggle Modo Oscuro / Claro
+        const btnThemeToggle = document.getElementById('btnThemeToggle');
+        let isLight = localStorage.getItem('servicomp_theme') === 'light';
+
+        function applyTheme() {
+            if (isLight) {
+                document.body.classList.add('light-theme');
+                btnThemeToggle.textContent = '☀️';
+            } else {
+                document.body.classList.remove('light-theme');
+                btnThemeToggle.textContent = '🌙';
+            }
+        }
+
+        btnThemeToggle.addEventListener('click', () => {
+            isLight = !isLight;
+            localStorage.setItem('servicomp_theme', isLight ? 'light' : 'dark');
+            applyTheme();
+        });
+
+        function loadPresets() {
+            servicePreset.innerHTML = '';
+            basePresets.forEach(p => {
+                const opt = document.createElement('option');
+                opt.value = p.id;
+                opt.textContent = `${p.name} (+${p.intervalKm.toLocaleString()} km)`;
+                servicePreset.appendChild(opt);
+            });
+            updateFormFromPreset();
+        }
+
+        function updateFormFromPreset() {
+            const selectedVal = servicePreset.value;
+            const presetObj = basePresets.find(p => p.id === selectedVal);
+
+            if (presetObj) {
+                serviceName.value = presetObj.name;
+                intervalKm.value = presetObj.intervalKm;
+                presetRecom.innerHTML = `<strong>Recomendación:</strong> ${presetObj.recom}`;
+                
+                const brandsHTML = presetObj.marcas.map(b => `<span class="brand-tag">${b}</span>`).join('');
+                presetBrands.innerHTML = `<strong>6 Marcas Sugeridas:</strong><br>${brandsHTML}`;
+                presetFuente.textContent = presetObj.fuente;
+            }
+        }
+
+        function init() {
+            applyTheme();
+            carModelInput.value = carState.model;
+            currentKmInput.value = carState.currentKm;
+            lastDoneKm.value = carState.currentKm;
+            loadPresets();
+            renderList();
+        }
+
+        function saveState() {
+            localStorage.setItem('servicomp_car', JSON.stringify(carState));
+            renderList();
+        }
+
+        btnUpdateKm.addEventListener('click', () => {
+            carState.model = carModelInput.value || "Mi Vehículo";
+            carState.currentKm = parseInt(currentKmInput.value) || 0;
+            saveState();
+            alert("¡Kilometraje actualizado correctamente!");
+        });
+
+        servicePreset.addEventListener('change', updateFormFromPreset);
+
+        serviceForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const selectedVal = servicePreset.value;
+            const presetObj = basePresets.find(p => p.id === selectedVal) || {
+                recom: 'Mantenimiento personalizado.',
+                marcas: ['Original OEM', 'Bosch', 'Mann Filter', 'Mobil 1', 'Gates', 'NGK'],
+                fuente: '📚 Ref: Manual del Propietario.'
+            };
+
+            const newService = {
+                id: Date.now(),
+                name: serviceName.value,
+                lastKm: parseInt(lastDoneKm.value),
+                intervalKm: parseInt(intervalKm.value),
+                recom: presetObj.recom,
+                marcas: presetObj.marcas,
+                fuente: presetObj.fuente
+            };
+            carState.services.push(newService);
+            saveState();
+        });
+
+        window.deleteService = function(id) {
+            carState.services = carState.services.filter(s => s.id !== id);
+            saveState();
+        };
+
+        function renderList() {
+            maintList.innerHTML = "";
+            if (carState.services.length === 0) {
+                maintList.innerHTML = `<p style="text-align:center; color: var(--text-muted); font-size:0.85rem; padding: 10px;">No hay mantenimientos registrados.</p>`;
+                return;
+            }
+
+            carState.services.forEach(serv => {
+                const nextKm = serv.lastKm + serv.intervalKm;
+                const remainingKm = nextKm - carState.currentKm;
+                let statusBadge = "", statusClass = "";
+
+                if (remainingKm <= 0) {
+                    statusBadge = `<span class="status-badge status-alert">¡Vencido (${Math.abs(remainingKm)} km)!</span>`;
+                    statusClass = "color: var(--status-danger)";
+                } else if (remainingKm <= 1000) {
+                    statusBadge = `<span class="status-badge status-warn">Próximo (${remainingKm} km)</span>`;
+                    statusClass = "color: var(--status-warn)";
+                } else {
+                    statusBadge = `<span class="status-badge status-ok">En regla</span>`;
+                    statusClass = "color: var(--status-good)";
+                }
+
+                const brandsTags = (serv.marcas || []).map(b => `<span class="brand-tag">${b}</span>`).join('');
+
+                maintList.innerHTML += `
+                    <div class="maint-item">
+                        <div class="maint-header-row">
+                            <div class="maint-info">
+                                <h4>${serv.name} ${statusBadge}</h4>
+                                <p>Último: ${serv.lastKm.toLocaleString()} km | Cada ${serv.intervalKm.toLocaleString()} km</p>
+                                <p>Próximo cambio: <strong>${nextKm.toLocaleString()} km</strong></p>
+                            </div>
+                            <div class="maint-metric">
+                                <div class="km-remaining" style="${statusClass}">
+                                    ${remainingKm > 0 ? remainingKm.toLocaleString() + ' km' : 'Toca revisar'}
+                                </div>
+                                <button onclick="deleteService(${serv.id})" style="background:none; border:none; color:var(--text-muted); cursor:pointer; font-size:0.75rem; margin-top:8px;">🗑️ Eliminar</button>
+                            </div>
+                        </div>
+
+                        <!-- Sección Inferior Detallada por Servicio -->
+                        <div class="maint-extra">
+                            <div class="maint-recom">${serv.recom || ''}</div>
+                            <div class="maint-brands">🏷️ <strong>6 Marcas Recomendadas:</strong><br>${brandsTags}</div>
+                            <div class="maint-source">${serv.fuente || '📚 Ref: Norma Genérica OEM'}</div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        btnReset.addEventListener('click', () => {
+            if (confirm("¿Quieres reiniciar todos los datos guardados?")) {
+                localStorage.removeItem('servicomp_car');
+                location.reload();
+            }
+        });
+
+        init();
+
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(reg => console.log('PWA SW Activo:', reg.scope))
+                    .catch(err => console.error('Error SW:', err));
+            });
+        }
+
+        let deferredPrompt;
+        const pwaInstallBanner = document.getElementById('pwaInstallBanner');
+        const btnInstallPwa = document.getElementById('btnInstallPwa');
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            pwaInstallBanner.style.display = 'flex';
+        });
+
+        btnInstallPwa.addEventListener('click', () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then(() => {
+                    deferredPrompt = null;
+                    pwaInstallBanner.style.display = 'none';
+                });
+            }
+        });
+    </script>
+</body>
+</html>
