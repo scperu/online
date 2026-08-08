@@ -1,0 +1,1328 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Planes Google · Comparativa</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <style>
+        /* ============================================================
+           VARIABLES CSS (Modo Oscuro por defecto)
+           ============================================================ */
+        :root {
+            --bg-body: #0b0e14;
+            --bg-category: #141a24;
+            --bg-card: #10161e;
+            --bg-card-hover: #18202b;
+            --bg-controls: #141a24;
+            --bg-select: #1f2a3a;
+            --bg-select-option: #141a24;
+            --bg-badge: #1f2a3a;
+            --border-category: #26303f;
+            --border-card: #2d3b4b;
+            --border-card-hover: #4a8bff;
+            --border-select: #3b4a5e;
+            --border-controls: #26303f;
+            --text-primary: #e8edf5;
+            --text-secondary: #b2c4db;
+            --text-muted: #9aabbf;
+            --text-title: #ffffff;
+            --text-link: #4a8bff;
+            --bg-price: #1a6a3a;
+            --text-price: #7bcb7b;
+            --border-price: #2a8a4a;
+            --bg-offer: #6a3a1a;
+            --text-offer: #ffb07a;
+            --border-offer: #8a5a2a;
+            --bg-ultra: #3a1a5a;
+            --text-ultra: #c07aff;
+            --border-ultra: #5a2a8a;
+            --bg-tier: #1a2a4a;
+            --text-tier: #8ab8ff;
+            --border-tier: #2a4a6a;
+            --bg-tag-new: #1a2a1a;
+            --text-tag-new: #7bcb7b;
+            --bg-tag-ultra: #3a1a5a;
+            --text-tag-ultra: #c07aff;
+            --bg-offer-tag: #6a3a1a;
+            --text-offer-tag: #ffb07a;
+            --icon-sol: #ffd700;
+            --icon-dollar: #7ecf7e;
+            --separator: #2d3b4b;
+            --shadow: rgba(0, 0, 0, 0.7);
+            --radius-card: 18px;
+            --radius-badge: 100px;
+            --font-family: 'Inter', 'Segoe UI', Roboto, system-ui, sans-serif;
+
+            --glow-primary: rgba(74, 139, 255, 0.15);
+            --glow-ultra: rgba(192, 122, 255, 0.15);
+            --transition-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        /* MODO CLARO */
+        body.light-mode {
+            --bg-body: #f0f4f8;
+            --bg-category: #ffffff;
+            --bg-card: #f8fafc;
+            --bg-card-hover: #edf2f7;
+            --bg-controls: #ffffff;
+            --bg-select: #f0f4f8;
+            --bg-select-option: #ffffff;
+            --bg-badge: #e8edf5;
+            --border-category: #d0d8e0;
+            --border-card: #c0c8d4;
+            --border-card-hover: #4a8bff;
+            --border-select: #c0c8d4;
+            --border-controls: #d0d8e0;
+            --text-primary: #1a1f2e;
+            --text-secondary: #3a4a5e;
+            --text-muted: #4a5a6e;
+            --text-title: #1a1f2e;
+            --text-link: #4a8bff;
+            --bg-price: #e8f5ed;
+            --text-price: #1a6a3a;
+            --border-price: #b0d8c0;
+            --bg-offer: #f5ede8;
+            --text-offer: #8a4a1a;
+            --border-offer: #d8b8a0;
+            --bg-ultra: #ede8f5;
+            --text-ultra: #5a2a8a;
+            --border-ultra: #c0b0d8;
+            --bg-tier: #e8edf5;
+            --text-tier: #1a4a7a;
+            --border-tier: #b0c8e0;
+            --bg-tag-new: #e0f0e0;
+            --text-tag-new: #1a6a1a;
+            --bg-tag-ultra: #ede8f5;
+            --text-tag-ultra: #5a2a8a;
+            --bg-offer-tag: #f5ede8;
+            --text-offer-tag: #8a4a1a;
+            --icon-sol: #c9a800;
+            --icon-dollar: #2d8f2d;
+            --separator: #c0c8d4;
+            --shadow: rgba(0, 0, 0, 0.08);
+            --glow-primary: rgba(74, 139, 255, 0.08);
+            --glow-ultra: rgba(192, 122, 255, 0.08);
+        }
+
+        /* ============================================================
+           RESET Y BASE
+           ============================================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-family);
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            padding: 30px 20px;
+            background-color: var(--bg-body);
+            color: var(--text-primary);
+            transition: background-color 0.6s ease, color 0.6s ease;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(ellipse at 20% 50%, var(--glow-primary) 0%, transparent 60%),
+                        radial-gradient(ellipse at 80% 50%, var(--glow-ultra) 0%, transparent 60%);
+            opacity: 0.3;
+            pointer-events: none;
+            z-index: 0;
+            transition: opacity 0.6s ease;
+            animation: pulseGlow 8s ease-in-out infinite alternate;
+        }
+
+        @keyframes pulseGlow {
+            0% { opacity: 0.2; transform: scale(1); }
+            100% { opacity: 0.4; transform: scale(1.05); }
+        }
+
+        .container {
+            max-width: 1500px;
+            width: 100%;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ============================================================
+           TÍTULO PRINCIPAL
+           ============================================================ */
+        .main-title {
+            text-align: center;
+            margin-bottom: 30px;
+            animation: fadeInDown 0.8s ease forwards;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .main-title h1 {
+            font-size: 2.6rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: var(--text-title);
+            transition: color 0.3s ease;
+            position: relative;
+            display: inline-block;
+        }
+
+        .main-title h1 span {
+            background: linear-gradient(135deg, #66b4ff, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+        }
+
+        .main-title h1 span::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, #66b4ff, #a78bfa);
+            border-radius: 2px;
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 0.6s var(--transition-smooth);
+        }
+
+        .main-title h1:hover span::after {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+
+        .main-title p {
+            font-size: 1.1rem;
+            margin-top: 6px;
+            color: var(--text-muted);
+            transition: color 0.3s ease;
+            font-weight: 400;
+            opacity: 0.8;
+        }
+
+        /* ============================================================
+           CONTROLES SUPERIORES
+           ============================================================ */
+        .controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 30px;
+            padding: 16px 32px;
+            border-radius: 60px;
+            border: 1px solid var(--border-controls);
+            background: var(--bg-controls);
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            transition: background-color 0.5s ease, border-color 0.5s ease, box-shadow 0.5s ease, transform 0.3s ease;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            box-shadow: 0 6px 20px var(--shadow), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+            animation: fadeInDown 0.8s ease 0.2s forwards;
+            opacity: 0;
+        }
+
+        .controls:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 32px var(--shadow), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+        }
+
+        .controls .control-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .controls label {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            transition: color 0.3s ease;
+            letter-spacing: 0.01em;
+        }
+
+        .controls select {
+            padding: 8px 18px;
+            border-radius: 40px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            border: 1px solid var(--border-select);
+            background: var(--bg-select);
+            color: var(--text-primary);
+            outline: none;
+            font-family: inherit;
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease,
+                        box-shadow 0.3s ease, transform 0.2s ease;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23b2c4db' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            padding-right: 36px;
+        }
+
+        .controls select:hover {
+            transform: scale(1.02);
+        }
+
+        .controls select:focus {
+            border-color: var(--border-card-hover);
+            box-shadow: 0 0 0 3px var(--glow-primary);
+        }
+
+        .controls select option {
+            background: var(--bg-select-option);
+            color: var(--text-primary);
+        }
+
+        .controls .separator {
+            color: var(--separator);
+            font-size: 1.5rem;
+            font-weight: 200;
+            transition: color 0.3s ease;
+        }
+
+        /* ============================================================
+           PROMO BANNER (NUEVO)
+           ============================================================ */
+        .promo-banner {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 10px 24px;
+            border-radius: 60px;
+            margin-bottom: 35px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-card);
+            transition: all 0.4s ease;
+            animation: fadeInDown 0.8s ease 0.35s forwards;
+            opacity: 0;
+            box-shadow: 0 2px 12px var(--shadow);
+            flex-wrap: wrap;
+        }
+
+        .promo-banner:hover {
+            border-color: var(--border-card-hover);
+            box-shadow: 0 4px 20px var(--shadow), 0 0 30px var(--glow-primary);
+            transform: translateY(-1px);
+        }
+
+        .promo-banner .promo-icon {
+            font-size: 1.4rem;
+            animation: pulseIcon 2s ease-in-out infinite;
+        }
+
+        @keyframes pulseIcon {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.1) rotate(-8deg); }
+        }
+
+        .promo-banner .promo-text {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            transition: color 0.3s ease;
+        }
+
+        .promo-banner .promo-text strong {
+            color: var(--text-primary);
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .promo-banner .promo-highlight {
+            display: inline-block;
+            padding: 2px 14px;
+            border-radius: 30px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            background: var(--bg-offer-tag);
+            color: var(--text-offer-tag);
+            border: 1px solid var(--border-offer);
+            animation: pulseTag 2s ease-in-out infinite;
+        }
+
+        @keyframes pulseTag {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(0.97); }
+        }
+
+        .promo-banner .promo-update {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .promo-banner .promo-update .dot {
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #4ade80;
+            animation: dotPulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes dotPulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.3; transform: scale(0.7); }
+        }
+
+        /* ============================================================
+           CATEGORÍAS
+           ============================================================ */
+        .category {
+            border-radius: 28px;
+            padding: 30px 28px 32px;
+            border: 1px solid var(--border-category);
+            background: var(--bg-category);
+            margin-bottom: 30px;
+            box-shadow: 0 16px 48px var(--shadow);
+            transition: background-color 0.5s ease, border-color 0.5s ease, box-shadow 0.5s ease,
+                        transform 0.4s var(--transition-smooth);
+            animation: fadeInUp 0.8s ease forwards;
+            opacity: 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .category:nth-child(2) { animation-delay: 0.1s; }
+        .category:nth-child(3) { animation-delay: 0.2s; }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .category::before {
+            content: '';
+            position: absolute;
+            top: -1px;
+            left: -1px;
+            right: -1px;
+            bottom: -1px;
+            border-radius: 28px;
+            background: linear-gradient(135deg, var(--border-card-hover), transparent 40%, transparent 60%, var(--border-ultra));
+            opacity: 0;
+            transition: opacity 0.6s ease;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .category:hover::before {
+            opacity: 0.15;
+        }
+
+        .category:last-child {
+            margin-bottom: 0;
+        }
+
+        .category-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid var(--border-category);
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            transition: border-color 0.3s ease;
+            position: relative;
+        }
+
+        .category-header .icon {
+            font-size: 2.4rem;
+            line-height: 1;
+            transition: transform 0.4s var(--transition-bounce);
+        }
+
+        .category:hover .category-header .icon {
+            transform: scale(1.1) rotate(-5deg);
+        }
+
+        .category-header h2 {
+            font-size: 1.6rem;
+            font-weight: 600;
+            letter-spacing: -0.01em;
+            color: var(--text-title);
+            transition: color 0.3s ease;
+        }
+
+        .category-header .badge {
+            margin-left: auto;
+            font-size: 0.7rem;
+            font-weight: 600;
+            padding: 4px 16px;
+            border-radius: 50px;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            background: var(--bg-badge);
+            color: var(--text-muted);
+            transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease;
+            border: 1px solid var(--border-card);
+        }
+
+        .category:hover .category-header .badge {
+            transform: scale(1.05);
+        }
+
+        /* ============================================================
+           PLANES - FILA (GRID mejorado)
+           ============================================================ */
+        .plans-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 24px;
+            align-items: stretch;
+        }
+
+        /* ============================================================
+           PLAN - TARJETA
+           ============================================================ */
+        .plan-card {
+            border-radius: var(--radius-card);
+            padding: 24px 24px 28px;
+            border: 1px solid var(--border-card);
+            background: var(--bg-card);
+            display: flex;
+            flex-direction: column;
+            transition: background-color 0.4s ease, border-color 0.4s ease, transform 0.4s var(--transition-bounce),
+                        box-shadow 0.5s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+            animation: cardAppear 0.6s ease forwards;
+            opacity: 0;
+        }
+
+        .plan-card:nth-child(1) { animation-delay: 0.05s; }
+        .plan-card:nth-child(2) { animation-delay: 0.1s; }
+        .plan-card:nth-child(3) { animation-delay: 0.15s; }
+        .plan-card:nth-child(4) { animation-delay: 0.2s; }
+        .plan-card:nth-child(5) { animation-delay: 0.25s; }
+        .plan-card:nth-child(6) { animation-delay: 0.3s; }
+
+        @keyframes cardAppear {
+            from {
+                opacity: 0;
+                transform: translateY(20px) scale(0.98);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .plan-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--border-card-hover), var(--border-ultra));
+            opacity: 0;
+            transition: opacity 0.5s ease, transform 0.5s ease;
+            transform: scaleX(0);
+            transform-origin: left;
+        }
+
+        .plan-card:hover::before {
+            opacity: 1;
+            transform: scaleX(1);
+        }
+
+        .plan-card:hover {
+            background: var(--bg-card-hover);
+            border-color: var(--border-card-hover);
+            transform: translateY(-6px) scale(1.005);
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5), 0 0 40px var(--glow-primary);
+        }
+
+        .plan-card .plan-title {
+            font-size: 1.15rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            color: var(--text-title);
+            transition: color 0.3s ease;
+            letter-spacing: -0.01em;
+        }
+
+        .plan-card .plan-title .emoji {
+            font-size: 1.3rem;
+            transition: transform 0.4s var(--transition-bounce);
+        }
+
+        .plan-card:hover .plan-title .emoji {
+            transform: scale(1.15) rotate(-5deg);
+        }
+
+        .plan-card .plan-title .plan-tag {
+            font-size: 0.65rem;
+            font-weight: 700;
+            padding: 2px 12px;
+            border-radius: 30px;
+            letter-spacing: 0.03em;
+            text-transform: uppercase;
+            border: 1px solid transparent;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .plan-card .plan-title .plan-tag:hover {
+            transform: scale(1.05);
+        }
+
+        .plan-card .plan-title .plan-tag.new {
+            background: var(--bg-tag-new);
+            color: var(--text-tag-new);
+            border-color: var(--text-tag-new);
+        }
+
+        .plan-card .plan-title .plan-tag.ultra-tag {
+            background: var(--bg-tag-ultra);
+            color: var(--text-tag-ultra);
+            border-color: var(--text-tag-ultra);
+        }
+
+        .plan-card .plan-title .plan-tag.popular {
+            background: #1a2a5a;
+            color: #8ab8ff;
+            border-color: #4a7aff;
+        }
+
+        .plan-card .plan-desc {
+            font-size: 0.85rem;
+            line-height: 1.6;
+            margin: 8px 0 12px 0;
+            color: var(--text-secondary);
+            transition: color 0.3s ease;
+            flex: 1;
+        }
+
+        .plan-card .plan-desc ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .plan-card .plan-desc ul li {
+            margin-bottom: 4px;
+            display: flex;
+            align-items: flex-start;
+            gap: 6px;
+            transition: transform 0.2s ease, color 0.2s ease;
+            padding: 2px 4px;
+            border-radius: 6px;
+        }
+
+        .plan-card .plan-desc ul li:hover {
+            transform: translateX(4px);
+            color: var(--text-primary);
+            background: var(--glow-primary);
+        }
+
+        .plan-card .plan-desc .emoji {
+            font-size: 0.9rem;
+            flex-shrink: 0;
+            margin-top: 1px;
+            transition: transform 0.3s ease;
+        }
+
+        .plan-card .plan-desc ul li:hover .emoji {
+            transform: scale(1.15);
+        }
+
+        .plan-card .plan-desc strong {
+            font-weight: 600;
+            color: var(--text-primary);
+            transition: color 0.3s ease;
+        }
+
+        .plan-card .plan-sub {
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin: 6px 0 2px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+            color: var(--text-secondary);
+            transition: color 0.3s ease;
+        }
+
+        .plan-card .plan-sub .emoji {
+            font-size: 0.95rem;
+            transition: transform 0.3s ease;
+        }
+
+        .plan-card:hover .plan-sub .emoji {
+            transform: scale(1.1);
+        }
+
+        .price-normal {
+            font-size: 0.8rem;
+            opacity: 0.6;
+            text-decoration: line-through;
+            margin-right: 4px;
+            color: var(--text-muted);
+            transition: opacity 0.3s ease;
+        }
+
+        .plan-card:hover .price-normal {
+            opacity: 0.8;
+        }
+
+        .price-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 22px;
+            border-radius: var(--radius-badge);
+            font-size: 1rem;
+            font-weight: 600;
+            margin: 8px 0 4px 0;
+            border: 1px solid var(--border-price);
+            background: var(--bg-price);
+            color: var(--text-price);
+            transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease,
+                        transform 0.3s var(--transition-bounce), box-shadow 0.4s ease;
+            width: fit-content;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            cursor: default;
+        }
+
+        .price-badge:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .price-badge .price-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-title);
+            transition: color 0.3s ease;
+            letter-spacing: -0.01em;
+        }
+
+        .price-badge .price-period {
+            font-weight: 400;
+            font-size: 0.75rem;
+            opacity: 0.8;
+            color: var(--text-secondary);
+        }
+
+        .price-badge.offer {
+            background: var(--bg-offer);
+            color: var(--text-offer);
+            border-color: var(--border-offer);
+        }
+
+        .price-badge.ultra {
+            background: var(--bg-ultra);
+            color: var(--text-ultra);
+            border-color: var(--border-ultra);
+        }
+
+        .offer-tag {
+            display: inline-block;
+            padding: 2px 14px;
+            border-radius: 30px;
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            background: var(--bg-offer-tag);
+            color: var(--text-offer-tag);
+            border: 1px solid var(--border-offer);
+            margin-left: 4px;
+            animation: pulseTag 2s ease-in-out infinite;
+            transition: transform 0.3s ease;
+        }
+
+        .offer-tag:hover {
+            transform: scale(1.05);
+        }
+
+        .price-badge-tier {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 6px 18px 6px 20px;
+            border-radius: var(--radius-badge);
+            font-size: 0.85rem;
+            font-weight: 500;
+            border: 1px solid var(--border-tier);
+            background: var(--bg-tier);
+            color: var(--text-tier);
+            transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease,
+                        transform 0.3s var(--transition-bounce), box-shadow 0.4s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            cursor: default;
+        }
+
+        .price-badge-tier:hover {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .price-badge-tier .month-label {
+            font-weight: 400;
+            font-size: 0.7rem;
+            opacity: 0.8;
+            color: var(--text-tier);
+            transition: color 0.3s ease;
+        }
+
+        .price-badge-tier .price-value {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--text-title);
+            transition: color 0.3s ease;
+        }
+
+        .tier-prices-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 10px 0 4px;
+        }
+
+        /* ============================================================
+           RESPONSIVE
+           ============================================================ */
+        @media (max-width: 768px) {
+            .plan-card {
+                min-width: 100%;
+            }
+
+            .plans-row {
+                grid-template-columns: 1fr;
+            }
+
+            .main-title h1 {
+                font-size: 2rem;
+            }
+
+            .category-header .badge {
+                margin-left: 0;
+                width: 100%;
+                text-align: center;
+            }
+
+            .category {
+                padding: 20px 16px;
+            }
+
+            .controls {
+                flex-direction: column;
+                gap: 14px;
+                padding: 16px 20px;
+                border-radius: 32px;
+            }
+
+            .controls .separator {
+                display: none;
+            }
+
+            .plan-card .plan-title {
+                font-size: 1rem;
+            }
+
+            .category-header h2 {
+                font-size: 1.3rem;
+            }
+
+            .price-badge {
+                font-size: 0.9rem;
+                padding: 8px 18px;
+                width: 100%;
+                justify-content: center;
+            }
+
+            .price-badge .price-value {
+                font-size: 1.3rem;
+            }
+
+            .price-badge-tier {
+                font-size: 0.8rem;
+                padding: 5px 14px;
+                gap: 6px;
+                width: 100%;
+                justify-content: center;
+            }
+
+            .price-badge-tier .price-value {
+                font-size: 1rem;
+            }
+
+            .tier-prices-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .promo-banner {
+                flex-direction: column;
+                text-align: center;
+                padding: 12px 18px;
+                gap: 6px;
+            }
+
+            .promo-banner .promo-update {
+                font-size: 0.7rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 12px 8px;
+            }
+
+            .plan-card {
+                padding: 18px 14px 20px;
+            }
+
+            .controls .control-group {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .price-badge {
+                padding: 6px 14px;
+                font-size: 0.8rem;
+            }
+
+            .price-badge .price-value {
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body class="dark-mode">
+
+    <div class="container">
+
+        <!-- ===== TÍTULO ===== -->
+        <div class="main-title">
+            <h1>📦 <span>Planes Google</span></h1>
+            <p>Almacenamiento · IA · Gemini — elige tu mejor opción</p>
+        </div>
+
+        <!-- ===== CONTROLES SUPERIORES ===== -->
+        <div class="controls" role="toolbar" aria-label="Controles de visualización">
+            <div class="control-group">
+                <label for="currencySelect">💱 Moneda</label>
+                <select id="currencySelect" aria-label="Seleccionar moneda">
+                    <option value="soles">🇵🇪 Soles (S/)</option>
+                    <option value="dolares">🇺🇸 Dólares ($)</option>
+                </select>
+            </div>
+
+            <span class="separator" aria-hidden="true">|</span>
+
+            <div class="control-group">
+                <label for="modeSelect">🌙 Modo</label>
+                <select id="modeSelect" aria-label="Seleccionar tema">
+                    <option value="dark">🌙 Oscuro</option>
+                    <option value="light">☀️ Claro</option>
+                </select>
+            </div>
+
+            <span class="separator" aria-hidden="true">|</span>
+
+        </div>
+
+        <!-- ===== PROMO BANNER (NUEVO) ===== -->
+        <div class="promo-banner">
+            <span class="promo-icon">⚡</span>
+            <span class="promo-text">
+                <strong>¡Ofertas por tiempo limitado!</strong> Las promociones cambian constantemente
+            </span>
+            <span class="promo-highlight">🔥 Actualizado hoy</span>
+            <span class="promo-update">
+                <span class="dot"></span> En vivo
+            </span>
+        </div>
+
+        <!-- =============================================================== -->
+        <!-- CATEGORÍA 1 — PLANES GOOGLE GEMINI                              -->
+        <!-- =============================================================== -->
+        <section class="category" aria-labelledby="gemini-heading">
+            <div class="category-header">
+                <span class="icon" aria-hidden="true">🧠</span>
+                <h2 id="gemini-heading">Planes Google Gemini</h2>
+                <span class="badge">2 planes</span>
+            </div>
+
+            <div class="plans-row">
+
+                <!-- 1. Gemini Plus -->
+                <article class="plan-card" role="article" aria-label="Gemini Plus">
+                    <div class="plan-title">
+                        <span class="emoji" aria-hidden="true">✨</span> 1. Gemini Plus
+                        <span class="plan-tag popular">⭐ Popular</span>
+                    </div>
+
+                    <div class="plan-desc">
+                        <ul>
+                            <li><span class="emoji" aria-hidden="true">🤖</span> App de Gemini con límites de uso 2 veces más altos que sin un plan Google AI, además de acceso a nuestro modelo Flash Pensar</li>
+                            <li><span class="emoji" aria-hidden="true">🎨</span> Google Flow con mayor acceso a los modelos creativos de Google</li>
+                            <li><span class="emoji" aria-hidden="true">📧</span> Gemini en Gmail</li>
+                            <li><span class="emoji" aria-hidden="true">📓</span> Gemini Notebook con mayor acceso</li>
+                        </ul>
+                    </div>
+
+                    <div class="price-badge offer">
+                        <span class="price-value price-display" data-sol="S/8.99" data-usd="$3.33">S/9.99</span>
+                        <span class="price-period">al mes, durante 2 meses</span>
+                        <span class="offer-tag">🔥 Oferta</span>
+                    </div>
+                    <div class="plan-sub">
+                        <span class="emoji" aria-hidden="true">📅</span> Después, <span class="price-display" data-sol="S/14.99" data-usd="$5.00">S/14.99</span> al mes (3er Mes)
+                    </div>
+                </article>
+
+                <!-- 2. Gemini Pro -->
+                <article class="plan-card" role="article" aria-label="Gemini Pro">
+                    <div class="plan-title">
+                        <span class="emoji" aria-hidden="true">🚀</span> 2. Gemini Pro
+                        <span class="plan-tag" style="background: #1a2a5a; color: #8ab8ff; border-color: #4a7aff;">💎 Pro</span>
+                    </div>
+
+                    <div class="plan-desc">
+                        <ul>
+                            <li><span class="emoji" aria-hidden="true">✅</span> Todo lo que incluye Plus y más</li>
+                            <li><span class="emoji" aria-hidden="true">🤖</span> App de Gemini con límites de uso 4 veces más altos que sin un plan Google AI, además de acceso a nuestro modelo Pro, Deep Research y más</li>
+                            <li><span class="emoji" aria-hidden="true">🎨</span> Google Flow con mayor acceso a los modelos creativos de Google</li>
+                            <li><span class="emoji" aria-hidden="true">📧</span> Gemini en Gmail, Documentos, Vids y más</li>
+                            <li><span class="emoji" aria-hidden="true">📓</span> Gemini Notebook con acceso alto</li>
+                            <li><span class="emoji" aria-hidden="true">🎥</span> Más funciones de Google Meet, como videollamadas grupales más largas (el límite sin una suscripción es de 1 hora)</li>
+                            <li><span class="emoji" aria-hidden="true">📅</span> Más funciones del Calendario de Google, como agenda de citas mejorada</li>
+                        </ul>
+                    </div>
+
+                    <div class="price-badge offer">
+                        <span class="price-value price-display" data-sol="S/19.99" data-usd="$6.66">S/19.99</span>
+                        <span class="price-period">al mes, durante 2 meses</span>
+                        <span class="offer-tag">🔥 Oferta</span>
+                    </div>
+                    <div class="plan-sub">
+                        <span class="emoji" aria-hidden="true">📅</span> Después, <span class="price-display" data-sol="S/25.99" data-usd="$8.66">S/25.99</span> al mes (3er Mes)
+                    </div>
+                </article>
+
+            </div>
+        </section>
+
+        <!-- =============================================================== -->
+        <!-- CATEGORÍA 2 — PLANES CON IA (GEMINI + HERRAMIENTAS)             -->
+        <!-- =============================================================== -->
+        <section class="category" aria-labelledby="ai-heading">
+            <div class="category-header">
+                <span class="icon" aria-hidden="true">🤖</span>
+                <h2 id="ai-heading">Planes Google Almacenamiento + IA</h2>
+                <span class="badge">6 planes</span>
+            </div>
+
+            <div class="plans-row">
+
+                <!-- 1. Google AI Plus - 400 GB -->
+                <article class="plan-card" role="article" aria-label="Google AI Plus con 400 GB">
+                    <div class="plan-title">
+                        <span class="emoji" aria-hidden="true">🧠</span> 1. Google AI Plus - 400 GB
+                    </div>
+
+                    <div class="plan-desc">
+                        <ul>
+                            <li><span class="emoji" aria-hidden="true">✨</span> Obtén acceso adicional a nuevas y potentes funciones para aumentar tu productividad y creatividad.</li>
+                            <li><span class="emoji" aria-hidden="true">✅</span> Todo lo de la versión Gratis: Incluye todas las características del plan sin cargo.</li>
+                            <li><span class="emoji" aria-hidden="true">🤖</span> App de Gemini: Límites de uso 2 veces mayores que en la versión gratuita y acceso a más funciones como generación de videos.</li>
+                            <li><span class="emoji" aria-hidden="true">🎨</span> Google Flow: 200 créditos de Google Flow para usar en el estudio creativo con IA, historias/escenas cinematográficas, acceso a Gemini Omni Flash y creación de herramientas personalizadas.</li>
+                            <li><span class="emoji" aria-hidden="true">🔍</span> Búsqueda de Google: Más acceso a Nano Banana en la Búsqueda.</li>
+                            <li><span class="emoji" aria-hidden="true">📓</span> Gemini Notebook: Asistente de investigación y redacción con más resúmenes de audio, cuadernos y más.</li>
+                            <li><span class="emoji" aria-hidden="true">📧</span> Gemini Integrado: Acceso a Gemini directamente en Gmail, Vids y más apps de Google.</li>
+                            <li><span class="emoji" aria-hidden="true">☁️</span> Almacenamiento: 400 GB de almacenamiento en la nube en Gmail, Drive y Fotos</li>
+                        </ul>
+                    </div>
+
+                    <div class="price-badge offer">
+                        <span class="price-value price-display" data-sol="S/9.99" data-usd="$3.00">S/8.99</span>
+                        <span class="price-period">al mes, durante 1 mes</span>
+                        <span class="offer-tag">🔥 Oferta</span>
+                    </div>
+                    <div class="plan-sub">
+                        <span class="emoji" aria-hidden="true">📅</span> Después, <span class="price-display" data-sol="S/15.99" data-usd="$5.33">S/15.99</span> mes (2do Mes)
+                    </div>
+                    <div class="plan-sub">
+                        <span class="emoji" aria-hidden="true">💰</span> Precio Normal <span class="price-normal price-display" data-sol="S/17.99" data-usd="$6.00">S/17.99</span>/mes
+                    </div>
+                </article>
+
+                <!-- 2. Google AI Pro - 5 TB -->
+                <article class="plan-card" role="article" aria-label="Google AI Pro con 5 TB">
+                    <div class="plan-title">
+                        <span class="emoji" aria-hidden="true">🚀</span> 2. Google AI Pro - 5 TB
+                    </div>
+
+                    <div class="plan-desc">
+                        <ul>
+                            <li><span class="emoji" aria-hidden="true">⚡</span> Obtén acceso mejorado a funciones nuevas y potentes para impulsar tu productividad y creatividad.</li>
+                            <li><span class="emoji" aria-hidden="true">✅</span> Todo lo del plan Plus: Incluye todas las características acumuladas de las modalidades anteriores.</li>
+                            <li><span class="emoji" aria-hidden="true">🤖</span> App de Gemini: Límites de uso 4 veces mayores que en la versión gratuita y generación de videos.</li>
+                            <li><span class="emoji" aria-hidden="true">🎨</span> Google Flow: 1,000 créditos de Google Flow con acceso a Gemini Omni Flash y creación de herramientas personalizadas.</li>
+                            <li><span class="emoji" aria-hidden="true">🔍</span> Búsqueda de Google: Mayor acceso a Gemini 3 Pro, Deep Search, capacidades de agente y más.</li>
+                            <li><span class="emoji" aria-hidden="true">🔄</span> Google Antigravity: Límites de frecuencia de entrada para el modelo de agente en la plataforma de desarrollo con agentes.</li>
+                            <li><span class="emoji" aria-hidden="true">📓</span> Gemini Notebook: 5 veces más resúmenes de audio, cuadernos y mejores capacidades.</li>
+                            <li><span class="emoji" aria-hidden="true">📧</span> Gemini Integrado: Acceso directo a Gemini en Gmail, Documentos, Vids y más apps.</li>
+                            <li><span class="emoji" aria-hidden="true">☁️</span> Almacenamiento: 5 TB de almacenamiento en la nube en Gmail, Drive y Fotos.</li>
+                        </ul>
+                    </div>
+
+                    <div class="price-badge offer">
+                        <span class="price-value price-display" data-sol="S/19.99" data-usd="$6.66">S/19.99</span>
+                        <span class="price-period">al mes, durante 1 mes</span>
+                        <span class="offer-tag">🔥 Intro</span>
+                    </div>
+                    <div class="plan-sub">
+                        <span class="emoji" aria-hidden="true">📅</span> Después, <span class="price-display" data-sol="S/37.99" data-usd="$12.66">S/37.99</span> mes (2do Mes)
+                    </div>
+                    <div class="plan-sub">
+                        <span class="emoji" aria-hidden="true">💰</span> Precio Normal <span class="price-normal price-display" data-sol="S/73.99" data-usd="$24.66">S/73.99</span>/mes
+                    </div>
+                </article>
+
+                <!-- 3. Google AI Pro - 1 TB -->
+                <article class="plan-card" role="article" aria-label="Google AI Pro con 1 TB">
+                    <div class="plan-title">
+                        <span class="emoji" aria-hidden="true">📊</span> 3. Google AI Pro - 1 TB
+                    </div>
+
+                    <div class="plan-desc">
+                        <ul>
+                            <li><span class="emoji" aria-hidden="true">⚡</span> Obtén acceso mejorado a funciones nuevas y potentes para impulsar tu productividad y creatividad.</li>
+                            <li><span class="emoji" aria-hidden="true">✅</span> Todo lo del plan Plus: Incluye todas las características acumuladas de las modalidades anteriores.</li>
+                            <li><span class="emoji" aria-hidden="true">🤖</span> App de Gemini: Límites de uso 4 veces mayores que en la versión gratuita y generación de videos.</li>
+                            <li><span class="emoji" aria-hidden="true">🎨</span> Google Flow: 1,000 créditos de Google Flow con acceso a Gemini Omni Flash y creación de herramientas personalizadas.</li>
+                            <li><span class="emoji" aria-hidden="true">🔍</span> Búsqueda de Google: Mayor acceso a Gemini 3 Pro, Deep Search, capacidades de agente y más.</li>
+                            <li><span class="emoji" aria-hidden="true">🔄</span> Google Antigravity: Límites de frecuencia de entrada para el modelo de agente en la plataforma de desarrollo con agentes.</li>
+                            <li><span class="emoji" aria-hidden="true">📓</span> Gemini Notebook: 5 veces más resúmenes de audio, cuadernos y mejores capacidades.</li>
+                            <li><span class="emoji" aria-hidden="true">📧</span> Gemini Integrado: Acceso directo a Gemini en Gmail, Documentos, Vids y más apps.</li>
+                            <li><span class="emoji" aria-hidden="true">☁️</span> Almacenamiento: 1 TB de almacenamiento en la nube en Gmail, Drive y Fotos.</li>
+                        </ul>
+                    </div>
+
+                    <div class="price-badge offer">
+                        <span class="price-value price-display" data-sol="S/19.99" data-usd="$6.66">S/19.99</span>
+                        <span class="price-period">al mes, durante 2 meses</span>
+                        <span class="offer-tag">🔥 Oferta</span>
+                    </div>
+                    <div class="plan-sub">
+                        <span class="emoji" aria-hidden="true">📅</span> Después, <span class="price-display" data-sol="S/37.99" data-usd="$12.66">S/37.99</span> al mes (3er Mes)
+                    </div>
+                </article>
+
+                <!-- 4. Google AI Pro - 1 TB (con YouTube) -->
+                <article class="plan-card" role="article" aria-label="Google AI Pro con 1 TB y YouTube Premium">
+                    <div class="plan-title">
+                        <span class="emoji" aria-hidden="true">🎬</span> 4. Google AI Pro - 1 TB
+                    </div>
+
+                    <div class="plan-desc">
+                        <ul>
+                            <li><span class="emoji" aria-hidden="true">⚡</span> Obtén acceso mejorado a funciones nuevas y potentes para impulsar tu productividad y creatividad.</li>
+                            <li><span class="emoji" aria-hidden="true">✅</span> Todo lo del plan Plus: Incluye todas las características acumuladas de las modalidades anteriores.</li>
+                            <li><span class="emoji" aria-hidden="true">🤖</span> App de Gemini: Límites de uso 4 veces mayores que en la versión gratuita y generación de videos.</li>
+                            <li><span class="emoji" aria-hidden="true">🎨</span> Google Flow: 1,000 créditos de Google Flow con acceso a Gemini Omni Flash y creación de herramientas personalizadas.</li>
+                            <li><span class="emoji" aria-hidden="true">🔍</span> Búsqueda de Google: Mayor acceso a Gemini 3 Pro, Deep Search, capacidades de agente y más.</li>
+                            <li><span class="emoji" aria-hidden="true">🔄</span> Google Antigravity: Límites de frecuencia de entrada para el modelo de agente en la plataforma de desarrollo con agentes.</li>
+                            <li><span class="emoji" aria-hidden="true">📓</span> Gemini Notebook: 5 veces más resúmenes de audio, cuadernos y mejores capacidades.</li>
+                            <li><span class="emoji" aria-hidden="true">📧</span> Gemini Integrado: Acceso directo a Gemini en Gmail, Documentos, Vids y más apps.</li>
+                            <li><span class="emoji" aria-hidden="true">▶️</span> YouTube Premium: Mira la mayoría de los videos sin anuncios, sin conexión y en segundo plano + Youtube Music.</li>
+                            <li><span class="emoji" aria-hidden="true">☁️</span> Almacenamiento: 1 TB de almacenamiento en la nube en Gmail, Drive y Fotos.</li>
+                        </ul>
+                    </div>
+
+                    <div class="tier-prices-row">
+                        <div class="price-badge-tier">
+                            <span class="month-label">1er Mes</span>
+                            <span class="price-value price-display" data-sol="S/23.99" data-usd="$8.00">S/23.99</span>
+                        </div>
+                        <div class="price-badge-tier">
+                            <span class="month-label">2do Mes</span>
+                            <span class="price-value price-display" data-sol="S/18.99" data-usd="$6.33">S/18.99</span>
+                        </div>
+                        <div class="price-badge-tier">
+                            <span class="month-label">3er Mes</span>
+                            <span class="price-value price-display" data-sol="S/14.99" data-usd="$5.00">S/14.99</span>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 5. Google AI Pro - 5 TB (promo nuevos) -->
+                <article class="plan-card" role="article" aria-label="Google AI Pro con 5 TB para nuevos usuarios">
+                    <div class="plan-title">
+                        <span class="emoji" aria-hidden="true">🌟</span> 5. Google AI Pro - 5 TB
+                        <span class="plan-tag new">🎁 Nuevos</span>
+                    </div>
+
+                    <div class="plan-desc">
+                        <ul>
+                            <li><span class="emoji" aria-hidden="true">⚡</span> Obtén acceso mejorado a funciones nuevas y potentes para impulsar tu productividad y creatividad.</li>
+                            <li><span class="emoji" aria-hidden="true">✅</span> Todo lo del plan Plus: Incluye todas las características acumuladas de las modalidades anteriores.</li>
+                            <li><span class="emoji" aria-hidden="true">🤖</span> App de Gemini: Límites de uso 4 veces mayores que en la versión gratuita y generación de videos.</li>
+                            <li><span class="emoji" aria-hidden="true">🎨</span> Google Flow: 1,000 créditos de Google Flow con acceso a Gemini Omni Flash y creación de herramientas personalizadas.</li>
+                            <li><span class="emoji" aria-hidden="true">🔍</span> Búsqueda de Google: Mayor acceso a Gemini 3 Pro, Deep Search, capacidades de agente y más.</li>
+                            <li><span class="emoji" aria-hidden="true">🔄</span> Google Antigravity: Límites de frecuencia de entrada para el modelo de agente en la plataforma de desarrollo con agentes.</li>
+                            <li><span class="emoji" aria-hidden="true">📓</span> Gemini Notebook: 5 veces más resúmenes de audio, cuadernos y mejores capacidades.</li>
+                            <li><span class="emoji" aria-hidden="true">📧</span> Gemini Integrado: Acceso directo a Gemini en Gmail, Documentos, Vids y más apps.</li>
+                            <li><span class="emoji" aria-hidden="true">☁️</span> Almacenamiento: 5 TB de almacenamiento en la nube en Gmail, Drive y Fotos.</li>
+                        </ul>
+                    </div>
+
+                    <div class="price-badge">
+                        <span class="price-value price-display" data-sol="S/32.99" data-usd="$11.00">S/32.99</span>
+                        <span class="price-period">por 3 meses</span>
+                    </div>
+                </article>
+
+                <!-- 6. Google AI Ultra - 20TB -->
+                <article class="plan-card" role="article" aria-label="Google AI Ultra con 20 TB">
+                    <div class="plan-title">
+                        <span class="emoji" aria-hidden="true">👑</span> 6. Google AI Ultra - 20TB
+                        <span class="plan-tag ultra-tag">💎 Premium</span>
+                    </div>
+
+                    <div class="plan-sub">
+                        <span class="emoji" aria-hidden="true">💎</span> Precio: A partir de <span class="price-display" data-sol="S/359.9" data-usd="$120.00">S/359.9</span> / mes
+                    </div>
+
+                    <div class="plan-desc">
+                        <ul>
+                            <li><span class="emoji" aria-hidden="true">🏆</span> Obtén el nivel más alto de acceso a lo mejor de la IA de Google y a funciones exclusivas.</li>
+                            <li><span class="emoji" aria-hidden="true">💰</span> <span class="price-display" data-sol="S/359.9" data-usd="$120.00">S/359.9</span> / mes: Límites de uso 5 veces más altos que los de AI Pro</li>
+                            <li><span class="emoji" aria-hidden="true">💰</span> <span class="price-display" data-sol="S/739.9" data-usd="$246.63">S/739.9</span> / mes: Límites de uso 20 veces más altos que los de AI Pro</li>
+                            <li><span class="emoji" aria-hidden="true">✅</span> Todo lo de Google AI Pro: Incluye la totalidad de ventajas de los niveles anteriores.</li>
+                            <li><span class="emoji" aria-hidden="true">🤖</span> App de Gemini: Límites de uso 20 veces mayores en Gemini que en el plan Pro, además de acceso anticipado a funciones avanzadas como Deep Think y Gemini Spark (en países seleccionados).</li>
+                            <li><span class="emoji" aria-hidden="true">🎨</span> Google Flow: 10,000 o 25,000 créditos de Google Flow para el estudio creativo con IA y Gemini Omni Flash.</li>
+                            <li><span class="emoji" aria-hidden="true">🔍</span> Búsqueda de Google: Máximo nivel de acceso a Gemini 3 Pro, Deep Search, capacidades de agente y más.</li>
+                            <li><span class="emoji" aria-hidden="true">🔄</span> Google Antigravity: Ultra 5x / 20x: Los límites de frecuencia más altos para el modelo de agente en la plataforma de desarrollo.</li>
+                            <li><span class="emoji" aria-hidden="true">📓</span> Gemini Notebook: Los límites más altos posibles y las mejores capacidades de los modelos.</li>
+                            <li><span class="emoji" aria-hidden="true">📧</span> Gemini Integrado: Los límites de uso más amplios de Gemini directamente en las apps de Google (Gmail, Documentos, Vids, etc.).</li>
+                            <li><span class="emoji" aria-hidden="true">🌍</span> Project Genie: Crea y explora mundos interactivos en tiempo real con Genie 3, nuestro innovador modelo de mundos.</li>
+                            <li><span class="emoji" aria-hidden="true">▶️</span> YouTube Premium: Plan individual completo de YouTube Premium (sin anuncios, sin conexión, en segundo plano).</li>
+                            <li><span class="emoji" aria-hidden="true">☁️</span> Almacenamiento: Almacenamiento en la nube a partir de 20 TB en Gmail, Drive y Fotos.</li>
+                        </ul>
+                    </div>
+
+                    <div class="price-badge ultra">
+                        <span class="price-value price-display" data-sol="S/359.9" data-usd="$120.00">S/359.9</span>
+                        <span class="price-period">/ mes · 5x límites</span>
+                    </div>
+                    <div class="price-badge ultra" style="margin-top:4px;">
+                        <span class="price-value price-display" data-sol="S/739.9" data-usd="$246.63">S/739.9</span>
+                        <span class="price-period">/ mes · 20x límites</span>
+                    </div>
+                </article>
+
+            </div>
+        </section>
+
+    </div><!-- /container -->
+
+    <script>
+        // ============================================================
+        // SELECTOR DE MONEDA
+        // ============================================================
+        const currencySelect = document.getElementById('currencySelect');
+        const modeSelect = document.getElementById('modeSelect');
+
+        function updateCurrency(currency) {
+            const isSoles = currency === 'soles';
+
+            document.querySelectorAll('.price-display').forEach(el => {
+                const solValue = el.getAttribute('data-sol');
+                const usdValue = el.getAttribute('data-usd');
+
+                if (solValue && usdValue) {
+                    el.style.transition = 'opacity 0.3s ease';
+                    el.style.opacity = '0';
+                    setTimeout(() => {
+                        el.textContent = isSoles ? solValue : usdValue;
+                        el.style.opacity = '1';
+                    }, 150);
+                }
+            });
+        }
+
+        // ============================================================
+        // SELECTOR DE MODO (OSCURO/CLARO)
+        // ============================================================
+        function updateMode(mode) {
+            const body = document.body;
+            body.classList.remove('dark-mode', 'light-mode');
+            body.classList.add(mode === 'dark' ? 'dark-mode' : 'light-mode');
+
+            const modeLabel = document.querySelector('.control-group:nth-child(2) label');
+            if (mode === 'dark') {
+                modeLabel.innerHTML = '🌙 Modo';
+            } else {
+                modeLabel.innerHTML = '☀️ Modo';
+            }
+        }
+
+        // ============================================================
+        // EVENT LISTENERS
+        // ============================================================
+        currencySelect.addEventListener('change', function() {
+            updateCurrency(this.value);
+        });
+
+        modeSelect.addEventListener('change', function() {
+            updateMode(this.value);
+        });
+
+        // ============================================================
+        // INICIALIZAR
+        // ============================================================
+        updateMode('dark');
+        updateCurrency('soles');
+    </script>
+
+</body>
+</html>
